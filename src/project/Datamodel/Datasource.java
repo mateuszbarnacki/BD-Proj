@@ -157,13 +157,13 @@ public class Datasource {
         "CREATE TABLE " + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + " INTEGER NOT NULL, " + TABLE_WAREHOUSE_NAME +
                 " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_STREET + " VARCHAR(25) NOT NULL, " +
                 TABLE_WAREHOUSE_CITY + " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_POSTCODE + " VARCHAR(6) NOT NULL, " +
-                "CONSTRAINT " + TABLE_WAREHOUSE_ID + " PRIMARY KEY (" + TABLE_WAREHOUSE_ID + ")";
+                "CONSTRAINT id_magazyn PRIMARY KEY (" + TABLE_WAREHOUSE_ID + ")";
 
     public static final String CREATE_DEPARTMENT_TABLE =
             "CREATE TABLE " + TABLE_DEPARTMENT + " (\n" +
                     TABLE_DEPARTMENT_ID +" INTEGER NOT NULL,\n" +
                     TABLE_DEPARTMENT_NAME + " VARCHAR(25) NOT NULL,\n" +
-                    " CONSTRAINT " + TABLE_DEPARTMENT_ID + " PRIMARY KEY (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    " CONSTRAINT id_dzial PRIMARY KEY (" + TABLE_DEPARTMENT_ID + ")\n" +
                     ")";
 
     public static final String CREATE_MANAGER_TABLE =
@@ -173,7 +173,7 @@ public class Datasource {
                     TABLE_MANAGER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
                     TABLE_MANAGER_PHONE + " VARCHAR(9),\n" +
                     TABLE_MANAGER_EMAIL + " VARCHAR(30),\n" +
-                    " CONSTRAINT " + TABLE_MANAGER_ID + " PRIMARY KEY (" + TABLE_MANAGER_ID + ")\n" +
+                    " CONSTRAINT id_kierownik PRIMARY KEY (" + TABLE_MANAGER_ID + ")\n" +
                     ")";
 
     public static final String CREATE_WORKER_TABLE =
@@ -182,14 +182,14 @@ public class Datasource {
                     TABLE_WORKER_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_WORKER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
                     TABLE_WORKER_EMAIL + " VARCHAR(30),\n" +
-                    " CONSTRAINT " + TABLE_WORKER_ID + " PRIMARY KEY (" + TABLE_WORKER_ID + ")\n" +
+                    " CONSTRAINT id_pracownik PRIMARY KEY (" + TABLE_WORKER_ID + ")\n" +
                     ")";
 
     public static final String CREATE_DUTIES_TABLE =
             "CREATE TABLE " + TABLE_DUTIES + " (\n" +
                     TABLE_DUTIES_ID + " INTEGER NOT NULL,\n" +
                     TABLE_DUTIES_DESC + " VARCHAR(30) NOT NULL,\n" +
-                    " CONSTRAINT " + TABLE_DUTIES_ID + " PRIMARY KEY (" + TABLE_DUTIES_ID + ")\n" +
+                    " CONSTRAINT id_obowiazek PRIMARY KEY (" + TABLE_DUTIES_ID + ")\n" +
                     ")";
 
     public static final String CREATE_VACATION_TABLE =
@@ -197,7 +197,7 @@ public class Datasource {
                     TABLE_VACATION_ID + " INTEGER NOT NULL,\n" +
                     TABLE_VACATION_BEGINNING + " DATE NOT NULL,\n" +
                     TABLE_VACATION_END + " DATE NOT NULL,\n" +
-                    " CONSTRAINT " + TABLE_VACATION_ID + " PRIMARY KEY (" + TABLE_VACATION_ID + ")\n" +
+                    " CONSTRAINT id_urlop PRIMARY KEY (" + TABLE_VACATION_ID + ")\n" +
                     ")";
 
     public static final String CREATE_EXPOSITION_TABLE =
@@ -205,7 +205,7 @@ public class Datasource {
                     TABLE_EXPOSITION_ID + " INTEGER NOT NULL,\n" +
                     TABLE_EXPOSITION_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_EXPOSITION_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
-                    " CONSTRAINT " + TABLE_EXPOSITION_ID + " PRIMARY KEY (" + TABLE_EXPOSITION_ID + ")\n" +
+                    " CONSTRAINT id_ekspozycja PRIMARY KEY (" + TABLE_EXPOSITION_ID + ")\n" +
                     ")";
 
     public static final String CREATE_COMMODITY_TABLE =
@@ -213,7 +213,7 @@ public class Datasource {
                     TABLE_COMMODITY_ID + " INTEGER NOT NULL,\n" +
                     TABLE_COMMODITY_NAME + " VARCHAR(30) NOT NULL,\n" +
                     TABLE_COMMODITY_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
-                    " CONSTRAINT " + TABLE_COMMODITY_ID + " PRIMARY KEY (" + TABLE_COMMODITY_ID + ")\n" +
+                    " CONSTRAINT id_towar PRIMARY KEY (" + TABLE_COMMODITY_ID + ")\n" +
                     ")";
 
     public static final String CREATE_DESIGNER_TABLE =
@@ -223,15 +223,78 @@ public class Datasource {
                     TABLE_DESIGNER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
                     TABLE_DESIGNER_EMAIL + " VARCHAR(30),\n" +
                     TABLE_DESIGNER_PHONE + " VARCHAR(9),\n" +
-                    " CONSTRAINT " + TABLE_DESIGNER_ID + " PRIMARY KEY (" + TABLE_DESIGNER_ID + ")\n" +
+                    " CONSTRAINT id_projektant PRIMARY KEY (" + TABLE_DESIGNER_ID + ")\n" +
                     ")";
 
     public static final String CREATE_OPINION_TABLE =
             "CREATE TABLE " + TABLE_OPINION + " (\n" +
                     TABLE_OPINION_ID + " INTEGER NOT NULL,\n" +
                     TABLE_OPINION_DESC + " VARCHAR(50) NOT NULL,\n" +
-                    " CONSTRAINT " + TABLE_OPINION_ID + " PRIMARY KEY (" + TABLE_OPINION_ID + ")\n" +
+                    " CONSTRAINT id_opinia PRIMARY KEY (" + TABLE_OPINION_ID + ")\n" +
                     ");";
+
+    public static final String CREATE_COMMODITY_OPINION_TABLE =
+            "CREATE TABLE " + TABLE_COMMODITY_OPINION + " (\n" +
+                    TABLE_COMMODITY_OPINION_ID_COMMODITY + " INTEGER NOT NULL,\n" +
+                    TABLE_COMMODITY_OPINION_ID_OPINION + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT towar_opinia_pk PRIMARY KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ", " + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
+                    ")";
+
+    public static final String CREATE_EXPOSITION_DESIGNER_TABLE =
+            "CREATE TABLE " + TABLE_EXPOSITION_DESIGNER + " (\n" +
+                    TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
+                    TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT ekspozycja_projektant_pk PRIMARY KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ", " + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
+                    ")";
+
+    public static final String CREATE_EXPOSITION_COMMODITY_TABLE =
+            "CREATE TABLE " + TABLE_EXPOSITION_COMMODITY + " (\n" +
+                    TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
+                    TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT ekspozycja_towar_pk PRIMARY KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ", " + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
+                    ")";
+
+    public static final String CREATE_WORKER_DUTY_TABLE =
+            "CREATE TABLE " + TABLE_WORKER_DUTY + " (\n" +
+                    TABLE_WORKER_DUTY_ID_WORKER + " INTEGER NOT NULL,\n" +
+                    TABLE_WORKER_DUTY_ID_DUTY + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT pracownik_obowiazek_pk PRIMARY KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ", " + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
+                    ")";
+
+    public static final String CREATE_WORKER_VACATION_TABLE =
+            "CREATE TABLE " + TABLE_WORKER_VACATION + " (\n" +
+                    TABLE_WORKER_VACATION_ID_WORKER + " INTEGER NOT NULL,\n" +
+                    TABLE_WORKER_VACATION_ID_VACATION + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT pracownik_plan_pk PRIMARY KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ", " + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
+                    ")";
+
+    public static final String CREATE_MANAGER_WORKER_TABLE =
+            "CREATE TABLE " + TABLE_MANAGER_WORKER + " (\n" +
+                    TABLE_MANAGER_WORKER_ID_MANAGER + " INTEGER NOT NULL,\n" +
+                    TABLE_MANAGER_WORKER_ID_WORKER + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT kierownik_pracownik_pk PRIMARY KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ", " + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
+                    ")";
+
+    public static final String CREATE_DEPARTMENT_EXPOSITION_TABLE =
+            "CREATE TABLE " + TABLE_DEPARTMENT_EXPOSITION + " (\n" +
+                    TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
+                    TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT dzial_ekspozycja_pk PRIMARY KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
+                    ")";
+
+    public static final String CREATE_DEPARTMENT_MANAGER_TABLE =
+            "CREATE TABLE " + TABLE_DEPARTMENT_MANAGER + " (\n" +
+                    TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
+                    TABLE_DEPARTMENT_MANAGER_ID_MANAGER + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT dzial_kierownik_pk PRIMARY KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
+                    ")";
+
+    public static final String CREATE_WAREHOUSE_EXPOSITION_TABLE =
+            "CREATE TABLE " + TABLE_WAREHOUSE_EXPOSITION + " (\n" +
+                    TABLE_WAREHOUSE_EXPOSITION_ID_WAREHOUSE + " INTEGER NOT NULL,\n" +
+                    TABLE_WAREHOUSE_EXPOSITION_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT magazyn_dzial_pk PRIMARY KEY (" + TABLE_WAREHOUSE_EXPOSITION_ID_WAREHOUSE + ", " + TABLE_WAREHOUSE_EXPOSITION_ID_EXPOSITION + ")\n" +
+                    ")";
 
     private PreparedStatement insertPerson;
 
