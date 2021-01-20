@@ -515,8 +515,55 @@ public class Datasource {
 
     public static final String GET_ALL_VACATIONS = "SELECT * FROM " + TABLE_VACATION;
 
-    
+    //Ekspozycja
+    public static final String INSERT_EXPOSITION =
+            "INSERT INTO " + TABLE_EXPOSITION + " VALUES (?, ?, ?)";
 
+    public static final String UPDATE_EXPOSITION =
+            "UPDATE " + TABLE_EXPOSITION + " SET " + TABLE_EXPOSITION_NAME + " = ?, " + TABLE_EXPOSITION_PRICE + " = ? WHERE " +
+                    TABLE_EXPOSITION_ID + " = ?";
+
+    public static final String DELETE_EXPOSITION =
+            "DELETE FROM " + TABLE_EXPOSITION + " WHERE " + TABLE_EXPOSITION_ID + " = ?";
+
+    public static final String GET_ALL_EXPOSITIONS = "SELECT * FROM " + TABLE_EXPOSITION;
+
+    //Towar
+    public static final String INSERT_COMMODITY =
+            "INSERT INTO " + TABLE_COMMODITY + " VALUES (?, ?, ?)";
+
+    public static final String UPDATE_COMMODITY =
+            "UPDATE " + TABLE_COMMODITY + " SET " + TABLE_COMMODITY_NAME + " = ?, " + TABLE_COMMODITY_PRICE + " = ? WHERE" +
+                TABLE_COMMODITY_ID + " = ?";
+
+    public static final String DELETE_COMMODITY =
+            "DELETE FROM " + TABLE_COMMODITY + " WHERE " + TABLE_COMMODITY_ID + " = ?";
+
+    public static final String GET_ALL_COMMODITIES = "SELECT * FROM " + TABLE_COMMODITY;
+
+    //Projektant
+    public static final String INSERT_DESIGNER =
+            "INSERT INTO " + TABLE_DESIGNER + " VALUES (?, ?, ?, ?, ?)";
+
+    public static final String UPDATE_DESIGNER =
+            "UPDATE " + TABLE_DESIGNER + " SET " + TABLE_DESIGNER_NAME + " = ?, " + TABLE_DESIGNER_SURNAME + " = ?, " +
+                    TABLE_DESIGNER_EMAIL + " = ?, " + TABLE_DESIGNER_PHONE + " = ? WHERE " + TABLE_DESIGNER_ID + " = ?";
+
+    public static final String DELETE_DESIGNER =
+            "DELETE FROM " + TABLE_DESIGNER + " WHERE " + TABLE_DESIGNER_ID  + " = ?";
+
+    public static final String GET_ALL_DESIGNERS = "SELECT * FROM " + TABLE_DESIGNER;
+
+    //Opinia
+    public static final String INSERT_OPINION =
+            "INSERT INTO " + TABLE_OPINION + " VALUES (?, ?)";
+
+    public static final String DELETE_OPINION =
+            "DELETE FROM " + TABLE_OPINION + " WHERE " + TABLE_OPINION_ID + " = ?";
+
+    public static final String GET_ALL_OPINIONS = "SELECT * FROM " + TABLE_OPINION;
+
+    //========================== Java code ========================
 
     private PreparedStatement insertPerson;
 
