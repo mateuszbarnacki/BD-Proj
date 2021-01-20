@@ -145,11 +145,11 @@ public class Datasource {
     public static final int INDEX_DEPARTMENT_MANAGER_ID_DEPARTMENT = 1;
     public static final int INDEX_DEPARTMENT_MANAGER_ID_MANAGER = 2;
 
-    public static final String TABLE_WAREHOUSE_EXPOSITION = "magazyn_dzial";
-    public static final String TABLE_WAREHOUSE_EXPOSITION_ID_WAREHOUSE = "id_magazyn";
-    public static final String TABLE_WAREHOUSE_EXPOSITION_ID_EXPOSITION = "id_dzial";
-    public static final int INDEX_WAREHOUSE_EXPOSITION_ID_WAREHOUSE = 1;
-    public static final int INDEX_WAREHOUSE_EXPOSITION_ID_EXPOSITION = 2;
+    public static final String TABLE_WAREHOUSE_DEPARTMENT = "magazyn_dzial";
+    public static final String TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE = "id_magazyn";
+    public static final String TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT = "id_dzial";
+    public static final int INDEX_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE = 1;
+    public static final int INDEX_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT = 2;
 
     // ================== Creation of the tables ===================
 
@@ -289,12 +289,160 @@ public class Datasource {
                     " CONSTRAINT dzial_kierownik_pk PRIMARY KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
                     ")";
 
-    public static final String CREATE_WAREHOUSE_EXPOSITION_TABLE =
-            "CREATE TABLE " + TABLE_WAREHOUSE_EXPOSITION + " (\n" +
-                    TABLE_WAREHOUSE_EXPOSITION_ID_WAREHOUSE + " INTEGER NOT NULL,\n" +
-                    TABLE_WAREHOUSE_EXPOSITION_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT magazyn_dzial_pk PRIMARY KEY (" + TABLE_WAREHOUSE_EXPOSITION_ID_WAREHOUSE + ", " + TABLE_WAREHOUSE_EXPOSITION_ID_EXPOSITION + ")\n" +
+    public static final String CREATE_WAREHOUSE_DEPARTMENT_TABLE =
+            "CREATE TABLE " + TABLE_WAREHOUSE_DEPARTMENT + " (\n" +
+                    TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + " INTEGER NOT NULL,\n" +
+                    TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT magazyn_dzial_pk PRIMARY KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ", " + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
                     ")";
+
+    // =================== Add foreign keys ===================
+
+    public static final String ALTER_TABLE_COMMODITY_OPINION_FK_OPINION =
+          "ALTER TABLE towar_opinia ADD CONSTRAINT opinia_towar_opinia_fk\n" +
+                  "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
+                  "REFERENCES opinia (" + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
+                  "ON DELETE NO ACTION\n" +
+                  "ON UPDATE NO ACTION\n" +
+                  "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_COMMODITY_OPINION_FK_COMMODITY =
+            "ALTER TABLE towar_opinia ADD CONSTRAINT towar_towar_opinia_fk\n" +
+                    "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ")\n" +
+                    "REFERENCES towar (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_EXPOSITION_DESIGNER_FK_DESIGNER =
+            "ALTER TABLE ekspozycja_projektant ADD CONSTRAINT projektant_ekspozycja_projektant_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
+                    "REFERENCES projektant (" + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_EXPOSITION_DESIGNER_FK_EXPOSITION =
+            "ALTER TABLE ekspozycja_projektant ADD CONSTRAINT ekspozycja_ekspozycja_projektant_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ")\n" +
+                    "REFERENCES ekspozycja (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_EXPOSITION_COMMODITY_FK_COMMODITY =
+            "ALTER TABLE ekspozycja_towar ADD CONSTRAINT towar_ekspozycja_towar_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
+                    "REFERENCES towar (" + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_EXPOSITION_COMMODITY_FK_EXPOSITION =
+            "ALTER TABLE ekspozycja_towar ADD CONSTRAINT ekspozycja_ekspozycja_towar_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ")\n" +
+                    "REFERENCES ekspozycja (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_DEPARTMENT_EXPOSITION_FK_EXPOSITION =
+            "ALTER TABLE dzial_ekspozycja ADD CONSTRAINT ekspozycja_dzial_ekspozycja_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
+                    "REFERENCES ekspozycja (" + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_DEPARTMENT_EXPOSITION_FK_DEPARTMENT =
+            "ALTER TABLE dzial_ekspozycja ADD CONSTRAINT dzial_dzial_ekspozycja_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ")\n" +
+                    "REFERENCES dzial (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_WORKER_DUTY_FK_DUTY =
+            "ALTER TABLE pracownik_obowiazek ADD CONSTRAINT obowiazek_pracownik_obowiazek_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
+                    "REFERENCES obowiazek (" + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_WORKER_DUTY_FK_WORKER =
+            "ALTER TABLE pracownik_obowiazek ADD CONSTRAINT pracownik_pracownik_obowiazek_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ")\n" +
+                    "REFERENCES pracownik (" + TABLE_WORKER_DUTY_ID_WORKER + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_WORKER_VACATION_FK_VACATION =
+            "ALTER TABLE pracownik_plan ADD CONSTRAINT plany_urlopowe_pracownik_plan_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
+                    "REFERENCES plany_urlopowe (" + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_WORKER_VACATION_FK_WORKER =
+            "ALTER TABLE pracownik_plan ADD CONSTRAINT pracownik_pracownik_plan_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ")\n" +
+                    "REFERENCES pracownik (" + TABLE_WORKER_VACATION_ID_WORKER + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_MANAGER_WORKER_FK_WORKER =
+            "ALTER TABLE kierownik_pracownik ADD CONSTRAINT pracownik_kierownik_pracownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
+                    "REFERENCES pracownik (" + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_MANAGER_WORKER_FK_MANAGER =
+            "ALTER TABLE kierownik_pracownik ADD CONSTRAINT kierownik_kierownik_pracownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ")\n" +
+                    "REFERENCES kierownik (" + TABLE_MANAGER_WORKER_ID_MANAGER + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_DEPARTMENT_MANAGER_FK_MANAGER =
+            "ALTER TABLE dzial_kierownik ADD CONSTRAINT kierownik_dzial_kierownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
+                    "REFERENCES kierownik (" + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_DEPARTMENT_MANAGER_FK_DEPARTMENT =
+            "ALTER TABLE dzial_kierownik ADD CONSTRAINT dzial_dzial_kierownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ")\n" +
+                    "REFERENCES dzial (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_WAREHOUSE_DEPARTMENT_FK_DEPARTMENT =
+            "ALTER TABLE magazyn_dzial ADD CONSTRAINT dzial_magazyn_dzial_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
+                    "REFERENCES dzial (" + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    public static final String ALTER_TABLE_WAREHOUSE_DEPARTMENT_FK_WAREHOUSE =
+            "ALTER TABLE magazyn_dzial ADD CONSTRAINT magazyn_magazyn_dzial_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ")\n" +
+                    "REFERENCES magazyn (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE";
+
+    // ===================== Insert, update, delete... =========================
 
     private PreparedStatement insertPerson;
 
