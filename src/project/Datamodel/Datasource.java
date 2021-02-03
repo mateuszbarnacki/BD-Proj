@@ -1,6 +1,8 @@
 package project.Datamodel;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Datasource {
     public static final String CONNECTION_STRING = "jdbc:postgresql://ziggy.db.elephantsql.com:5432/cefhxaqy";
@@ -474,6 +476,9 @@ public class Datasource {
     public static final String CHECK_RECORD =
             "SELECT * FROM " + TABLE_ACCOUNT + " WHERE " + TABLE_ACCOUNT_NAME + " = ?";
 
+    public static final String GET_ALL_ACCOUNTS =
+            "SELECT * FROM " + TABLE_ACCOUNT;
+
     // Magazyn
     public static final String INSERT_WAREHOUSE =
             "INSERT INTO " + TABLE_WAREHOUSE + " VALUES (?, ?, ?, ?, ?)";
@@ -708,6 +713,27 @@ public class Datasource {
             System.out.println("Couldn't delete record in " + TABLE_ACCOUNT + " table: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public List<Account> getAccounts(){
+        List<Account> accounts = new ArrayList<Account>();
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(GET_ALL_ACCOUNTS);
+            while(resultSet.next()){
+                String userName = resultSet.getString(INDEX_ACCOUNT_NAME);
+                String login = resultSet.getString(INDEX_ACCOUNT_LOGIN);
+                String password = resultSet.getString(INDEX_ACCOUNT_PASSWORD);
+
+                Account temp = new Account(userName, login, password);
+                accounts.add(temp);
+            }
+            resultSet.close();
+            return accounts;
+        }catch (SQLException e){
+            System.out.println("Couldn't get all accounts!");
+            e.printStackTrace();
+            return null;
         }
     }
 

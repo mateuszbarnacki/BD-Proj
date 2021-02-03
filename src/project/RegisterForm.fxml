@@ -12,6 +12,7 @@
             prefHeight="400.0" prefWidth="600.0">
     <center>
         <VBox alignment="CENTER" spacing="20">
+            <Label text="Rejestracja" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
             <GridPane hgap="15" vgap="10" alignment="CENTER">
                 <Label text="Nazwa użytkownika: " textAlignment="CENTER" style="-fx-font-size: 16px;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <TextField fx:id="userNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
