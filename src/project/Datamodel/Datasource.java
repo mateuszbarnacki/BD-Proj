@@ -470,7 +470,7 @@ public class Datasource {
             "DELETE FROM " + TABLE_ACCOUNT + " WHERE " + TABLE_ACCOUNT_NAME + " = ?";
 
     public static final String UPDATE_TABLE_ACCOUNT =
-            "UPDATE " + TABLE_ACCOUNT + " SET " + TABLE_ACCOUNT_NAME + " = ?, " + TABLE_ACCOUNT_LOGIN + " = ?, " + TABLE_ACCOUNT_PASSWORD + " = ? WHERE " +
+            "UPDATE " + TABLE_ACCOUNT + " SET " + TABLE_ACCOUNT_LOGIN + " = ?, " + TABLE_ACCOUNT_PASSWORD + " = ? WHERE " +
                     TABLE_ACCOUNT_NAME + " = ?";
 
     public static final String CHECK_RECORD =
@@ -690,9 +690,11 @@ public class Datasource {
         }
     }
 
-    public boolean updateAccount(String username){
+    public boolean updateAccount(String... data){
         try{
-            queryUpdateAccount.setString(INDEX_ACCOUNT_NAME, username);
+            queryUpdateAccount.setString(1, data[0]);
+            queryUpdateAccount.setString(2, data[1]);
+            queryUpdateAccount.setString(3, data[2]);
             int affectedRows = queryUpdateAccount.executeUpdate();
 
             return affectedRows == 1;
