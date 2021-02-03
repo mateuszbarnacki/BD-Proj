@@ -11,8 +11,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ContactList.fxml"));
-        primaryStage.setTitle("");
+        Parent root = FXMLLoader.load(getClass().getResource("RootWindow.fxml"));
+        primaryStage.setTitle("Symulator hurtowni mebli");
         primaryStage.setScene(new Scene(root, 400, 600));
         primaryStage.show();
     }

@@ -7,6 +7,16 @@ public class Datasource {
     public static final String username = "cefhxaqy";
     public static final String password = "vgtlgQPZ-bCZLJeG2t6pRd9HMeO_vr-e";
 
+    //============= Account config ==================
+    public static final String TABLE_ACCOUNT = "konto";
+    public static final String TABLE_ACCOUNT_NAME = "nazwa_uzytkownika";
+    public static final String TABLE_ACCOUNT_LOGIN = "login";
+    public static final String TABLE_ACCOUNT_PASSWORD = "password";
+    public static final int INDEX_ACCOUNT_NAME = 1;
+    public static final int INDEX_ACCOUNT_LOGIN = 2;
+    public static final int INDEX_ACCOUNT_PASSWORD = 3;
+    // ===========================
+
     public static final String TABLE_WAREHOUSE = "magazyn";
     public static final String TABLE_WAREHOUSE_ID = "id_magazyn";
     public static final String TABLE_WAREHOUSE_NAME = "nazwa";
@@ -152,6 +162,12 @@ public class Datasource {
     public static final int INDEX_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT = 2;
 
     // ================== Creation of the tables ===================
+
+    //================= Account ======================
+    public static final String CREATE_TABLE_ACCOUNT =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_ACCOUNT + " (" + TABLE_ACCOUNT_NAME +
+            " VARCHAR(50) NOT NULL," + TABLE_ACCOUNT_LOGIN + " VARCHAR(50) NOT NULL, " + TABLE_ACCOUNT_PASSWORD + " VARCHAR(50) NOT NULL)";
+    //==================================
 
     public static final String CREATE_WAREHOUSE_TABLE =
         "CREATE TABLE " + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + " INTEGER NOT NULL, " + TABLE_WAREHOUSE_NAME +
@@ -444,6 +460,19 @@ public class Datasource {
 
     // ===================== Insert, update, delete... =========================
 
+    //Account
+    public static final String INSERT_TABLE_ACCOUNT =
+            "INSERT INTO " + TABLE_ACCOUNT + " VALUES (?, ?, ?)";
+
+    public static final String DELETE_TABLE_ACCOUNT =
+            "DELETE FROM " + TABLE_ACCOUNT + " WHERE " + TABLE_ACCOUNT_NAME + " = ?";
+
+    public static final String UPDATE_TABLE_ACCOUNT =
+            "UPDATE " + TABLE_ACCOUNT + " SET " + TABLE_ACCOUNT_NAME + " = ?, " + TABLE_ACCOUNT_LOGIN + " = ?, " + TABLE_ACCOUNT_PASSWORD + " = ? WHERE " +
+                    TABLE_ACCOUNT_NAME + " = ?";
+
+    public static final String CHECK_RECORD =
+            "SELECT * FROM " + TABLE_ACCOUNT + " WHERE " + TABLE_ACCOUNT_NAME + " = ?";
 
     // Magazyn
     public static final String INSERT_WAREHOUSE =
@@ -565,6 +594,10 @@ public class Datasource {
 
     //========================== Java code ========================
 
+    private PreparedStatement queryInsertAccount;
+    private PreparedStatement queryDeleteAccount;
+    private PreparedStatement queryUpdateAccount;
+    private PreparedStatement queryCheckUser;
     private PreparedStatement insertPerson;
 
     private Connection connection;
@@ -579,6 +612,13 @@ public class Datasource {
     public boolean open(){
         try{
             connection = DriverManager.getConnection(CONNECTION_STRING, username, password);
+
+            createAccountTable();
+
+            queryInsertAccount = connection.prepareStatement(INSERT_TABLE_ACCOUNT);
+            queryDeleteAccount = connection.prepareStatement(DELETE_TABLE_ACCOUNT);
+            queryUpdateAccount = connection.prepareStatement(UPDATE_TABLE_ACCOUNT);
+            queryCheckUser = connection.prepareStatement(CHECK_RECORD);
 
             //createPersonTable();
 
@@ -597,6 +637,18 @@ public class Datasource {
             /*if(insertOsoba != null){
                 insertOsoba.close();
             }*/
+            if(queryCheckUser != null){
+                queryCheckUser.close();
+            }
+            if(queryUpdateAccount != null){
+                queryUpdateAccount.close();
+            }
+            if(queryDeleteAccount != null){
+                queryDeleteAccount.close();
+            }
+            if(queryInsertAccount!= null){
+                queryInsertAccount.close();
+            }
             if(connection != null){
                 connection.close();
             }
@@ -607,6 +659,81 @@ public class Datasource {
             return false;
         }
     }
+
+    //====================== Account ============================
+
+    private void createAccountTable(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(CREATE_TABLE_ACCOUNT);
+        } catch(SQLException e) {
+            System.out.println("Couldn't create table " + TABLE_ACCOUNT + ": " + e.getMessage());
+        }
+    }
+
+    public boolean insertAccount(Account data){
+        try{
+            queryInsertAccount.setString(INDEX_ACCOUNT_NAME, data.getUsername());
+            queryInsertAccount.setString(INDEX_ACCOUNT_LOGIN, data.getLogin());
+            queryInsertAccount.setString(INDEX_ACCOUNT_PASSWORD, data.getPassword());
+            int affectedRows = queryInsertAccount.executeUpdate();
+
+            return affectedRows == 1;
+        } catch(SQLException e) {
+            System.out.println("Couldn't insert data to " + TABLE_ACCOUNT + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateAccount(String username){
+        try{
+            queryUpdateAccount.setString(INDEX_ACCOUNT_NAME, username);
+            int affectedRows = queryUpdateAccount.executeUpdate();
+
+            return affectedRows == 1;
+        } catch(SQLException e) {
+            System.out.println("Couldn't update username to " + TABLE_ACCOUNT + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteAccount(String username){
+        try{
+            queryDeleteAccount.setString(INDEX_ACCOUNT_NAME, username);
+            int affectedRows = queryDeleteAccount.executeUpdate();
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record in " + TABLE_ACCOUNT + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Account isRecordExists(String username){
+        Account account = null;
+        try{
+            queryCheckUser.setString(INDEX_ACCOUNT_NAME, username);
+            ResultSet resultSet = queryCheckUser.executeQuery();
+
+            while(resultSet.next()){
+                String name = resultSet.getString(INDEX_ACCOUNT_NAME);
+                String login = resultSet.getString(INDEX_ACCOUNT_LOGIN);
+                String password = resultSet.getString(INDEX_ACCOUNT_PASSWORD);
+                Account temp = new Account(name, login, password);
+                account = temp;
+            }
+            resultSet.close();
+            return account;
+        } catch(SQLException e) {
+            System.out.println("Couldn't query the " + TABLE_ACCOUNT + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //=========================================
 
     private void createPersonTable(){
         try {
