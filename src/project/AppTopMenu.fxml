@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.AppTopMenuController">
+    <top>
+        <MenuBar>
+            <Menu text="Opcje">
+                <items>
+                    <MenuItem text="Wyloguj"/>
+                    <MenuItem text="Zamknij" onAction="#close"/>
+                </items>
+            </Menu>
+            <Menu text="Baza">
+                <items>
+                    <MenuItem text="Działy"/>
+                    <MenuItem text="Kierownicy"/>
+                    <MenuItem text="Pracownicy"/>
+                    <MenuItem text="Projektanci"/>
+                    <MenuItem text="Obowiązki"/>
+                    <MenuItem text="Plany urlopowe"/>
+                    <MenuItem text="Ekspozycje"/>
+                    <MenuItem text="Towary"/>
+                    <MenuItem text="Opinie"/>
+                </items>
+            </Menu>
+        </MenuBar>
+    </top>
+</BorderPane>

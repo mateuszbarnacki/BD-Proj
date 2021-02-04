@@ -7,9 +7,13 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import project.Datamodel.Account;
 import project.Datamodel.Datasource;
 
@@ -61,15 +65,25 @@ public class LoginFormController {
                 String user = accountsList.getSelectionModel().getSelectedItem().getUsername();
                 if(controller.login(user)){
                     dialog.close();
+                    BorderPane temp = new BorderPane();
                     fxmlLoader = new FXMLLoader();
                     fxmlLoader.setLocation(getClass().getResource("WarehouseWindow.fxml"));
                     Session.getInstance().setToken(user);
                     try{
-                        borderPane.setCenter(fxmlLoader.load());
+                        temp.setCenter(fxmlLoader.load());
                     } catch(IOException e){
-                        System.out.println("Couldn't load magazine page: " + e.getMessage());
+                        System.out.println("Couldn't load magazine center page: " + e.getMessage());
                         e.printStackTrace();
                     }
+                    fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("AppTopMenu.fxml"));
+                    try{
+                        temp.setTop(fxmlLoader.load());
+                    } catch(IOException e){
+                        System.out.println("Couldn't load magazine center page: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                    this.borderPane.getScene().setRoot(temp);
                 } else {
                     alertCreator(Alert.AlertType.ERROR, "Błąd logowania", "Błędne dane logowania!");
                 }
@@ -116,6 +130,7 @@ public class LoginFormController {
 
     @FXML
     public void deleteAccount(ActionEvent event){
+        String username = accountsList.getSelectionModel().getSelectedItem().getUsername();
         DialogPane dialogPane = new DialogPane();
         dialogPane.setHeaderText(null);
         dialogPane.setContentText("Czy na pewno chcesz usunąć konto?");
@@ -128,13 +143,15 @@ public class LoginFormController {
         Optional<ButtonType> result = dialog.showAndWait();
 
         if(result.isPresent() && (result.get() == ButtonType.OK)){
-            if(Datasource.getInstance().deleteAccount(accountsList.getSelectionModel().getSelectedItem().getUsername())){
-                alertCreator(Alert.AlertType.INFORMATION, "Usunięcie konta", "Konto zostało sukcesywnie usunięte");
-                Task<ObservableList<Account>> task = new GetAccounts();
-                accountsList.itemsProperty().bind(task.valueProperty());
-                new Thread(task).start();
-            } else {
-                alertCreator(Alert.AlertType.ERROR, "Usunięcie konta", "Błąd podczas usuwania konta!");
+            if(Datasource.getInstance().dropSchema(username)) {
+                if (Datasource.getInstance().deleteAccount(username)) {
+                    alertCreator(Alert.AlertType.INFORMATION, "Usunięcie konta", "Konto zostało sukcesywnie usunięte");
+                    Task<ObservableList<Account>> task = new GetAccounts();
+                    accountsList.itemsProperty().bind(task.valueProperty());
+                    new Thread(task).start();
+                } else {
+                    alertCreator(Alert.AlertType.ERROR, "Usunięcie konta", "Błąd podczas usuwania konta!");
+                }
             }
         }
     }

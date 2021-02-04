@@ -8,7 +8,26 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="project.WarehouseWindowController"
-            prefHeight="400.0" prefWidth="600.0">
-
+            fx:controller="project.WarehouseWindowController">
+    <center>
+        <BorderPane>
+            <center>
+                <VBox spacing="15" alignment="CENTER">
+                    <Label text="Dostępne działania" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
+                    <GridPane fx:id="gridPane" vgap="10" hgap="10" alignment="CENTER">
+                        <Label text="Nazwa: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
+                        <Label fx:id="nameLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
+                        <Label text="Ulica: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
+                        <Label fx:id="streetLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
+                        <Label text="Miasto: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
+                        <Label fx:id="cityLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
+                        <Label text="Kod pocztowy: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
+                        <Label fx:id="postcodeLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
+                    </GridPane>
+                    <Button fx:id="createWarehouseButton" text="Utwórz magazyn" textAlignment="CENTER" onAction="#createWarehouse" minWidth="120" minHeight="30" style="-fx-background-radius: 30px;"/>
+                    <Button fx:id="manageDepartmentButton" text="Zarządzaj działami" textAlignment="CENTER" onAction="#manageDepartment" minWidth="120" minHeight="30" style="-fx-background-radius: 30px;"/>
+                </VBox>
+            </center>
+        </BorderPane>
+    </center>
 </BorderPane>

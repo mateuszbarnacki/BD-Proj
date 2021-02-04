@@ -10,7 +10,6 @@ public class Datasource {
     public static final String CONNECTION_STRING = "jdbc:postgresql://ziggy.db.elephantsql.com:5432/cefhxaqy";
     public static final String username = "cefhxaqy";
     public static final String password = "vgtlgQPZ-bCZLJeG2t6pRd9HMeO_vr-e";
-    private String currentUser;
 
     //============= Account config ==================
     public static final String TABLE_ACCOUNT = "konto";
@@ -27,7 +26,7 @@ public class Datasource {
     public static final String TABLE_WAREHOUSE_NAME = "nazwa";
     public static final String TABLE_WAREHOUSE_STREET = "ulica";
     public static final String TABLE_WAREHOUSE_CITY = "miasto";
-    public static final String TABLE_WAREHOUSE_POSTCODE = "kod pocztowy";
+    public static final String TABLE_WAREHOUSE_POSTCODE = "kod_pocztowy";
     public static final int INDEX_WAREHOUSE_ID = 1;
     public static final int INDEX_WAREHOUSE_NAME = 2;
     public static final int INDEX_WAREHOUSE_STREET = 3;
@@ -170,298 +169,9 @@ public class Datasource {
 
     //================= Account ======================
     public static final String CREATE_TABLE_ACCOUNT =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_ACCOUNT + " (" + TABLE_ACCOUNT_NAME +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_ACCOUNT + " (" + TABLE_ACCOUNT_NAME +
             " VARCHAR(50) NOT NULL," + TABLE_ACCOUNT_LOGIN + " VARCHAR(50) NOT NULL, " + TABLE_ACCOUNT_PASSWORD + " VARCHAR(50) NOT NULL)";
     //==================================
-
-    public static final String CREATE_WAREHOUSE_TABLE =
-        "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + " INTEGER NOT NULL, " + TABLE_WAREHOUSE_NAME +
-                " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_STREET + " VARCHAR(25) NOT NULL, " +
-                TABLE_WAREHOUSE_CITY + " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_POSTCODE + " VARCHAR(6) NOT NULL, " +
-                "CONSTRAINT id_magazyn PRIMARY KEY (" + TABLE_WAREHOUSE_ID + ")";
-
-    public static final String CREATE_DEPARTMENT_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (\n" +
-                    TABLE_DEPARTMENT_ID +" INTEGER NOT NULL,\n" +
-                    TABLE_DEPARTMENT_NAME + " VARCHAR(25) NOT NULL,\n" +
-                    " CONSTRAINT id_dzial PRIMARY KEY (" + TABLE_DEPARTMENT_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_MANAGER_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_MANAGER + " (\n" +
-                   TABLE_MANAGER_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_MANAGER_NAME + " VARCHAR(20) NOT NULL,\n" +
-                    TABLE_MANAGER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
-                    TABLE_MANAGER_PHONE + " VARCHAR(9),\n" +
-                    TABLE_MANAGER_EMAIL + " VARCHAR(30),\n" +
-                    " CONSTRAINT id_kierownik PRIMARY KEY (" + TABLE_MANAGER_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_WORKER_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WORKER + " (\n" +
-                    TABLE_WORKER_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_WORKER_NAME + " VARCHAR(20) NOT NULL,\n" +
-                    TABLE_WORKER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
-                    TABLE_WORKER_EMAIL + " VARCHAR(30),\n" +
-                    " CONSTRAINT id_pracownik PRIMARY KEY (" + TABLE_WORKER_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_DUTIES_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DUTIES + " (\n" +
-                    TABLE_DUTIES_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_DUTIES_DESC + " VARCHAR(30) NOT NULL,\n" +
-                    " CONSTRAINT id_obowiazek PRIMARY KEY (" + TABLE_DUTIES_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_VACATION_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_VACATION + " (\n" +
-                    TABLE_VACATION_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_VACATION_BEGINNING + " DATE NOT NULL,\n" +
-                    TABLE_VACATION_END + " DATE NOT NULL,\n" +
-                    " CONSTRAINT id_urlop PRIMARY KEY (" + TABLE_VACATION_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_EXPOSITION_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_EXPOSITION + " (\n" +
-                    TABLE_EXPOSITION_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_EXPOSITION_NAME + " VARCHAR(20) NOT NULL,\n" +
-                    TABLE_EXPOSITION_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
-                    " CONSTRAINT id_ekspozycja PRIMARY KEY (" + TABLE_EXPOSITION_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_COMMODITY_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_COMMODITY + " (\n" +
-                    TABLE_COMMODITY_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_COMMODITY_NAME + " VARCHAR(30) NOT NULL,\n" +
-                    TABLE_COMMODITY_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
-                    " CONSTRAINT id_towar PRIMARY KEY (" + TABLE_COMMODITY_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_DESIGNER_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DESIGNER + " (\n" +
-                    TABLE_DESIGNER_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_DESIGNER_NAME + " VARCHAR(20) NOT NULL,\n" +
-                    TABLE_DESIGNER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
-                    TABLE_DESIGNER_EMAIL + " VARCHAR(30),\n" +
-                    TABLE_DESIGNER_PHONE + " VARCHAR(9),\n" +
-                    " CONSTRAINT id_projektant PRIMARY KEY (" + TABLE_DESIGNER_ID + ")\n" +
-                    ")";
-
-    public static final String CREATE_OPINION_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_OPINION + " (\n" +
-                    TABLE_OPINION_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_OPINION_DESC + " VARCHAR(50) NOT NULL,\n" +
-                    " CONSTRAINT id_opinia PRIMARY KEY (" + TABLE_OPINION_ID + ")\n" +
-                    ");";
-
-    public static final String CREATE_COMMODITY_OPINION_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_COMMODITY_OPINION + " (\n" +
-                    TABLE_COMMODITY_OPINION_ID_COMMODITY + " INTEGER NOT NULL,\n" +
-                    TABLE_COMMODITY_OPINION_ID_OPINION + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT towar_opinia_pk PRIMARY KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ", " + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
-                    ")";
-
-    public static final String CREATE_EXPOSITION_DESIGNER_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_EXPOSITION_DESIGNER + " (\n" +
-                    TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
-                    TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT ekspozycja_projektant_pk PRIMARY KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ", " + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
-                    ")";
-
-    public static final String CREATE_EXPOSITION_COMMODITY_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_EXPOSITION_COMMODITY + " (\n" +
-                    TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
-                    TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT ekspozycja_towar_pk PRIMARY KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ", " + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
-                    ")";
-
-    public static final String CREATE_WORKER_DUTY_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WORKER_DUTY + " (\n" +
-                    TABLE_WORKER_DUTY_ID_WORKER + " INTEGER NOT NULL,\n" +
-                    TABLE_WORKER_DUTY_ID_DUTY + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT pracownik_obowiazek_pk PRIMARY KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ", " + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
-                    ")";
-
-    public static final String CREATE_WORKER_VACATION_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WORKER_VACATION + " (\n" +
-                    TABLE_WORKER_VACATION_ID_WORKER + " INTEGER NOT NULL,\n" +
-                    TABLE_WORKER_VACATION_ID_VACATION + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT pracownik_plan_pk PRIMARY KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ", " + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
-                    ")";
-
-    public static final String CREATE_MANAGER_WORKER_TABLE =
-            "CREATE TABLE IF NOT EXISTS " +  getInstance().currentUser + "." + TABLE_MANAGER_WORKER + " (\n" +
-                    TABLE_MANAGER_WORKER_ID_MANAGER + " INTEGER NOT NULL,\n" +
-                    TABLE_MANAGER_WORKER_ID_WORKER + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT kierownik_pracownik_pk PRIMARY KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ", " + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
-                    ")";
-
-    public static final String CREATE_DEPARTMENT_EXPOSITION_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DEPARTMENT_EXPOSITION + " (\n" +
-                    TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
-                    TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT dzial_ekspozycja_pk PRIMARY KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
-                    ")";
-
-    public static final String CREATE_DEPARTMENT_MANAGER_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DEPARTMENT_MANAGER + " (\n" +
-                    TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
-                    TABLE_DEPARTMENT_MANAGER_ID_MANAGER + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT dzial_kierownik_pk PRIMARY KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
-                    ")";
-
-    public static final String CREATE_WAREHOUSE_DEPARTMENT_TABLE =
-            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WAREHOUSE_DEPARTMENT + " (\n" +
-                    TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + " INTEGER NOT NULL,\n" +
-                    TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
-                    " CONSTRAINT magazyn_dzial_pk PRIMARY KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ", " + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
-                    ")";
-
-    // =================== Add foreign keys ===================
-
-    public static final String ALTER_TABLE_COMMODITY_OPINION_FK_OPINION =
-          "ALTER TABLE " + getInstance().currentUser + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT opinia_towar_opinia_fk\n" +
-                  "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
-                  "REFERENCES " + getInstance().currentUser + "." + TABLE_OPINION + " (" + TABLE_OPINION_ID + ")\n" +
-                  "ON DELETE NO ACTION\n" +
-                  "ON UPDATE NO ACTION\n" +
-                  "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_COMMODITY_OPINION_FK_COMMODITY =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT towar_towar_opinia_fk\n" +
-                    "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_EXPOSITION_DESIGNER_FK_DESIGNER =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT projektant_ekspozycja_projektant_fk\n" +
-                    "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DESIGNER + " (" + TABLE_DESIGNER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_EXPOSITION_DESIGNER_FK_EXPOSITION =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT ekspozycja_ekspozycja_projektant_fk\n" +
-                    "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." +  TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_EXPOSITION_COMMODITY_FK_COMMODITY =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT towar_ekspozycja_towar_fk\n" +
-                    "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
-                    "REFERENCES " + getInstance() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_EXPOSITION_COMMODITY_FK_EXPOSITION =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT ekspozycja_ekspozycja_towar_fk\n" +
-                    "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_DEPARTMENT_EXPOSITION_FK_EXPOSITION =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT ekspozycja_dzial_ekspozycja_fk\n" +
-                    "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_DEPARTMENT_EXPOSITION_FK_DEPARTMENT =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT dzial_dzial_ekspozycja_fk\n" +
-                    "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_WORKER_DUTY_FK_DUTY =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT obowiazek_pracownik_obowiazek_fk\n" +
-                    "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." +  TABLE_DUTIES + " (" + TABLE_DUTIES_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_WORKER_DUTY_FK_WORKER =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT pracownik_pracownik_obowiazek_fk\n" +
-                    "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." +  TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_WORKER_VACATION_FK_VACATION =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT plany_urlopowe_pracownik_plan_fk\n" +
-                    "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_VACATION + " (" + TABLE_VACATION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_WORKER_VACATION_FK_WORKER =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT pracownik_pracownik_plan_fk\n" +
-                    "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_MANAGER_WORKER_FK_WORKER =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT pracownik_kierownik_pracownik_fk\n" +
-                    "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_MANAGER_WORKER_FK_MANAGER =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT kierownik_kierownik_pracownik_fk\n" +
-                    "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_DEPARTMENT_MANAGER_FK_MANAGER =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT kierownik_dzial_kierownik_fk\n" +
-                    "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_DEPARTMENT_MANAGER_FK_DEPARTMENT =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT dzial_dzial_kierownik_fk\n" +
-                    "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_WAREHOUSE_DEPARTMENT_FK_DEPARTMENT =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT dzial_magazyn_dzial_fk\n" +
-                    "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
-
-    public static final String ALTER_TABLE_WAREHOUSE_DEPARTMENT_FK_WAREHOUSE =
-            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT magazyn_magazyn_dzial_fk\n" +
-                    "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ")\n" +
-                    "REFERENCES " + getInstance().currentUser + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
-                    "ON UPDATE NO ACTION\n" +
-                    "NOT DEFERRABLE";
 
     // ===================== Insert, update, delete... =========================
 
@@ -606,6 +316,7 @@ public class Datasource {
     private PreparedStatement queryDeleteAccount;
     private PreparedStatement queryUpdateAccount;
     private PreparedStatement queryCheckUser;
+
     private PreparedStatement queryInsertWarehouse;
 
     private Connection connection;
@@ -638,8 +349,27 @@ public class Datasource {
 
     public boolean openUserEnvironment(){
         try{
-            this.currentUser = Session.getInstance().getToken();
             createWarehouseTable();
+            createDepartmentTable();
+            createManagerTable();
+            createWorkerTable();
+            createDutiesTable();
+            createVacationTable();
+            createExpositionTable();
+            createCommodityTable();
+            createDesignerTable();
+            createOpinionTable();
+
+            createCommodityOpinionTable();
+            createExpositionDesignerTable();
+            createExpositionCommodityTable();
+            createWorkerDutyTable();
+            createWorkerVacationTable();
+            createManagerWorkerTable();
+            createDepartmentExpositionTable();
+            createDepartmentManagerTable();
+            createWarehouseDepartmentTable();
+
 
             queryInsertWarehouse = connection.prepareStatement(INSERT_WAREHOUSE);
 
@@ -684,6 +414,36 @@ public class Datasource {
             return true;
         } catch(SQLException e){
             System.out.println("Couldn't close the connection with the user environment: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //====================== Schema =============================
+
+    /*public void test(){
+        System.out.println(CREATE_SCHEMA);
+    }*/
+
+    public boolean createSchema(){
+        try (Statement statement = connection.createStatement()){
+            statement.execute("CREATE SCHEMA IF NOT EXISTS " + Session.getInstance().getToken());
+
+            return true;
+        } catch(SQLException e){
+            System.out.println("Couldn't create schema for user " + Session.getInstance().getToken() + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean dropSchema(String username){
+        try (Statement statement = connection.createStatement()){
+            statement.execute( "DROP SCHEMA " + username + " CASCADE");
+
+            return true;
+        } catch (SQLException e){
+            System.out.println("Couldn't drop schema for user " + username + ": " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -785,12 +545,14 @@ public class Datasource {
         }
     }
 
-    //=========================================
+    //========================================= Warehouse methods =================================
 
     private void createWarehouseTable(){
         try {
             Statement statement = connection.createStatement();
-            statement.execute(CREATE_WAREHOUSE_TABLE);
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + " INTEGER NOT NULL, " + TABLE_WAREHOUSE_NAME +
+                    " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_STREET + " VARCHAR(25) NOT NULL, " +
+                    TABLE_WAREHOUSE_CITY + " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_POSTCODE + " VARCHAR(6) NOT NULL, CONSTRAINT id_magazyn PRIMARY KEY (" + TABLE_WAREHOUSE_ID + "))");
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
             e.printStackTrace();
@@ -811,6 +573,579 @@ public class Datasource {
             System.out.println("Couldn't insert data to " + TABLE_ACCOUNT + " table: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    //================================== Department Methods ===========================
+
+    private void createDepartmentTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (\n" +
+                    TABLE_DEPARTMENT_ID +" INTEGER NOT NULL,\n" +
+                    TABLE_DEPARTMENT_NAME + " VARCHAR(25) NOT NULL,\n" +
+                    " CONSTRAINT id_dzial PRIMARY KEY (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_DEPARTMENT + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //================================== Manager Methods ============================
+
+    private void createManagerTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (\n" +
+                    TABLE_MANAGER_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_MANAGER_NAME + " VARCHAR(20) NOT NULL,\n" +
+                    TABLE_MANAGER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
+                    TABLE_MANAGER_PHONE + " VARCHAR(9),\n" +
+                    TABLE_MANAGER_EMAIL + " VARCHAR(30),\n" +
+                    " CONSTRAINT id_kierownik PRIMARY KEY (" + TABLE_MANAGER_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_MANAGER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //================================ Worker Methods ========================
+
+    private void createWorkerTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WORKER + " (\n" +
+                    TABLE_WORKER_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_WORKER_NAME + " VARCHAR(20) NOT NULL,\n" +
+                    TABLE_WORKER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
+                    TABLE_WORKER_EMAIL + " VARCHAR(30),\n" +
+                    " CONSTRAINT id_pracownik PRIMARY KEY (" + TABLE_WORKER_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WORKER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    //=============================== Duties Methods ==========================
+
+    private void createDutiesTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DUTIES + " (\n" +
+                    TABLE_DUTIES_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_DUTIES_DESC + " VARCHAR(30) NOT NULL,\n" +
+                    " CONSTRAINT id_obowiazek PRIMARY KEY (" + TABLE_DUTIES_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_DUTIES + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //=============================== Vacation Methods ==========================
+
+    private void createVacationTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_VACATION + " (\n" +
+                    TABLE_VACATION_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_VACATION_BEGINNING + " DATE NOT NULL,\n" +
+                    TABLE_VACATION_END + " DATE NOT NULL,\n" +
+                    " CONSTRAINT id_urlop PRIMARY KEY (" + TABLE_VACATION_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_VACATION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //============================== Exposition Methods ==========================
+
+    private void createExpositionTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " (\n" +
+                    TABLE_EXPOSITION_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_EXPOSITION_NAME + " VARCHAR(20) NOT NULL,\n" +
+                    TABLE_EXPOSITION_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
+                    " CONSTRAINT id_ekspozycja PRIMARY KEY (" + TABLE_EXPOSITION_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_EXPOSITION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //=========================== Commodity Methods =================================
+
+    private void createCommodityTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " (\n" +
+                    TABLE_COMMODITY_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_COMMODITY_NAME + " VARCHAR(30) NOT NULL,\n" +
+                    TABLE_COMMODITY_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
+                    " CONSTRAINT id_towar PRIMARY KEY (" + TABLE_COMMODITY_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_COMMODITY + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //============================ Designer Methods ==============================
+
+    private void createDesignerTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(  "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " (\n" +
+                    TABLE_DESIGNER_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_DESIGNER_NAME + " VARCHAR(20) NOT NULL,\n" +
+                    TABLE_DESIGNER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
+                    TABLE_DESIGNER_EMAIL + " VARCHAR(30),\n" +
+                    TABLE_DESIGNER_PHONE + " VARCHAR(9),\n" +
+                    " CONSTRAINT id_projektant PRIMARY KEY (" + TABLE_DESIGNER_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_DESIGNER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //=========================== Opinion Methods =========================
+
+    private void createOpinionTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(   "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (\n" +
+                    TABLE_OPINION_ID + " INTEGER NOT NULL,\n" +
+                    TABLE_OPINION_DESC + " VARCHAR(50) NOT NULL,\n" +
+                    " CONSTRAINT id_opinia PRIMARY KEY (" + TABLE_OPINION_ID + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_OPINION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // ============================== COMMODITY_OPINION_TABLE ================
+
+    private void createCommodityOpinionTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(    "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " (\n" +
+                    TABLE_COMMODITY_OPINION_ID_COMMODITY + " INTEGER NOT NULL,\n" +
+                    TABLE_COMMODITY_OPINION_ID_OPINION + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT towar_opinia_pk PRIMARY KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ", " + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_COMMODITY_OPINION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //================================= EXPOSITION_DESIGNER_TABLE ====================
+
+    private void createExpositionDesignerTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " (\n" +
+                    TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
+                    TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT ekspozycja_projektant_pk PRIMARY KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ", " + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_EXPOSITION_DESIGNER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    //================================== EXPOSITION_COMMODITY_TABLE =====================
+
+    private void createExpositionCommodityTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " (\n" +
+                    TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
+                    TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT ekspozycja_towar_pk PRIMARY KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ", " + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_EXPOSITION_COMMODITY + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //=============================== WORKER_DUTY_TABLE =============================
+
+    private void createWorkerDutyTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(  "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " (\n" +
+                    TABLE_WORKER_DUTY_ID_WORKER + " INTEGER NOT NULL,\n" +
+                    TABLE_WORKER_DUTY_ID_DUTY + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT pracownik_obowiazek_pk PRIMARY KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ", " + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WORKER_DUTY + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //=================================== WORKER_VACATION_TABLE ============================
+
+    private void createWorkerVacationTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(  "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " (\n" +
+                    TABLE_WORKER_VACATION_ID_WORKER + " INTEGER NOT NULL,\n" +
+                    TABLE_WORKER_VACATION_ID_VACATION + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT pracownik_plan_pk PRIMARY KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ", " + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WORKER_VACATION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //======================================== MANAGER_WORKER_TABLE ================================
+
+    private void createManagerWorkerTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(  "CREATE TABLE IF NOT EXISTS " +  Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " (\n" +
+                    TABLE_MANAGER_WORKER_ID_MANAGER + " INTEGER NOT NULL,\n" +
+                    TABLE_MANAGER_WORKER_ID_WORKER + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT kierownik_pracownik_pk PRIMARY KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ", " + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_MANAGER_WORKER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //====================================== DEPARTMENT_EXPOSITION_TABLE ===========================
+
+    private void createDepartmentExpositionTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " (\n" +
+                    TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
+                    TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT dzial_ekspozycja_pk PRIMARY KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_DEPARTMENT_EXPOSITION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //======================================= DEPARTMENT_MANAGER_TABLE ================================
+
+    private void createDepartmentManagerTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " (\n" +
+                    TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
+                    TABLE_DEPARTMENT_MANAGER_ID_MANAGER + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT dzial_kierownik_pk PRIMARY KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_DEPARTMENT_MANAGER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //======================================== WAREHOUSE_DEPARTMENT_TABLE =====================
+
+    private void createWarehouseDepartmentTable(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " (\n" +
+                    TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + " INTEGER NOT NULL,\n" +
+                    TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
+                    " CONSTRAINT magazyn_dzial_pk PRIMARY KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ", " + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
+                    ")");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE_DEPARTMENT + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //====================================== Add foreign keys =====================
+
+    private void alterTableCommodityOpinionFkOpinion(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT opinia_towar_opinia_fk\n" +
+                    "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (" + TABLE_OPINION_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableCommodityOpinionFkCommodity(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT towar_towar_opinia_fk\n" +
+                    "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableExpositionDesignerFkDesigner(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT projektant_ekspozycja_projektant_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " (" + TABLE_DESIGNER_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableExpositionDesignerFkExposition(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT ekspozycja_ekspozycja_projektant_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableExpositionCommodityFkCommodity(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT towar_ekspozycja_towar_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableExpositionCommodityFkExposition(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT ekspozycja_ekspozycja_towar_fk\n" +
+                    "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableDepartmentExpositionFkExposition(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT ekspozycja_dzial_ekspozycja_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableDepartmentExpositionFkDepartment(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT dzial_dzial_ekspozycja_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableWorkerDutyFkDuty(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT obowiazek_pracownik_obowiazek_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_DUTIES + " (" + TABLE_DUTIES_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableWorkerDutyFkWorker(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT pracownik_pracownik_obowiazek_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableWorkerVacationFkVacation(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT plany_urlopowe_pracownik_plan_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_VACATION + " (" + TABLE_VACATION_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableWorkerVacationFkWorker(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT pracownik_pracownik_plan_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableManagerWorkerFkWorker(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT pracownik_kierownik_pracownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableManagerWorkerFkManager(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT kierownik_kierownik_pracownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableDepartmentManagerFkManager(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT kierownik_dzial_kierownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableDepartmentManagerFkDepartment(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT dzial_dzial_kierownik_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableWarehouseDepartmentFkDepartment(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT dzial_magazyn_dzial_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableWarehouseDepartmentFkWarehouse(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT magazyn_magazyn_dzial_fk\n" +
+                    "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + ")\n" +
+                    "ON DELETE NO ACTION\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE");
+        }catch(SQLException e){
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
