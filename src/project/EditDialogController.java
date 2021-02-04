@@ -5,7 +5,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import project.Datamodel.Datasource;
 
-public class EditDialog {
+public class EditDialogController {
     @FXML
     public TextField login;
     @FXML

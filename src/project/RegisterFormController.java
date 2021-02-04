@@ -11,7 +11,7 @@ import project.Datamodel.Datasource;
 
 import java.util.Optional;
 
-public class RegisterForm {
+public class RegisterFormController {
     @FXML
     public TextField userNameField;
     @FXML

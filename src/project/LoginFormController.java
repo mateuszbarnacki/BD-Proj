@@ -16,7 +16,7 @@ import project.Datamodel.Datasource;
 import java.io.IOException;
 import java.util.Optional;
 
-public class LoginForm {
+public class LoginFormController {
     @FXML
     public ListView<Account> accountsList;
     @FXML
@@ -56,13 +56,14 @@ public class LoginForm {
 
         Optional<ButtonType> response = dialog.showAndWait();
         if((response.isPresent()) && (response.get() == ButtonType.OK)){
-            LoginDialog controller = fxmlLoader.getController();
+            LoginDialogController controller = fxmlLoader.getController();
             if(controller.validateFields()){
                 String user = accountsList.getSelectionModel().getSelectedItem().getUsername();
                 if(controller.login(user)){
                     dialog.close();
                     fxmlLoader = new FXMLLoader();
-                    fxmlLoader.setLocation(getClass().getResource("Magazine.fxml"));
+                    fxmlLoader.setLocation(getClass().getResource("WarehouseWindow.fxml"));
+                    Session.getInstance().setToken(user);
                     try{
                         borderPane.setCenter(fxmlLoader.load());
                     } catch(IOException e){
@@ -97,7 +98,7 @@ public class LoginForm {
 
         Optional<ButtonType> response = dialog.showAndWait();
         if(response.isPresent() && (response.get() == ButtonType.OK)){
-            EditDialog controller = fxmlLoader.getController();
+            EditDialogController controller = fxmlLoader.getController();
             if(controller.validateFields()){
                 String username = accountsList.getSelectionModel().getSelectedItem().getUsername();
                 if(controller.update(username)){

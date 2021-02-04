@@ -6,7 +6,7 @@ import javafx.scene.control.TextField;
 import project.Datamodel.Account;
 import project.Datamodel.Datasource;
 
-public class LoginDialog {
+public class LoginDialogController {
     @FXML
     public TextField login;
     @FXML

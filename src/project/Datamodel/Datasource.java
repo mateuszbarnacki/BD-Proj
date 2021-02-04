@@ -1,5 +1,7 @@
 package project.Datamodel;
 
+import project.Session;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ public class Datasource {
     public static final String CONNECTION_STRING = "jdbc:postgresql://ziggy.db.elephantsql.com:5432/cefhxaqy";
     public static final String username = "cefhxaqy";
     public static final String password = "vgtlgQPZ-bCZLJeG2t6pRd9HMeO_vr-e";
+    private String currentUser;
 
     //============= Account config ==================
     public static final String TABLE_ACCOUNT = "konto";
@@ -167,25 +170,25 @@ public class Datasource {
 
     //================= Account ======================
     public static final String CREATE_TABLE_ACCOUNT =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_ACCOUNT + " (" + TABLE_ACCOUNT_NAME +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_ACCOUNT + " (" + TABLE_ACCOUNT_NAME +
             " VARCHAR(50) NOT NULL," + TABLE_ACCOUNT_LOGIN + " VARCHAR(50) NOT NULL, " + TABLE_ACCOUNT_PASSWORD + " VARCHAR(50) NOT NULL)";
     //==================================
 
     public static final String CREATE_WAREHOUSE_TABLE =
-        "CREATE TABLE " + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + " INTEGER NOT NULL, " + TABLE_WAREHOUSE_NAME +
+        "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + " INTEGER NOT NULL, " + TABLE_WAREHOUSE_NAME +
                 " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_STREET + " VARCHAR(25) NOT NULL, " +
                 TABLE_WAREHOUSE_CITY + " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_POSTCODE + " VARCHAR(6) NOT NULL, " +
                 "CONSTRAINT id_magazyn PRIMARY KEY (" + TABLE_WAREHOUSE_ID + ")";
 
     public static final String CREATE_DEPARTMENT_TABLE =
-            "CREATE TABLE " + TABLE_DEPARTMENT + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (\n" +
                     TABLE_DEPARTMENT_ID +" INTEGER NOT NULL,\n" +
                     TABLE_DEPARTMENT_NAME + " VARCHAR(25) NOT NULL,\n" +
                     " CONSTRAINT id_dzial PRIMARY KEY (" + TABLE_DEPARTMENT_ID + ")\n" +
                     ")";
 
     public static final String CREATE_MANAGER_TABLE =
-            "CREATE TABLE " + TABLE_MANAGER + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_MANAGER + " (\n" +
                    TABLE_MANAGER_ID + " INTEGER NOT NULL,\n" +
                     TABLE_MANAGER_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_MANAGER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
@@ -195,7 +198,7 @@ public class Datasource {
                     ")";
 
     public static final String CREATE_WORKER_TABLE =
-            "CREATE TABLE " + TABLE_WORKER + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WORKER + " (\n" +
                     TABLE_WORKER_ID + " INTEGER NOT NULL,\n" +
                     TABLE_WORKER_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_WORKER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
@@ -204,14 +207,14 @@ public class Datasource {
                     ")";
 
     public static final String CREATE_DUTIES_TABLE =
-            "CREATE TABLE " + TABLE_DUTIES + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DUTIES + " (\n" +
                     TABLE_DUTIES_ID + " INTEGER NOT NULL,\n" +
                     TABLE_DUTIES_DESC + " VARCHAR(30) NOT NULL,\n" +
                     " CONSTRAINT id_obowiazek PRIMARY KEY (" + TABLE_DUTIES_ID + ")\n" +
                     ")";
 
     public static final String CREATE_VACATION_TABLE =
-            "CREATE TABLE " + TABLE_VACATION + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_VACATION + " (\n" +
                     TABLE_VACATION_ID + " INTEGER NOT NULL,\n" +
                     TABLE_VACATION_BEGINNING + " DATE NOT NULL,\n" +
                     TABLE_VACATION_END + " DATE NOT NULL,\n" +
@@ -219,7 +222,7 @@ public class Datasource {
                     ")";
 
     public static final String CREATE_EXPOSITION_TABLE =
-            "CREATE TABLE " + TABLE_EXPOSITION + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_EXPOSITION + " (\n" +
                     TABLE_EXPOSITION_ID + " INTEGER NOT NULL,\n" +
                     TABLE_EXPOSITION_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_EXPOSITION_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
@@ -227,7 +230,7 @@ public class Datasource {
                     ")";
 
     public static final String CREATE_COMMODITY_TABLE =
-            "CREATE TABLE " + TABLE_COMMODITY + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_COMMODITY + " (\n" +
                     TABLE_COMMODITY_ID + " INTEGER NOT NULL,\n" +
                     TABLE_COMMODITY_NAME + " VARCHAR(30) NOT NULL,\n" +
                     TABLE_COMMODITY_PRICE + " DOUBLE PRECISION DEFAULT 0.0 NOT NULL,\n" +
@@ -235,7 +238,7 @@ public class Datasource {
                     ")";
 
     public static final String CREATE_DESIGNER_TABLE =
-            "CREATE TABLE " + TABLE_DESIGNER + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DESIGNER + " (\n" +
                     TABLE_DESIGNER_ID + " INTEGER NOT NULL,\n" +
                     TABLE_DESIGNER_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_DESIGNER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
@@ -245,70 +248,70 @@ public class Datasource {
                     ")";
 
     public static final String CREATE_OPINION_TABLE =
-            "CREATE TABLE " + TABLE_OPINION + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_OPINION + " (\n" +
                     TABLE_OPINION_ID + " INTEGER NOT NULL,\n" +
                     TABLE_OPINION_DESC + " VARCHAR(50) NOT NULL,\n" +
                     " CONSTRAINT id_opinia PRIMARY KEY (" + TABLE_OPINION_ID + ")\n" +
                     ");";
 
     public static final String CREATE_COMMODITY_OPINION_TABLE =
-            "CREATE TABLE " + TABLE_COMMODITY_OPINION + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_COMMODITY_OPINION + " (\n" +
                     TABLE_COMMODITY_OPINION_ID_COMMODITY + " INTEGER NOT NULL,\n" +
                     TABLE_COMMODITY_OPINION_ID_OPINION + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT towar_opinia_pk PRIMARY KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ", " + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
                     ")";
 
     public static final String CREATE_EXPOSITION_DESIGNER_TABLE =
-            "CREATE TABLE " + TABLE_EXPOSITION_DESIGNER + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_EXPOSITION_DESIGNER + " (\n" +
                     TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
                     TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT ekspozycja_projektant_pk PRIMARY KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ", " + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
                     ")";
 
     public static final String CREATE_EXPOSITION_COMMODITY_TABLE =
-            "CREATE TABLE " + TABLE_EXPOSITION_COMMODITY + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_EXPOSITION_COMMODITY + " (\n" +
                     TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
                     TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT ekspozycja_towar_pk PRIMARY KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ", " + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
                     ")";
 
     public static final String CREATE_WORKER_DUTY_TABLE =
-            "CREATE TABLE " + TABLE_WORKER_DUTY + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WORKER_DUTY + " (\n" +
                     TABLE_WORKER_DUTY_ID_WORKER + " INTEGER NOT NULL,\n" +
                     TABLE_WORKER_DUTY_ID_DUTY + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT pracownik_obowiazek_pk PRIMARY KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ", " + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
                     ")";
 
     public static final String CREATE_WORKER_VACATION_TABLE =
-            "CREATE TABLE " + TABLE_WORKER_VACATION + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WORKER_VACATION + " (\n" +
                     TABLE_WORKER_VACATION_ID_WORKER + " INTEGER NOT NULL,\n" +
                     TABLE_WORKER_VACATION_ID_VACATION + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT pracownik_plan_pk PRIMARY KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ", " + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
                     ")";
 
     public static final String CREATE_MANAGER_WORKER_TABLE =
-            "CREATE TABLE " + TABLE_MANAGER_WORKER + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " +  getInstance().currentUser + "." + TABLE_MANAGER_WORKER + " (\n" +
                     TABLE_MANAGER_WORKER_ID_MANAGER + " INTEGER NOT NULL,\n" +
                     TABLE_MANAGER_WORKER_ID_WORKER + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT kierownik_pracownik_pk PRIMARY KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ", " + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
                     ")";
 
     public static final String CREATE_DEPARTMENT_EXPOSITION_TABLE =
-            "CREATE TABLE " + TABLE_DEPARTMENT_EXPOSITION + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DEPARTMENT_EXPOSITION + " (\n" +
                     TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
                     TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT dzial_ekspozycja_pk PRIMARY KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
                     ")";
 
     public static final String CREATE_DEPARTMENT_MANAGER_TABLE =
-            "CREATE TABLE " + TABLE_DEPARTMENT_MANAGER + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_DEPARTMENT_MANAGER + " (\n" +
                     TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
                     TABLE_DEPARTMENT_MANAGER_ID_MANAGER + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT dzial_kierownik_pk PRIMARY KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ", " + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
                     ")";
 
     public static final String CREATE_WAREHOUSE_DEPARTMENT_TABLE =
-            "CREATE TABLE " + TABLE_WAREHOUSE_DEPARTMENT + " (\n" +
+            "CREATE TABLE IF NOT EXISTS " + getInstance().currentUser + "." + TABLE_WAREHOUSE_DEPARTMENT + " (\n" +
                     TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + " INTEGER NOT NULL,\n" +
                     TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
                     " CONSTRAINT magazyn_dzial_pk PRIMARY KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ", " + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
@@ -317,145 +320,145 @@ public class Datasource {
     // =================== Add foreign keys ===================
 
     public static final String ALTER_TABLE_COMMODITY_OPINION_FK_OPINION =
-          "ALTER TABLE " + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT opinia_towar_opinia_fk\n" +
+          "ALTER TABLE " + getInstance().currentUser + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT opinia_towar_opinia_fk\n" +
                   "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
-                  "REFERENCES " + TABLE_OPINION + " (" + TABLE_OPINION_ID + ")\n" +
+                  "REFERENCES " + getInstance().currentUser + "." + TABLE_OPINION + " (" + TABLE_OPINION_ID + ")\n" +
                   "ON DELETE NO ACTION\n" +
                   "ON UPDATE NO ACTION\n" +
                   "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_COMMODITY_OPINION_FK_COMMODITY =
-            "ALTER TABLE " + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT towar_towar_opinia_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT towar_towar_opinia_fk\n" +
                     "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ")\n" +
-                    "REFERENCES " + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_EXPOSITION_DESIGNER_FK_DESIGNER =
-            "ALTER TABLE " + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT projektant_ekspozycja_projektant_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT projektant_ekspozycja_projektant_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
-                    "REFERENCES " + TABLE_DESIGNER + " (" + TABLE_DESIGNER_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DESIGNER + " (" + TABLE_DESIGNER_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_EXPOSITION_DESIGNER_FK_EXPOSITION =
-            "ALTER TABLE " + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT ekspozycja_ekspozycja_projektant_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT ekspozycja_ekspozycja_projektant_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ")\n" +
-                    "REFERENCES " + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." +  TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_EXPOSITION_COMMODITY_FK_COMMODITY =
-            "ALTER TABLE " + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT towar_ekspozycja_towar_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT towar_ekspozycja_towar_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
-                    "REFERENCES " + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
+                    "REFERENCES " + getInstance() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_EXPOSITION_COMMODITY_FK_EXPOSITION =
-            "ALTER TABLE " + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT ekspozycja_ekspozycja_towar_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT ekspozycja_ekspozycja_towar_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ")\n" +
-                    "REFERENCES " + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_DEPARTMENT_EXPOSITION_FK_EXPOSITION =
-            "ALTER TABLE " + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT ekspozycja_dzial_ekspozycja_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT ekspozycja_dzial_ekspozycja_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
-                    "REFERENCES " + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_DEPARTMENT_EXPOSITION_FK_DEPARTMENT =
-            "ALTER TABLE " + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT dzial_dzial_ekspozycja_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT dzial_dzial_ekspozycja_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ")\n" +
-                    "REFERENCES " + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_WORKER_DUTY_FK_DUTY =
-            "ALTER TABLE " + TABLE_WORKER_DUTY + " ADD CONSTRAINT obowiazek_pracownik_obowiazek_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT obowiazek_pracownik_obowiazek_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
-                    "REFERENCES " + TABLE_DUTIES + " (" + TABLE_DUTIES_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." +  TABLE_DUTIES + " (" + TABLE_DUTIES_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_WORKER_DUTY_FK_WORKER =
-            "ALTER TABLE " + TABLE_WORKER_DUTY + " ADD CONSTRAINT pracownik_pracownik_obowiazek_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT pracownik_pracownik_obowiazek_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ")\n" +
-                    "REFERENCES " + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." +  TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_WORKER_VACATION_FK_VACATION =
-            "ALTER TABLE " + TABLE_WORKER_VACATION + " ADD CONSTRAINT plany_urlopowe_pracownik_plan_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT plany_urlopowe_pracownik_plan_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
-                    "REFERENCES " + TABLE_VACATION + " (" + TABLE_VACATION_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_VACATION + " (" + TABLE_VACATION_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_WORKER_VACATION_FK_WORKER =
-            "ALTER TABLE " + TABLE_WORKER_VACATION + " ADD CONSTRAINT pracownik_pracownik_plan_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT pracownik_pracownik_plan_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ")\n" +
-                    "REFERENCES " + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_MANAGER_WORKER_FK_WORKER =
-            "ALTER TABLE " + TABLE_MANAGER_WORKER + " ADD CONSTRAINT pracownik_kierownik_pracownik_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT pracownik_kierownik_pracownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
-                    "REFERENCES " + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_MANAGER_WORKER_FK_MANAGER =
-            "ALTER TABLE " + TABLE_MANAGER_WORKER + " ADD CONSTRAINT kierownik_kierownik_pracownik_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT kierownik_kierownik_pracownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ")\n" +
-                    "REFERENCES " + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_DEPARTMENT_MANAGER_FK_MANAGER =
-            "ALTER TABLE " + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT kierownik_dzial_kierownik_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT kierownik_dzial_kierownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
-                    "REFERENCES " + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_DEPARTMENT_MANAGER_FK_DEPARTMENT =
-            "ALTER TABLE " + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT dzial_dzial_kierownik_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT dzial_dzial_kierownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ")\n" +
-                    "REFERENCES " + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_WAREHOUSE_DEPARTMENT_FK_DEPARTMENT =
-            "ALTER TABLE " + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT dzial_magazyn_dzial_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT dzial_magazyn_dzial_fk\n" +
                     "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
-                    "REFERENCES " + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
 
     public static final String ALTER_TABLE_WAREHOUSE_DEPARTMENT_FK_WAREHOUSE =
-            "ALTER TABLE " + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT magazyn_magazyn_dzial_fk\n" +
+            "ALTER TABLE " + getInstance().currentUser + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT magazyn_magazyn_dzial_fk\n" +
                     "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ")\n" +
-                    "REFERENCES " + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + ")\n" +
+                    "REFERENCES " + getInstance().currentUser + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + ")\n" +
                     "ON DELETE NO ACTION\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE";
@@ -603,7 +606,7 @@ public class Datasource {
     private PreparedStatement queryDeleteAccount;
     private PreparedStatement queryUpdateAccount;
     private PreparedStatement queryCheckUser;
-    private PreparedStatement insertPerson;
+    private PreparedStatement queryInsertWarehouse;
 
     private Connection connection;
     private final static Datasource instance = new Datasource();
@@ -625,12 +628,23 @@ public class Datasource {
             queryUpdateAccount = connection.prepareStatement(UPDATE_TABLE_ACCOUNT);
             queryCheckUser = connection.prepareStatement(CHECK_RECORD);
 
-            //createPersonTable();
-
-            //insertPerson = connection.prepareStatement(INSERT_PERSON);
-
             return true;
         }catch (SQLException e){
+            System.out.println("Couldn't open the connection to account database: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean openUserEnvironment(){
+        try{
+            this.currentUser = Session.getInstance().getToken();
+            createWarehouseTable();
+
+            queryInsertWarehouse = connection.prepareStatement(INSERT_WAREHOUSE);
+
+            return true;
+        } catch(SQLException e){
             System.out.println("Couldn't open the connection to main database: " + e.getMessage());
             e.printStackTrace();
             return false;
@@ -639,9 +653,6 @@ public class Datasource {
 
     public boolean close(){
         try{
-            /*if(insertOsoba != null){
-                insertOsoba.close();
-            }*/
             if(queryCheckUser != null){
                 queryCheckUser.close();
             }
@@ -660,6 +671,19 @@ public class Datasource {
             return true;
         }catch (SQLException e){
             System.out.println("Couldn't close the connection: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean closeUserEnvironment(){
+        try{
+            if(queryInsertWarehouse != null){
+                queryInsertWarehouse.close();
+            }
+            return true;
+        } catch(SQLException e){
+            System.out.println("Couldn't close the connection with the user environment: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -763,13 +787,30 @@ public class Datasource {
 
     //=========================================
 
-    private void createPersonTable(){
+    private void createWarehouseTable(){
         try {
             Statement statement = connection.createStatement();
-            //statement.execute(CREATE_PERSON_TABLE);
+            statement.execute(CREATE_WAREHOUSE_TABLE);
         }catch(SQLException e){
-            //System.out.println("Couldn't create " + TABLE_PERSON + " table: " + e.getMessage());
+            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean insertWarehouse(Warehouse data){
+        try{
+            queryInsertWarehouse.setInt(INDEX_WAREHOUSE_ID, data.getId());
+            queryInsertWarehouse.setString(INDEX_WAREHOUSE_NAME, data.getName());
+            queryInsertWarehouse.setString(INDEX_WAREHOUSE_STREET, data.getStreet());
+            queryInsertWarehouse.setString(INDEX_WAREHOUSE_CITY, data.getCity());
+            queryInsertWarehouse.setString(INDEX_WAREHOUSE_POSTCODE, data.getPostcode());
+            int affectedRows = queryInsertWarehouse.executeUpdate();
+
+            return affectedRows == 1;
+        } catch(SQLException e) {
+            System.out.println("Couldn't insert data to " + TABLE_ACCOUNT + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 }
