@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.CreateWarehouseDialogController">
+    <GridPane alignment="CENTER" vgap="10" hgap="10">
+        <Label text="Nazwa magazynu: " textAlignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="name" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Ulica: " GridPane.rowIndex="1" GridPane.columnIndex="0" textAlignment="CENTER" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="street" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Miasto: " textAlignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="city" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Kod pocztowy: " textAlignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+</AnchorPane>

@@ -43,8 +43,8 @@ public class Datasource {
     public static final String TABLE_MANAGER_ID = "id_kierownik";
     public static final String TABLE_MANAGER_NAME = "imie";
     public static final String TABLE_MANAGER_SURNAME = "nazwisko";
-    public static final String TABLE_MANAGER_PHONE = "numer telefonu";
-    public static final String TABLE_MANAGER_EMAIL = "adres email";
+    public static final String TABLE_MANAGER_PHONE = "numer_telefonu";
+    public static final String TABLE_MANAGER_EMAIL = "adres_email";
     public static final int INDEX_MANAGER_ID = 1;
     public static final int INDEX_MANAGER_NAME = 2;
     public static final int INDEX_MANAGER_SURNAME = 3;
@@ -55,7 +55,7 @@ public class Datasource {
     public static final String TABLE_WORKER_ID = "id_pracownik";
     public static final String TABLE_WORKER_NAME = "imie";
     public static final String TABLE_WORKER_SURNAME = "nazwisko";
-    public static final String TABLE_WORKER_EMAIL = "adres email";
+    public static final String TABLE_WORKER_EMAIL = "adres_email";
     public static final int INDEX_WORKER_ID = 1;
     public static final int INDEX_WORKER_NAME = 2;
     public static final int INDEX_WORKER_SURNAME = 3;
@@ -67,10 +67,10 @@ public class Datasource {
     public static final int INDEX_DUTIES_ID = 1;
     public static final int INDEX_DUTIES_DESC = 2;
 
-    public static final String TABLE_VACATION = "plany urlopowe";
+    public static final String TABLE_VACATION = "plany_urlopowe";
     public static final String TABLE_VACATION_ID = "id_urlop";
-    public static final String TABLE_VACATION_BEGINNING = "data rozpoczecia";
-    public static final String TABLE_VACATION_END = "data zakonczenia";
+    public static final String TABLE_VACATION_BEGINNING = "data_rozpoczecia";
+    public static final String TABLE_VACATION_END = "data_zakonczenia";
     public static final int INDEX_VACATION_ID = 1;
     public static final int INDEX_VACATION_BEGINNING = 2;
     public static final int INDEX_VACATION_END = 3;
@@ -370,6 +370,43 @@ public class Datasource {
             createDepartmentManagerTable();
             createWarehouseDepartmentTable();
 
+            dropTableCommodityOpinionFkOpinion();
+            dropTableCommodityOpinionFkCommodity();
+            dropTableExpositionDesignerFkDesigner();
+            dropTableExpositionDesignerFkExposition();
+            dropTableExpositionCommodityFkCommodity();
+            dropTableExpositionCommodityFkExposition();
+            dropTableDepartmentExpositionFkExposition();
+            dropTableDepartmentExpositionFkDepartment();
+            dropTableWorkerDutyFkDuty();
+            dropTableWorkerDutyFkWorker();
+            dropTableWorkerVacationFkVacation();
+            dropTableWorkerVacationFkWorker();
+            dropTableManagerWorkerFkWorker();
+            dropTableManagerWorkerFkManager();
+            dropTableDepartmentManagerFkManager();
+            dropTableDepartmentManagerFkDepartment();
+            dropTableWarehouseDepartmentFkDepartment();
+            dropTableWarehouseDepartmentFkWarehouse();
+
+            alterTableCommodityOpinionFkOpinion();
+            alterTableCommodityOpinionFkCommodity();
+            alterTableExpositionDesignerFkDesigner();
+            alterTableExpositionDesignerFkExposition();
+            alterTableExpositionCommodityFkCommodity();
+            alterTableExpositionCommodityFkExposition();
+            alterTableDepartmentExpositionFkExposition();
+            alterTableDepartmentExpositionFkDepartment();
+            alterTableWorkerDutyFkDuty();
+            alterTableWorkerDutyFkWorker();
+            alterTableWorkerVacationFkVacation();
+            alterTableWorkerVacationFkWorker();
+            alterTableManagerWorkerFkWorker();
+            alterTableManagerWorkerFkManager();
+            alterTableDepartmentManagerFkManager();
+            alterTableDepartmentManagerFkDepartment();
+            alterTableWarehouseDepartmentFkDepartment();
+            alterTableWarehouseDepartmentFkWarehouse();
 
             queryInsertWarehouse = connection.prepareStatement(INSERT_WAREHOUSE);
 
@@ -548,14 +585,27 @@ public class Datasource {
     //========================================= Warehouse methods =================================
 
     private void createWarehouseTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + " INTEGER NOT NULL, " + TABLE_WAREHOUSE_NAME +
                     " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_STREET + " VARCHAR(25) NOT NULL, " +
                     TABLE_WAREHOUSE_CITY + " VARCHAR(25) NOT NULL, " + TABLE_WAREHOUSE_POSTCODE + " VARCHAR(6) NOT NULL, CONSTRAINT id_magazyn PRIMARY KEY (" + TABLE_WAREHOUSE_ID + "))");
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean isWarehouseExists(){
+        try (Statement statement = connection.createStatement();
+            ResultSet results = statement.executeQuery("SELECT COUNT(*) AS count FROM " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE)){
+            results.next();
+            int response = results.getInt("count");
+
+            return response == 1;
+        } catch (SQLException e){
+            System.out.println("Couldn't get number of rows in " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -889,7 +939,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table commodity-opinion fkOpinion: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableCommodityOpinionFkOpinion(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " DROP CONSTRAINT IF EXISTS opinia_towar_opinia_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table commodity-opinion fkOpinion: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -904,7 +964,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table commodity-opinion fkCommodity: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableCommodityOpinionFkCommodity(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " DROP CONSTRAINT IF EXISTS towar_towar_opinia_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table commodity-opinion fkCommodity: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -919,7 +989,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table exposition-designer fkDesigner: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableExpositionDesignerFkDesigner(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " DROP CONSTRAINT IF EXISTS projektant_ekspozycja_projektant_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table exposition-designer fkDesigner: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -934,7 +1014,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table exposition-designer fkExposition: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableExpositionDesignerFkExposition(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " DROP CONSTRAINT IF EXISTS ekspozycja_ekspozycja_projektant_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table exposition-designer fkExposition: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -949,7 +1039,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table exposition-commodity fkCommodity: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableExpositionCommodityFkCommodity(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " DROP CONSTRAINT IF EXISTS towar_ekspozycja_towar_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table exposition-commodity fkCommodity: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -964,7 +1064,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table exposition-commodity fkExposition: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableExpositionCommodityFkExposition(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " DROP CONSTRAINT IF EXISTS ekspozycja_ekspozycja_towar_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table exposition-commodity fkExposition: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -979,7 +1089,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table department-exposition fkExposition: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableDepartmentExpositionFkExposition(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " DROP CONSTRAINT IF EXISTS ekspozycja_dzial_ekspozycja_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table department-exposition fkExposition: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -994,7 +1114,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table department-exposition fkDepartment: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableDepartmentExpositionFkDepartment(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " DROP CONSTRAINT IF EXISTS dzial_dzial_ekspozycja_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table department-exposition fkDepartment: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1009,7 +1139,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table worker-duty fkDuty: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableWorkerDutyFkDuty(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " DROP CONSTRAINT IF EXISTS obowiazek_pracownik_obowiazek_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table worker-duty fkDuty: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1024,7 +1164,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table worker-duty fkWorker: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableWorkerDutyFkWorker(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " DROP CONSTRAINT IF EXISTS pracownik_pracownik_obowiazek_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table worker-duty fkWorker: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1039,7 +1189,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table worker-vacation fkVacation: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableWorkerVacationFkVacation(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " DROP CONSTRAINT IF EXISTS plany_urlopowe_pracownik_plan_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table worker-vacation fkVacation: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1054,7 +1214,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table worker-vacation fkWorker: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableWorkerVacationFkWorker(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " DROP CONSTRAINT IF EXISTS pracownik_pracownik_plan_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table worker-vacation fkWorker: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1069,7 +1239,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table manager-worker fkWorker: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableManagerWorkerFkWorker(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " DROP CONSTRAINT IF EXISTS pracownik_kierownik_pracownik_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table manager-worker fkWorker: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1084,7 +1264,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table manager-worker fkManager: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableManagerWorkerFkManager(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " DROP CONSTRAINT IF EXISTS kierownik_kierownik_pracownik_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table manager-worker fkManager: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1099,7 +1289,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table department-manager fkManager: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableDepartmentManagerFkManager(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " DROP CONSTRAINT IF EXISTS kierownik_dzial_kierownik_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table department-manager fkManager: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1114,7 +1314,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table department-manager fkDepartment: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableDepartmentManagerFkDepartment(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " DROP CONSTRAINT IF EXISTS dzial_dzial_kierownik_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table department-manager fkDepartment: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1129,7 +1339,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table warehouse-department fkDepartment: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableWarehouseDepartmentFkDepartment(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " DROP CONSTRAINT IF EXISTS dzial_magazyn_dzial_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table warehouse-department fkDepartment: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1144,7 +1364,17 @@ public class Datasource {
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
-            System.out.println("Couldn't create " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            System.out.println("Couldn't process alter table warehouse-department fkWarehouse: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableWarehouseDepartmentFkWarehouse(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " DROP CONSTRAINT IF EXISTS magazyn_magazyn_dzial_fk");
+        }catch(SQLException e){
+            System.out.println("Couldn't process alter table warehouse-department fkWarehouse: " + e.getMessage());
             e.printStackTrace();
         }
     }

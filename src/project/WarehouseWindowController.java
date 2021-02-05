@@ -27,8 +27,15 @@ public class WarehouseWindowController {
     public void initialize(){
         Datasource.getInstance().createSchema();
         Datasource.getInstance().openUserEnvironment();
-        gridPane.setVisible(false);
-        manageDepartmentButton.setVisible(false);
+        if(Datasource.getInstance().isWarehouseExists()){
+            gridPane.setVisible(true);
+            createWarehouseButton.setVisible(false);
+            manageDepartmentButton.setVisible(true);
+        } else {
+            gridPane.setVisible(false);
+            createWarehouseButton.setVisible(true);
+            manageDepartmentButton.setVisible(false);
+        }
     }
 
     @FXML
