@@ -68,7 +68,7 @@ public class Datasource {
     public static final int INDEX_DUTIES_DESC = 2;
 
     public static final String TABLE_VACATION = "plany_urlopowe";
-    public static final String TABLE_VACATION_ID = "id_urlop";
+    public static final String TABLE_VACATION_ID = "id_plany_urlopowe";
     public static final String TABLE_VACATION_BEGINNING = "data_rozpoczecia";
     public static final String TABLE_VACATION_END = "data_zakonczenia";
     public static final int INDEX_VACATION_ID = 1;
@@ -191,20 +191,7 @@ public class Datasource {
 
     public static final String GET_ALL_ACCOUNTS =
             "SELECT * FROM " + TABLE_ACCOUNT;
-
-    // Magazyn
-    public static final String INSERT_WAREHOUSE =
-            "INSERT INTO " + TABLE_WAREHOUSE + " VALUES (?, ?, ?, ?, ?)";
-
-    public static final String UPDATE_WAREHOUSE =
-            "UPDATE " + TABLE_WAREHOUSE + " SET " + TABLE_WAREHOUSE_NAME + " = ?, " + TABLE_WAREHOUSE_STREET + " = ?, " +
-            TABLE_WAREHOUSE_CITY + " = ?, " + TABLE_WAREHOUSE_POSTCODE + " = ? WHERE " + TABLE_WAREHOUSE_ID  + " = ?";
-
-    public static final String DELETE_WAREHOUSE =
-            "DELETE FROM " + TABLE_WAREHOUSE + " WHERE " + TABLE_WAREHOUSE_ID + " = ?";
-
-    public static final String GET_ALL_WAREHOUSES = "SELECT * FROM " + TABLE_WAREHOUSE;
-
+    
     //Dzial
     public static final String INSERT_DEPARTMENT =
             "INSERT INTO " + TABLE_DEPARTMENT + " VALUES (?, ?)";
@@ -317,8 +304,6 @@ public class Datasource {
     private PreparedStatement queryUpdateAccount;
     private PreparedStatement queryCheckUser;
 
-    private PreparedStatement queryInsertWarehouse;
-
     private Connection connection;
     private final static Datasource instance = new Datasource();
 
@@ -347,8 +332,7 @@ public class Datasource {
         }
     }
 
-    public boolean openUserEnvironment(){
-        try{
+    public void openUserEnvironment(){
             createWarehouseTable();
             createDepartmentTable();
             createManagerTable();
@@ -445,15 +429,6 @@ public class Datasource {
             createNormalizeNamesWorkerTrigger();
             dropNormalizeNamesDesignerTrigger();
             createNormalizeNamesDesignerTrigger();
-
-            queryInsertWarehouse = connection.prepareStatement(INSERT_WAREHOUSE);
-
-            return true;
-        } catch(SQLException e){
-            System.out.println("Couldn't open the connection to main database: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public boolean close(){
@@ -476,19 +451,6 @@ public class Datasource {
             return true;
         }catch (SQLException e){
             System.out.println("Couldn't close the connection: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean closeUserEnvironment(){
-        try{
-            if(queryInsertWarehouse != null){
-                queryInsertWarehouse.close();
-            }
-            return true;
-        } catch(SQLException e){
-            System.out.println("Couldn't close the connection with the user environment: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -903,6 +865,29 @@ public class Datasource {
         }
     }
 
+    //====================== Funkcje pomocnicze ===========================
+
+    private int findLowestFreeId(String table) {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT id_" + table + " FROM " + Session.getInstance().getToken() + "." + table)) {
+            int counter = 1;
+            int temp = 0;
+            while (resultSet.next()) {
+                temp = resultSet.getInt(1);
+                if(counter != temp){
+                    break;
+                } else {
+                    counter++;
+                }
+            }
+            return counter;
+        } catch (SQLException e) {
+            System.out.println("Couldn't find lowest id number: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     //====================== Account ============================
 
     private void createAccountTable(){
@@ -1027,19 +1012,50 @@ public class Datasource {
     }
 
     public boolean insertWarehouse(Warehouse data){
-        try{
-            queryInsertWarehouse.setInt(INDEX_WAREHOUSE_ID, data.getId());
-            queryInsertWarehouse.setString(INDEX_WAREHOUSE_NAME, data.getName());
-            queryInsertWarehouse.setString(INDEX_WAREHOUSE_STREET, data.getStreet());
-            queryInsertWarehouse.setString(INDEX_WAREHOUSE_CITY, data.getCity());
-            queryInsertWarehouse.setString(INDEX_WAREHOUSE_POSTCODE, data.getPostcode());
-            int affectedRows = queryInsertWarehouse.executeUpdate();
+        try (Statement statement = connection.createStatement()){
+            int id = findLowestFreeId(TABLE_WAREHOUSE);
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE +
+                    " VALUES (" + id + ", " + data.getName() + ", " + data.getStreet() + ", " + data.getCity() + ", " + data.getPostcode() + ")");
 
             return affectedRows == 1;
         } catch(SQLException e) {
-            System.out.println("Couldn't insert data to " + TABLE_ACCOUNT + " table: " + e.getMessage());
+            System.out.println("Couldn't insert data to " + TABLE_WAREHOUSE + " table: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public boolean updateWarehouse(Warehouse data){
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate( "UPDATE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " SET " + TABLE_WAREHOUSE_NAME + " = " + data.getName() + ", " +
+                    TABLE_WAREHOUSE_STREET + " = " + data.getStreet() + ", " + TABLE_WAREHOUSE_CITY + " = " + data.getCity() + ", " +
+                    TABLE_WAREHOUSE_POSTCODE + " = " + data.getPostcode() + " WHERE " + TABLE_WAREHOUSE_ID  + " = 1" );
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't update data in " + TABLE_WAREHOUSE + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Warehouse getWarehouseData() {
+        try (Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE)) {
+            Warehouse warehouse = null;
+            while (resultSet.next()){
+                String name = resultSet.getString(INDEX_WAREHOUSE_NAME);
+                String street = resultSet.getString(INDEX_WAREHOUSE_STREET);
+                String city = resultSet.getString(INDEX_WAREHOUSE_CITY);
+                String postcode = resultSet.getString(INDEX_WAREHOUSE_POSTCODE);
+                warehouse = new Warehouse(1, name, street, city, postcode);
+            }
+
+            return warehouse;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get " + TABLE_WAREHOUSE + " data: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 

@@ -9,7 +9,6 @@ public class AppTopMenuController {
 
     @FXML
     public void close(ActionEvent event){
-        Datasource.getInstance().closeUserEnvironment();
         Platform.exit();
     }
 }
