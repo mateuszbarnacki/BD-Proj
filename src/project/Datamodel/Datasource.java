@@ -370,6 +370,8 @@ public class Datasource {
             createDepartmentManagerTable();
             createWarehouseDepartmentTable();
 
+            //Foreign keys
+
             dropTableCommodityOpinionFkOpinion();
             dropTableCommodityOpinionFkCommodity();
             dropTableExpositionDesignerFkDesigner();
@@ -407,6 +409,42 @@ public class Datasource {
             alterTableDepartmentManagerFkDepartment();
             alterTableWarehouseDepartmentFkDepartment();
             alterTableWarehouseDepartmentFkWarehouse();
+
+            //Functions and triggers
+
+            createCheckPostcodeFunction();
+            dropCheckPostcodeWarehouseTrigger();
+            createCheckPostcodeWarehouseTrigger();
+
+            createCheckPhoneNumberFunction();
+            dropCheckPhoneNumberManagerTrigger();
+            createCheckPhoneNumberManagerTrigger();
+            dropCheckPhoneNumberDesignerTrigger();
+            createCheckPhoneNumberDesignerTrigger();
+
+            createCheckEmailFunction();
+            dropCheckEmailManagerTrigger();
+            createCheckEmailManagerTrigger();
+            dropCheckEmailWorkerTrigger();
+            createCheckEmailWorkerTrigger();
+            dropCheckEmailDesignerTrigger();
+            createCheckEmailDesignerTrigger();
+
+            createCheckNamesFunction();
+            dropCheckNamesManagerTrigger();
+            createCheckNamesManagerTrigger();
+            dropCheckNamesWorkerTrigger();
+            createCheckNamesWorkerTrigger();
+            dropCheckNamesDesignerTrigger();
+            createCheckNamesDesignerTrigger();
+
+            createNormalizeNamesFunction();
+            dropNormalizeNamesManagerTrigger();
+            createNormalizeNamesManagerTrigger();
+            dropNormalizeNamesWorkerTrigger();
+            createNormalizeNamesWorkerTrigger();
+            dropNormalizeNamesDesignerTrigger();
+            createNormalizeNamesDesignerTrigger();
 
             queryInsertWarehouse = connection.prepareStatement(INSERT_WAREHOUSE);
 
@@ -483,6 +521,385 @@ public class Datasource {
             System.out.println("Couldn't drop schema for user " + username + ": " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    //======================= Postgres functions and triggers ================================
+
+    private void createCheckPostcodeFunction(){
+        try (Statement statement = connection.createStatement()){
+            statement.execute("CREATE OR REPLACE FUNCTION checkPostcode()\n" +
+                    "\tRETURNS TRIGGER\n" +
+                    "    LANGUAGE plpgsql\n" +
+                    "    AS $$\n" +
+                    "    DECLARE size varchar;\n" +
+                    "    BEGIN\n" +
+                    "    \tsize = regexp_matches(NEW.kod_pocztowy, '^\\d{2}-\\d{3}$');\n" +
+                    "        IF size IS NULL OR length(size) != 8 THEN\n" +
+                    "        \tRAISE EXCEPTION 'Niepoprawny kod pocztowy!';\n" +
+                    "        END IF;\n" +
+                    "    RETURN NEW;\n" +
+                    "    END;\n" +
+                    "    $$;");
+        } catch (SQLException e){
+            System.out.println("Couldn't create checkPostcode function: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckPostcodeWarehouseTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_WAREHOUSE + "Postcodes\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE +
+                    "    FOR EACH ROW EXECUTE PROCEDURE checkPostcode();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check postcode warehouse trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckPostcodeWarehouseTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_WAREHOUSE + "Postcodes ON " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE);
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check postcode warehouse trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckPhoneNumberFunction(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE OR REPLACE FUNCTION checkPhoneNumber()\n" +
+                    "\tRETURNS TRIGGER\n" +
+                    "    LANGUAGE plpgsql\n" +
+                    "    AS $$\n" +
+                    "    DECLARE res varchar;\n" +
+                    "    BEGIN\n" +
+                    "    \tres = regexp_matches(NEW.numer_telefonu, '^\\d{9}$');\n" +
+                    "        IF res IS NULL OR length(res) != 11 THEN\n" +
+                    "        \tRAISE EXCEPTION 'Niepoprawny numer telefonu!';\n" +
+                    "        END IF;\n" +
+                    "    \tRETURN NEW;\n" +
+                    "    END;\n" +
+                    "    $$;");
+        } catch (SQLException e){
+            System.out.println("Couldn't create checkPhoneNumber function: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckPhoneNumberManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_MANAGER + "PhoneNumber\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER +
+                    "    FOR EACH ROW EXECUTE PROCEDURE checkPhoneNumber();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check manager phone number trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckPhoneNumberManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_MANAGER + "PhoneNumber ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check manager phone number trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckPhoneNumberDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_DESIGNER + "PhoneNumber\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER +
+                    "    FOR EACH ROW EXECUTE PROCEDURE checkPhoneNumber();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check designer phone number trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckPhoneNumberDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_DESIGNER + "PhoneNumber ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check designer phone number trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckEmailFunction(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE OR REPLACE FUNCTION checkEmail()\n" +
+                    "\tRETURNS TRIGGER\n" +
+                    "    LANGUAGE plpgsql\n" +
+                    "    AS $$\n" +
+                    "    DECLARE res varchar;\n" +
+                    "    BEGIN\n" +
+                    "    \tres = regexp_matches(NEW.adres_email, '^\\S+@\\S+\\.{1}\\S+$');\n" +
+                    "\t\tIF res IS NULL THEN\n" +
+                    "        \tRAISE EXCEPTION 'Niepoprawny adres email!';\n" +
+                    "    \tEND IF;\n" +
+                    "        RETURN NEW;\n" +
+                    "    END;\n" +
+                    "    $$;");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create checkEmail function: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckEmailManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_MANAGER + "Email\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER +
+                    "    FOR EACH ROW EXECUTE PROCEDURE checkEmail();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check manager email trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckEmailManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_MANAGER + "Email ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check manager email trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckEmailWorkerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_WORKER + "Email\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_WORKER +
+                    "    FOR EACH ROW EXECUTE PROCEDURE checkEmail();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check worker email trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckEmailWorkerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_WORKER + "Email ON " + Session.getInstance().getToken() + "." + TABLE_WORKER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check worker email trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckEmailDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_DESIGNER + "Email\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER +
+                    "    FOR EACH ROW EXECUTE PROCEDURE checkEmail();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check designer email trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckEmailDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_DESIGNER + "Email ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check designer email trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckNamesFunction(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE OR REPLACE FUNCTION checkNames ()\n" +
+                    "\tRETURNS TRIGGER\n" +
+                    "    LANGUAGE plpgsql\n" +
+                    "    AS $$\n" +
+                    "    DECLARE spacePosition integer;\n" +
+                    "    \t\ttabPosition integer;\n" +
+                    "            newLinePosition integer;\n" +
+                    "            numberRegex varchar;\n" +
+                    "    BEGIN\n" +
+                    "\n" +
+                    "\tspacePosition = strpos(NEW.imie, chr(9));\n" +
+                    "\ttabPosition = strpos(NEW.imie, chr(10));\n" +
+                    "\tnewLinePosition = strpos(NEW.imie, chr(32));\n" +
+                    "\tnumberRegex = regexp_matches(NEW.imie, '[0-9]');\n" +
+                    "\n" +
+                    "\tIF spacePosition > 0 THEN\n" +
+                    "    \t RAISE EXCEPTION 'Niepoprawna wartość pola imie: wprowadzenie tabulacji.';\n" +
+                    "    ELSIF tabPosition > 0  THEN\n" +
+                    "    \tRAISE EXCEPTION 'Niepoprawna wartość pola imie: wprowadzenie nowej linii.';\n" +
+                    "    ELSEIF newLinePosition > 0 THEN\n" +
+                    "    \tRAISE EXCEPTION 'Niepoprawna wartość pola imie: wprowadzenie spacji.';\n" +
+                    "    ELSEIF length(numberRegex) > 0 THEN\n" +
+                    "    \tRAISE EXCEPTION 'Niepoprawna wartość pola imie: wprowadzenie cyfr.';\n" +
+                    "    END IF;\n" +
+                    "\n" +
+                    "    spacePosition = strpos(NEW.nazwisko, chr(9));\n" +
+                    "\ttabPosition = strpos(NEW.nazwisko, chr(10));\n" +
+                    "\tnewLinePosition = strpos(NEW.nazwisko, chr(32));\n" +
+                    "    numberRegex = regexp_matches(NEW.nazwisko, '[0-9]');\n" +
+                    "\n" +
+                    "   \tIF spacePosition > 0 THEN\n" +
+                    "    \t RAISE EXCEPTION 'Niepoprawna wartość pola nazwisko: wprowadzenie tabulacji.';\n" +
+                    "    ELSIF tabPosition > 0  THEN\n" +
+                    "    \tRAISE EXCEPTION 'Niepoprawna wartość pola nazwisko: wprowadzenie nowej linii.';\n" +
+                    "    ELSEIF newLinePosition > 0 THEN\n" +
+                    "    \tRAISE EXCEPTION 'Niepoprawna wartość pola nazwisko: wprowadzenie spacji.';\n" +
+                    "    ELSEIF length(numberRegex) > 0 THEN\n" +
+                    "    \tRAISE EXCEPTION 'Niepoprawna wartość pola nazwisko: wprowadzenie cyfr.';\n" +
+                    "    END IF;\n" +
+                    "\n" +
+                    "    RETURN NEW;\n" +
+                    "    END;\n" +
+                    "    $$;");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create checkNames function: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckNamesManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_MANAGER +"NameAndSurname\n" +
+                    "\t\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER +
+                    "    \tFOR EACH ROW EXECUTE PROCEDURE checkNames();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check manager name and surname trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckNamesManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_MANAGER + "NameAndSurname ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check manager name and surname trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckNamesWorkerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_WORKER + "NameAndSurname\n" +
+                    "\t\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_WORKER +
+                    "    \tFOR EACH ROW EXECUTE PROCEDURE checkNames();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check worker name and surname trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckNamesWorkerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_WORKER + "NameAndSurname ON " + Session.getInstance().getToken() + "." + TABLE_WORKER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check worker name and surname trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createCheckNamesDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER check" + TABLE_DESIGNER + "NameAndSurname\n" +
+                    "\t\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER +
+                    "    \tFOR EACH ROW EXECUTE PROCEDURE checkNames();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create check designer name and surname trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropCheckNamesDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS check" + TABLE_DESIGNER + "NameAndSurname ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop check designer name and surname trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createNormalizeNamesFunction() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE OR REPLACE FUNCTION normalizeNames () RETURNS TRIGGER AS $$\n" +
+                    "\tDECLARE var varchar;\n" +
+                    "BEGIN\n" +
+                    "\tNEW.imie := upper(NEW.imie);\n" +
+                    "    NEW.nazwisko := upper(NEW.nazwisko);\n" +
+                    "    var := SUBSTRING(NEW.imie, 2, length(NEW.imie));\n" +
+                    "    NEW.imie := SUBSTRING(NEW.imie, 1, 1) || lower(var);\n" +
+                    "    var := SUBSTRING(NEW.nazwisko, 2, length(NEW.nazwisko));\n" +
+                    "    NEW.nazwisko := SUBSTRING(NEW.nazwisko, 1, 1) || lower(var);\n" +
+                    "    RETURN NEW;\n" +
+                    "END;\n" +
+                    "$$ LANGUAGE 'plpgsql';");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create normalizeNames function: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createNormalizeNamesManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER normalize" + TABLE_MANAGER + "Name\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER +
+                    "    FOR EACH ROW\n" +
+                    "    EXECUTE PROCEDURE normalizeNames ();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create normalize manager name trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropNormalizeNamesManagerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS normalize" + TABLE_MANAGER + "Name ON " + Session.getInstance().getToken() + "." + TABLE_MANAGER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop normalize manager name trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createNormalizeNamesWorkerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER normalize" + TABLE_WORKER + "Name\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_WORKER +
+                    "    FOR EACH ROW\n" +
+                    "    EXECUTE PROCEDURE normalizeNames ();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create normalize worker name trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropNormalizeNamesWorkerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS normalize" + TABLE_WORKER + "Name ON " + Session.getInstance().getToken() + "." + TABLE_WORKER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop normalize worker name trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void createNormalizeNamesDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TRIGGER normalize" + TABLE_DESIGNER + "Name\n" +
+                    "\tBEFORE INSERT OR UPDATE ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER +
+                    "    FOR EACH ROW\n" +
+                    "    EXECUTE PROCEDURE normalizeNames ();");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create normalize designer name trigger: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropNormalizeNamesDesignerTrigger(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DROP TRIGGER IF EXISTS normalize" + TABLE_DESIGNER + "Name ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER );
+        } catch (SQLException e) {
+            System.out.println("Couldn't drop normalize designer name trigger: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -629,8 +1046,7 @@ public class Datasource {
     //================================== Department Methods ===========================
 
     private void createDepartmentTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()){
             statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (\n" +
                     TABLE_DEPARTMENT_ID +" INTEGER NOT NULL,\n" +
                     TABLE_DEPARTMENT_NAME + " VARCHAR(25) NOT NULL,\n" +
@@ -645,8 +1061,7 @@ public class Datasource {
     //================================== Manager Methods ============================
 
     private void createManagerTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()){
             statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (\n" +
                     TABLE_MANAGER_ID + " INTEGER NOT NULL,\n" +
                     TABLE_MANAGER_NAME + " VARCHAR(20) NOT NULL,\n" +
