@@ -6,10 +6,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -88,13 +85,45 @@ public class DepartmentWindowController {
         Optional<ButtonType> result = dialog.showAndWait();
         if(result.isPresent() && (result.get() == ButtonType.OK)) {
             DepartmentDialogController controller = fxmlLoader.getController();
-            controller.processResult();
+            if (controller.processResult()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Kreator działów");
+                alert.setHeaderText(null);
+                alert.setContentText("Zaktualizowano listę działów");
+                Optional<ButtonType> response = alert.showAndWait();
+                if (response.isPresent()) {
+                    Task<ObservableList<Department>> task = new GetListOfDepartments();
+                    departmentsList.itemsProperty().bind(task.valueProperty());
+                    new Thread(task).start();
+                    alert.close();
+                }
+            }
         }
     }
 
     @FXML
     public void loadStuffSection(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("StuffSection.fxml"));
+        BorderPane temp = new BorderPane();
 
+        try{
+            temp.setCenter(fxmlLoader.load());
+        } catch (IOException e) {
+            System.out.println("Couldn't load stuff section page: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("AppTopMenu.fxml"));
+        try{
+            temp.setTop(fxmlLoader.load());
+        } catch (IOException e) {
+            System.out.println("Couldn't load app top menu: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        this.borderPane.getScene().setRoot(temp);
     }
 
     @FXML

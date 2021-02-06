@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.StuffSectionController" fx:id="borderPane">
+    <left>
+        <HBox prefWidth="40">
+            <Label text="Powrót" onMouseClicked="#displayPreviousPage" style="-fx-font-size: 12px; -fx-text-fill: orange;"/>
+        </HBox>
+    </left>
+    <center>
+        <VBox alignment="CENTER" spacing="20" prefWidth="320">
+            <Button text="Strefa kierownika" textAlignment="CENTER" onAction="#loadManagerPage" prefWidth="160" prefHeight="40" style="-fx-background-radius: 30px;"/>
+            <Button text="Strefa pracownika" textAlignment="CENTER" onAction="#loadVacationPage" prefWidth="160" prefHeight="40" style="-fx-background-radius: 30px;"/>
+        </VBox>
+    </center>
+    <right>
+        <HBox prefWidth="40"/>
+    </right>
+</BorderPane>
