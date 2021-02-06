@@ -1,22 +1,16 @@
 package project.Datamodel;
 
 public class Warehouse {
-    private final int id;
     private final String name;
     private final String street;
     private final String city;
     private final String postcode;
 
-    public Warehouse(int id, String... data){
-        this.id = id;
+    public Warehouse(String... data){
         this.name = data[0];
         this.street = data[1];
         this.city = data[2];
         this.postcode = data[3];
-    }
-
-    public int getId(){
-        return this.id;
     }
 
     public String getName(){

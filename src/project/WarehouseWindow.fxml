@@ -8,24 +8,25 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="project.WarehouseWindowController">
+            fx:controller="project.WarehouseWindowController" fx:id="borderPane">
     <center>
         <BorderPane>
             <center>
                 <VBox spacing="15" alignment="CENTER">
                     <Label text="Dostępne działania" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-                    <GridPane fx:id="gridPane" vgap="10" hgap="10" alignment="CENTER">
-                        <Label text="Nazwa: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
-                        <Label fx:id="nameLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
-                        <Label text="Ulica: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
-                        <Label fx:id="streetLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
-                        <Label text="Miasto: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
-                        <Label fx:id="cityLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
-                        <Label text="Kod pocztowy: " textAlignment="CENTER" style="-fx-font-size: 28px; -fx-text-fill: orange;"/>
-                        <Label fx:id="postcodeLabel" textAlignment="CENTER" style="-fx-font-size: 28px;"/>
+                    <GridPane fx:id="gridPane" vgap="10" hgap="5" alignment="CENTER">
+                        <Label text="Nazwa: " textAlignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 20px; -fx-text-fill: orange;"/>
+                        <Label fx:id="nameLabel" textAlignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-font-size: 20px;"/>
+                        <Label text="Ulica: " textAlignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-size: 20px; -fx-text-fill: orange;"/>
+                        <Label fx:id="streetLabel" textAlignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-font-size: 20px;"/>
+                        <Label text="Miasto: " textAlignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-size: 20px; -fx-text-fill: orange;"/>
+                        <Label fx:id="cityLabel" textAlignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-font-size: 20px;"/>
+                        <Label text="Kod pocztowy: " textAlignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-size: 20px; -fx-text-fill: orange;"/>
+                        <Label fx:id="postcodeLabel" textAlignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-font-size: 20px;"/>
                     </GridPane>
-                    <Button fx:id="createWarehouseButton" text="Utwórz magazyn" textAlignment="CENTER" onAction="#createWarehouse" minWidth="120" minHeight="30" style="-fx-background-radius: 30px;"/>
-                    <Button fx:id="manageDepartmentButton" text="Zarządzaj działami" textAlignment="CENTER" onAction="#manageDepartment" minWidth="120" minHeight="30" style="-fx-background-radius: 30px;"/>
+                    <Button fx:id="createWarehouseButton" text="Utwórz magazyn" textAlignment="CENTER" onAction="#createWarehouse" minWidth="160" minHeight="40" style="-fx-background-radius: 30px;"/>
+                    <Button fx:id="updateWarehouseButton" text="Edytuj dane magazynu" textAlignment="CENTER" onAction="#editWarehouse" minWidth="160" minHeight="40" style="-fx-background-radius: 30px;"/>
+                    <Button fx:id="manageDepartmentButton" text="Zarządzaj działami" textAlignment="CENTER" onAction="#manageDepartment" minWidth="160" minHeight="40" style="-fx-background-radius: 30px;"/>
                 </VBox>
             </center>
         </BorderPane>

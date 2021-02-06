@@ -191,7 +191,7 @@ public class Datasource {
 
     public static final String GET_ALL_ACCOUNTS =
             "SELECT * FROM " + TABLE_ACCOUNT;
-    
+
     //Dzial
     public static final String INSERT_DEPARTMENT =
             "INSERT INTO " + TABLE_DEPARTMENT + " VALUES (?, ?)";
@@ -1011,32 +1011,23 @@ public class Datasource {
         }
     }
 
-    public boolean insertWarehouse(Warehouse data){
-        try (Statement statement = connection.createStatement()){
-            int id = findLowestFreeId(TABLE_WAREHOUSE);
-            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE +
-                    " VALUES (" + id + ", " + data.getName() + ", " + data.getStreet() + ", " + data.getCity() + ", " + data.getPostcode() + ")");
-
-            return affectedRows == 1;
-        } catch(SQLException e) {
-            System.out.println("Couldn't insert data to " + TABLE_WAREHOUSE + " table: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+    public boolean insertWarehouse(Warehouse data) throws SQLException{
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_WAREHOUSE);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE +
+                    " (" + TABLE_WAREHOUSE_ID + ", " + TABLE_WAREHOUSE_NAME + ", " + TABLE_WAREHOUSE_STREET + ", " + TABLE_WAREHOUSE_CITY + ", " + TABLE_WAREHOUSE_POSTCODE + ")" +
+                    " VALUES (" + id + ", \'" + data.getName() + "\', \'" + data.getStreet() + "\', \'" + data.getCity() + "\', \'" + data.getPostcode() + "\')");
+        statement.close();
+        return affectedRows == 1;
     }
 
-    public boolean updateWarehouse(Warehouse data){
-        try (Statement statement = connection.createStatement()) {
-            int affectedRows = statement.executeUpdate( "UPDATE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " SET " + TABLE_WAREHOUSE_NAME + " = " + data.getName() + ", " +
-                    TABLE_WAREHOUSE_STREET + " = " + data.getStreet() + ", " + TABLE_WAREHOUSE_CITY + " = " + data.getCity() + ", " +
-                    TABLE_WAREHOUSE_POSTCODE + " = " + data.getPostcode() + " WHERE " + TABLE_WAREHOUSE_ID  + " = 1" );
-
-            return affectedRows == 1;
-        } catch (SQLException e) {
-            System.out.println("Couldn't update data in " + TABLE_WAREHOUSE + " table: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+    public boolean updateWarehouse(Warehouse data) throws SQLException{
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate( "UPDATE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " SET " + TABLE_WAREHOUSE_NAME + " = \'" + data.getName() + "\', " +
+                    TABLE_WAREHOUSE_STREET + " = \'" + data.getStreet() + "\', " + TABLE_WAREHOUSE_CITY + " = \'" + data.getCity() + "\', " +
+                    TABLE_WAREHOUSE_POSTCODE + " = \'" + data.getPostcode() + "\' WHERE " + TABLE_WAREHOUSE_ID  + " = 1" );
+        statement.close();
+        return affectedRows == 1;
     }
 
     public Warehouse getWarehouseData() {
@@ -1048,7 +1039,7 @@ public class Datasource {
                 String street = resultSet.getString(INDEX_WAREHOUSE_STREET);
                 String city = resultSet.getString(INDEX_WAREHOUSE_CITY);
                 String postcode = resultSet.getString(INDEX_WAREHOUSE_POSTCODE);
-                warehouse = new Warehouse(1, name, street, city, postcode);
+                warehouse = new Warehouse(name, street, city, postcode);
             }
 
             return warehouse;
