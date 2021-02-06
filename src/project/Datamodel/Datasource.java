@@ -192,15 +192,6 @@ public class Datasource {
     public static final String GET_ALL_ACCOUNTS =
             "SELECT * FROM " + TABLE_ACCOUNT;
 
-    //Dzial
-    public static final String INSERT_DEPARTMENT =
-            "INSERT INTO " + TABLE_DEPARTMENT + " VALUES (?, ?)";
-
-    public static final String DELETE_DEPARTMENT =
-            "DELETE FROM " + TABLE_DEPARTMENT + " WHERE " + TABLE_DEPARTMENT_NAME + " LIKE ?";
-
-    public static final String GET_ALL_DEPARTMENTS = "SELECT * FROM " + TABLE_DEPARTMENT;
-
     //Kierownik
     public static final String INSERT_MANAGER =
             "INSERT INTO " + TABLE_MANAGER + " VALUES (?, ?, ?, ?, ?)";
@@ -1062,6 +1053,42 @@ public class Datasource {
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_DEPARTMENT + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean insertDepartment(String name) {
+        try (Statement statement = connection.createStatement()) {
+            int id = findLowestFreeId(TABLE_DEPARTMENT);
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT
+                                + " VALUES (" + id + ", \'" + name + "\')");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert to " + TABLE_DEPARTMENT + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Department> getDepartments() {
+        List<Department> list = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_DEPARTMENT_ID);
+                String name = resultSet.getString(INDEX_DEPARTMENT_NAME);
+                Department department = new Department(id, name);
+                list.add(department);
+            }
+            if(list.size() == 0) list = null;
+
+            return list;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get departments from the database: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 

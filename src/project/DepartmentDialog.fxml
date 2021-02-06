@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.DepartmentDialogController">
+    <center>
+        <GridPane alignment="CENTER" vgap="5" hgap="10">
+            <RadioButton fx:id="kitchenButton" alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="kitchen" text="Kuchnia" textAlignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <RadioButton fx:id="bathroomButton" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="bathroom" text="Łazienka" textAlignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <RadioButton fx:id="bedroomButton" alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="bedroom" text="Sypialnia" textAlignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <RadioButton fx:id="hallButton" alignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="hall" text="Przedpokój" textAlignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <RadioButton fx:id="childRoomButton" alignment="CENTER" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <Label fx:id="childRoom" text="Pokój dziecięcy" textAlignment="CENTER" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <RadioButton fx:id="livingRoomButton" alignment="CENTER" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <Label fx:id="livingRoom" text="Pokój dzienny" textAlignment="CENTER" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label fx:id="lackOfItemsLabel" text="Brak działów do dodania!" textAlignment="CENTER" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        </GridPane>
+    </center>
+</BorderPane>

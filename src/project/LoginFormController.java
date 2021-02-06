@@ -7,13 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import project.Datamodel.Account;
 import project.Datamodel.Datasource;
 
@@ -68,6 +64,7 @@ public class LoginFormController {
                     BorderPane temp = new BorderPane();
                     fxmlLoader = new FXMLLoader();
                     fxmlLoader.setLocation(getClass().getResource("WarehouseWindow.fxml"));
+                    Session.getInstance().lock();
                     Session.getInstance().setToken(user);
                     try{
                         temp.setCenter(fxmlLoader.load());

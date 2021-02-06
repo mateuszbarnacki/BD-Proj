@@ -36,8 +36,11 @@ public class WarehouseWindowController {
     public GridPane gridPane;
 
     public void initialize(){
-        Datasource.getInstance().createSchema();
-        Datasource.getInstance().openUserEnvironment();
+        if (Session.getInstance().isFirstLog()) {
+            Datasource.getInstance().createSchema();
+            Datasource.getInstance().openUserEnvironment();
+            Session.getInstance().unlock();
+        }
         if(Datasource.getInstance().isWarehouseExists()){
             setLabels();
             gridPane.setVisible(true);
