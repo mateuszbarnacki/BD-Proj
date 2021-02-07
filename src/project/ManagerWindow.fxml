@@ -20,10 +20,10 @@
             <ListView fx:id="managersList" onMouseClicked="#showOptions">
             </ListView>
             <HBox fx:id="hBox" spacing="15" alignment="CENTER">
-                <Button text="Dodaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#addManager" style="-fx-background-radius: 30px;"/>
-                <Button text="Edytuj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#editManager" style="-fx-background-radius: 30px;"/>
-                <Button text="Usuń" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#deleteManager" style="-fx-background-radius: 30px;"/>
-                <Button text="Zarządzaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#loadWorkerPage" style="-fx-background-radius: 30px;"/>
+                <Button text="Dodaj" textAlignment="CENTER" minWidth="60" minHeight="15" onAction="#addManager" style="-fx-background-radius: 30px;"/>
+                <Button text="Edytuj" textAlignment="CENTER" minWidth="60" minHeight="15" onAction="#editManager" style="-fx-background-radius: 30px;"/>
+                <Button text="Usuń" textAlignment="CENTER" minWidth="60" minHeight="15" onAction="#deleteManager" style="-fx-background-radius: 30px;"/>
+                <Button text="Zarządzaj" textAlignment="CENTER" minWidth="60" minHeight="15" onAction="#loadWorkerPage" style="-fx-background-radius: 30px;"/>
             </HBox>
         </VBox>
     </center>

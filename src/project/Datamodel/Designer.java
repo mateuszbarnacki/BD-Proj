@@ -1,18 +1,18 @@
 package project.Datamodel;
 
-public class Manager {
+public class Designer {
     private final int id;
     private final String name;
     private final String surname;
     private final String phoneNumber;
     private final String email;
 
-    public Manager(int id, String... data) {
+    public Designer(int id, String... data) {
         this.id = id;
         this.name = data[0];
         this.surname = data[1];
-        this.phoneNumber = data[2];
-        this.email = data[3];
+        this.email = data[2];
+        this.phoneNumber = data[3];
     }
 
     public int getId() {

@@ -192,102 +192,6 @@ public class Datasource {
     public static final String GET_ALL_ACCOUNTS =
             "SELECT * FROM " + TABLE_ACCOUNT;
 
-    //Kierownik
-    public static final String INSERT_MANAGER =
-            "INSERT INTO " + TABLE_MANAGER + " VALUES (?, ?, ?, ?, ?)";
-
-    public static final String UPDATE_MANAGER =
-            "UPDATE " + TABLE_MANAGER + " SET " + TABLE_MANAGER_NAME + " = ?, " + TABLE_MANAGER_SURNAME + " = ?, " +
-            TABLE_MANAGER_PHONE + " = ?, " + TABLE_MANAGER_EMAIL + " = ? WHERE " + TABLE_MANAGER_ID + " = ?";
-
-    public static final String DELETE_MANAGER =
-            "DELETE FROM " + TABLE_MANAGER + " WHERE " + TABLE_MANAGER_ID + " = ?";
-
-    public static final String GET_ALL_MANAGERS = "SELECT * FROM " + TABLE_MANAGER;
-
-    //Pracownik
-    public static final String INSERT_WORKER =
-            "INSERT INTO " + TABLE_WORKER + " VALUES (?, ?, ?, ?)";
-
-    public static final String UPDATE_WORKER =
-            "UPDATE " + TABLE_WORKER + " SET " + TABLE_WORKER_NAME + " = ?, " + TABLE_WORKER_SURNAME + " = ?, " +
-                    TABLE_WORKER_EMAIL + " = ? WHERE " + TABLE_WORKER_ID + " = ?";
-
-    public static final String DELETE_WORKER =
-            "DELETE FROM " + TABLE_WORKER + " WHERE " + TABLE_WORKER_ID + " = ?";
-
-    public static final String GET_ALL_WORKERS = "SELECT * FROM " + TABLE_WORKER;
-
-    //Obowiazek
-    public static final String INSERT_DUTY =
-            "INSERT INTO " + TABLE_DUTIES + " VALUES (?, ?)";
-
-    public static final String DELETE_DUTY =
-            "DELETE FROM " + TABLE_DUTIES + " WHERE " + TABLE_DUTIES_ID + " = ?";
-
-    public static final String GET_ALL_DUTIES = "SELECT * FROM " + TABLE_DUTIES;
-
-    //Plany urlopowe
-    public static final String INSERT_VACATION =
-            "INSERT INTO " + TABLE_VACATION + " VALUES (?, ?, ?)";
-
-    public static final String UPDATE_VACATION =
-            "UPDATE " + TABLE_VACATION + " SET " + TABLE_VACATION_BEGINNING + " = ?, " + TABLE_VACATION_END + " = ? WHERE " +
-                    TABLE_VACATION_ID + " = ?";
-
-    public static final String DELETE_VACATION =
-            "DELETE FROM " + TABLE_VACATION + " WHERE " + TABLE_VACATION_ID + " = ?";
-
-    public static final String GET_ALL_VACATIONS = "SELECT * FROM " + TABLE_VACATION;
-
-    //Ekspozycja
-    public static final String INSERT_EXPOSITION =
-            "INSERT INTO " + TABLE_EXPOSITION + " VALUES (?, ?, ?)";
-
-    public static final String UPDATE_EXPOSITION =
-            "UPDATE " + TABLE_EXPOSITION + " SET " + TABLE_EXPOSITION_NAME + " = ?, " + TABLE_EXPOSITION_PRICE + " = ? WHERE " +
-                    TABLE_EXPOSITION_ID + " = ?";
-
-    public static final String DELETE_EXPOSITION =
-            "DELETE FROM " + TABLE_EXPOSITION + " WHERE " + TABLE_EXPOSITION_ID + " = ?";
-
-    public static final String GET_ALL_EXPOSITIONS = "SELECT * FROM " + TABLE_EXPOSITION;
-
-    //Towar
-    public static final String INSERT_COMMODITY =
-            "INSERT INTO " + TABLE_COMMODITY + " VALUES (?, ?, ?)";
-
-    public static final String UPDATE_COMMODITY =
-            "UPDATE " + TABLE_COMMODITY + " SET " + TABLE_COMMODITY_NAME + " = ?, " + TABLE_COMMODITY_PRICE + " = ? WHERE" +
-                TABLE_COMMODITY_ID + " = ?";
-
-    public static final String DELETE_COMMODITY =
-            "DELETE FROM " + TABLE_COMMODITY + " WHERE " + TABLE_COMMODITY_ID + " = ?";
-
-    public static final String GET_ALL_COMMODITIES = "SELECT * FROM " + TABLE_COMMODITY;
-
-    //Projektant
-    public static final String INSERT_DESIGNER =
-            "INSERT INTO " + TABLE_DESIGNER + " VALUES (?, ?, ?, ?, ?)";
-
-    public static final String UPDATE_DESIGNER =
-            "UPDATE " + TABLE_DESIGNER + " SET " + TABLE_DESIGNER_NAME + " = ?, " + TABLE_DESIGNER_SURNAME + " = ?, " +
-                    TABLE_DESIGNER_EMAIL + " = ?, " + TABLE_DESIGNER_PHONE + " = ? WHERE " + TABLE_DESIGNER_ID + " = ?";
-
-    public static final String DELETE_DESIGNER =
-            "DELETE FROM " + TABLE_DESIGNER + " WHERE " + TABLE_DESIGNER_ID  + " = ?";
-
-    public static final String GET_ALL_DESIGNERS = "SELECT * FROM " + TABLE_DESIGNER;
-
-    //Opinia
-    public static final String INSERT_OPINION =
-            "INSERT INTO " + TABLE_OPINION + " VALUES (?, ?)";
-
-    public static final String DELETE_OPINION =
-            "DELETE FROM " + TABLE_OPINION + " WHERE " + TABLE_OPINION_ID + " = ?";
-
-    public static final String GET_ALL_OPINIONS = "SELECT * FROM " + TABLE_OPINION;
-
     //========================== Java code ========================
 
     private PreparedStatement queryInsertAccount;
@@ -448,10 +352,6 @@ public class Datasource {
     }
 
     //====================== Schema =============================
-
-    /*public void test(){
-        System.out.println(CREATE_SCHEMA);
-    }*/
 
     public boolean createSchema(){
         try (Statement statement = connection.createStatement()){
@@ -1064,7 +964,7 @@ public class Datasource {
 
             return affectedRows == 1;
         } catch (SQLException e) {
-            System.out.println("Couldn't insert to " + TABLE_DEPARTMENT + ": " + e.getMessage());
+            System.out.println("Couldn't insert into " + TABLE_DEPARTMENT + " table: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -1086,7 +986,7 @@ public class Datasource {
 
             return list;
         } catch (SQLException e) {
-            System.out.println("Couldn't get departments from the database: " + e.getMessage());
+            System.out.println("Couldn't get all records from " + TABLE_DEPARTMENT + " table: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -1100,13 +1000,70 @@ public class Datasource {
                     TABLE_MANAGER_ID + " INTEGER NOT NULL,\n" +
                     TABLE_MANAGER_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_MANAGER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
-                    TABLE_MANAGER_PHONE + " VARCHAR(9),\n" +
-                    TABLE_MANAGER_EMAIL + " VARCHAR(30),\n" +
+                    TABLE_MANAGER_PHONE + " VARCHAR(9) NOT NULL,\n" +
+                    TABLE_MANAGER_EMAIL + " VARCHAR(30) NOT NULL,\n" +
                     " CONSTRAINT id_kierownik PRIMARY KEY (" + TABLE_MANAGER_ID + ")\n" +
                     ")");
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_MANAGER + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean insertManager(Manager manager) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_MANAGER);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_MANAGER +
+                " (" + TABLE_MANAGER_ID + ", " + TABLE_MANAGER_NAME + ", " + TABLE_MANAGER_SURNAME + ", " + TABLE_MANAGER_PHONE +
+                ", " + TABLE_MANAGER_EMAIL + ") VALUES (" + id + ", '" + manager.getName() + "', '" + manager.getSurname() + "', '" +
+                manager.getPhoneNumber() + "', '" + manager.getEmail() + "')");
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public boolean updateManager(Manager manager) throws SQLException {
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate("UPDATE " + Session.getInstance().getToken() + "." + TABLE_MANAGER +
+                            " SET " + TABLE_MANAGER_NAME + " = '" + manager.getName() + "', " + TABLE_MANAGER_SURNAME + " = '" +
+                            manager.getSurname() + "', " + TABLE_MANAGER_PHONE + " = '" + manager.getPhoneNumber() + "', " +
+                            TABLE_MANAGER_EMAIL + " = '" + manager.getEmail() + "' WHERE " + TABLE_MANAGER_ID + " = " + manager.getId());
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deleteManager(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " WHERE " + TABLE_MANAGER_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_MANAGER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Manager> getManagers() {
+        List<Manager> managers = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_MANAGER)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_MANAGER_ID);
+                String name = resultSet.getString(INDEX_MANAGER_NAME);
+                String surname = resultSet.getString(INDEX_MANAGER_SURNAME);
+                String phoneNumber = resultSet.getString(INDEX_MANAGER_PHONE);
+                String email = resultSet.getString(INDEX_MANAGER_EMAIL);
+                Manager manager = new Manager(id, name, surname, phoneNumber, email);
+
+                managers.add(manager);
+            }
+
+            return managers;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_MANAGER + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1119,7 +1076,7 @@ public class Datasource {
                     TABLE_WORKER_ID + " INTEGER NOT NULL,\n" +
                     TABLE_WORKER_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_WORKER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
-                    TABLE_WORKER_EMAIL + " VARCHAR(30),\n" +
+                    TABLE_WORKER_EMAIL + " VARCHAR(30) NOT NULL,\n" +
                     " CONSTRAINT id_pracownik PRIMARY KEY (" + TABLE_WORKER_ID + ")\n" +
                     ")");
         }catch(SQLException e){
@@ -1128,6 +1085,58 @@ public class Datasource {
         }
     }
 
+    public boolean insertWorker(Worker worker) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_WORKER);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WORKER +
+                            " (" + TABLE_WORKER_ID + ", " + TABLE_WORKER_NAME + ", " + TABLE_WORKER_SURNAME + ", " + TABLE_WORKER_EMAIL +
+                            ") VALUES (" + id + ", '" + worker.getName() + "', '" + worker.getSurname() + "', '" + worker.getEmail() + "')");
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public boolean updateWorker(Worker worker) throws SQLException {
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate("UPDATE " + Session.getInstance().getToken() + "." + TABLE_WORKER + " SET " +
+                            TABLE_WORKER_NAME + " = '" + worker.getName() + "', " + TABLE_WORKER_SURNAME + " = '" + worker.getSurname() +
+                            "', " + TABLE_WORKER_EMAIL + " = '" + worker.getEmail() + "' WHERE " + TABLE_WORKER_ID + " = " + worker.getId());
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deleteWorker(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_WORKER + " WHERE " + TABLE_WORKER_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_WORKER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Worker> getWorkers() {
+        List<Worker> workers = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_WORKER)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_WORKER_ID);
+                String name = resultSet.getString(INDEX_WORKER_NAME);
+                String surname = resultSet.getString(INDEX_WORKER_SURNAME);
+                String email = resultSet.getString(INDEX_WORKER_EMAIL);
+                Worker worker = new Worker(id, name, surname, email);
+                workers.add(worker);
+            }
+
+            return workers;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_WORKER + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     //=============================== Duties Methods ==========================
 
@@ -1142,6 +1151,47 @@ public class Datasource {
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_DUTIES + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean insertDuty(Duty duty) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_DUTIES);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DUTIES +
+                            "(" + TABLE_DUTIES_ID + ", " + TABLE_DUTIES_DESC + ") VALUES (" + id + ", '" + duty.getDescription() + "')");
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deleteDuty(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_DUTIES + " WHERE " + TABLE_DUTIES_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_DUTIES + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Duty> getDuties() {
+        List<Duty> duties = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_DUTIES)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_DUTIES_ID);
+                String description = resultSet.getString(INDEX_DUTIES_DESC);
+                Duty duty = new Duty(id, description);
+
+                duties.add(duty);
+            }
+
+            return duties;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_DUTIES + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1162,6 +1212,49 @@ public class Datasource {
         }
     }
 
+    public boolean insertVacation(Vacation vacation) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_VACATION);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_VACATION +
+                            " (" + TABLE_VACATION_ID + ", " + TABLE_VACATION_BEGINNING + ", " + TABLE_VACATION_END + ") VALUES ("
+                            + id + ", " + vacation.getBeginning() + ", " + vacation.getEnd() + ")");
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deleteVacation(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_VACATION + " WHERE " + TABLE_VACATION_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_VACATION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Vacation> getVacations() {
+        List<Vacation> vacations = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_VACATION)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_VACATION_ID);
+                Date beginning = resultSet.getDate(INDEX_VACATION_BEGINNING);
+                Date end = resultSet.getDate(INDEX_VACATION_END);
+                Vacation vacation = new Vacation(id, beginning, end);
+
+                vacations.add(vacation);
+            }
+
+            return vacations;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_VACATION + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //============================== Exposition Methods ==========================
 
     private void createExpositionTable(){
@@ -1176,6 +1269,59 @@ public class Datasource {
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_EXPOSITION + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean insertExposition(Exposition exposition) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_EXPOSITION);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION +
+                            " (" + TABLE_EXPOSITION_ID + ", " + TABLE_EXPOSITION_NAME + ", " + TABLE_EXPOSITION_PRICE + ") VALUES (" +
+                            id + ", '" + exposition.getName() + "', " + exposition.getPrice() + ")");
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public boolean updateExposition(Exposition exposition) throws SQLException {
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate("UPDATE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " SET " +
+                            TABLE_EXPOSITION_NAME + " = '" + exposition.getName() + "', " + TABLE_EXPOSITION_PRICE + " = " + exposition.getPrice()
+                            + " WHERE " + TABLE_EXPOSITION_ID + " = " + exposition.getId());
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deleteExposition(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " WHERE " + TABLE_EXPOSITION_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_EXPOSITION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Exposition> getExpositions() {
+        List<Exposition> expositions = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION)) {
+
+            while(resultSet.next()) {
+                int id = resultSet.getInt(INDEX_EXPOSITION_ID);
+                String name = resultSet.getString(INDEX_EXPOSITION_NAME);
+                double price = resultSet.getDouble(INDEX_EXPOSITION_PRICE);
+                Exposition exposition = new Exposition(id, name, price);
+
+                expositions.add(exposition);
+            }
+
+            return expositions;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_EXPOSITION + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1196,6 +1342,59 @@ public class Datasource {
         }
     }
 
+    public boolean insertCommodity(Commodity commodity) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_COMMODITY);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_COMMODITY +
+                            " (" + TABLE_COMMODITY_ID + ", " + TABLE_COMMODITY_NAME + ", " + TABLE_COMMODITY_PRICE + ") VALUES (" +
+                            id + ", '" + commodity.getName() + "', " + commodity.getPrice() + ")");
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public boolean updateCommodity(Commodity commodity) throws SQLException {
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate("UPDATE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " SET " +
+                            TABLE_COMMODITY_NAME + " = '" + commodity.getName() + "', " + TABLE_COMMODITY_PRICE + " = " + commodity.getPrice() +
+                            " WHERE " + TABLE_COMMODITY_ID + " = " + commodity.getId());
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deleteCommodity(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " WHERE " + TABLE_COMMODITY_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_COMMODITY + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Commodity> getCommodities() {
+        List<Commodity> commodities = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_COMMODITY)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_COMMODITY_ID);
+                String name = resultSet.getString(INDEX_COMMODITY_NAME);
+                double price = resultSet.getDouble(INDEX_COMMODITY_PRICE);
+                Commodity commodity = new Commodity(id, name, price);
+
+                commodities.add(commodity);
+            }
+
+            return commodities;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_COMMODITY + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //============================ Designer Methods ==============================
 
     private void createDesignerTable(){
@@ -1205,13 +1404,70 @@ public class Datasource {
                     TABLE_DESIGNER_ID + " INTEGER NOT NULL,\n" +
                     TABLE_DESIGNER_NAME + " VARCHAR(20) NOT NULL,\n" +
                     TABLE_DESIGNER_SURNAME + " VARCHAR(30) NOT NULL,\n" +
-                    TABLE_DESIGNER_EMAIL + " VARCHAR(30),\n" +
-                    TABLE_DESIGNER_PHONE + " VARCHAR(9),\n" +
+                    TABLE_DESIGNER_EMAIL + " VARCHAR(30) NOT NULL,\n" +
+                    TABLE_DESIGNER_PHONE + " VARCHAR(9) NOT NULL,\n" +
                     " CONSTRAINT id_projektant PRIMARY KEY (" + TABLE_DESIGNER_ID + ")\n" +
                     ")");
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_DESIGNER + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean insertDesigner(Designer designer) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_DESIGNER);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DESIGNER +
+                            " (" + TABLE_DESIGNER_ID + ", " + TABLE_DESIGNER_NAME + ", " + TABLE_DESIGNER_SURNAME + ", " + TABLE_DESIGNER_EMAIL
+                            + ", " + TABLE_DESIGNER_PHONE + ") VALUES (" + id + ", '" + designer.getName() + "', '" + designer.getSurname() + "', '" +
+                            designer.getEmail() + "', '" + designer.getPhoneNumber() + "')");
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public boolean updateDesigner(Designer designer) throws SQLException {
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate("UPDATE " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " SET " +
+                            TABLE_DESIGNER_NAME + " = '" + designer.getName() + "', " + TABLE_DESIGNER_SURNAME + " = '" + designer.getSurname() + "', " +
+                            TABLE_DESIGNER_EMAIL + " = '" + designer.getEmail() + "', " + TABLE_DESIGNER_PHONE + " = '" + designer.getPhoneNumber() + "' WHERE " +
+                            TABLE_DESIGNER_ID + " = " + designer.getId());
+
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deleteDesigner(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " WHERE " + TABLE_DESIGNER_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_DESIGNER + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Designer> getDesigners() {
+        List<Designer> designers = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_DESIGNER)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_DESIGNER_ID);
+                String name = resultSet.getString(INDEX_DESIGNER_NAME);
+                String surname = resultSet.getString(INDEX_DESIGNER_SURNAME);
+                String email = resultSet.getString(INDEX_DESIGNER_EMAIL);
+                String phoneNumber = resultSet.getString(INDEX_DESIGNER_PHONE);
+                Designer designer = new Designer(id, name, surname, email, phoneNumber);
+
+                designers.add(designer);
+            }
+
+            return designers;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_DESIGNER + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1228,6 +1484,50 @@ public class Datasource {
         }catch(SQLException e){
             System.out.println("Couldn't create " + TABLE_OPINION + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean insertOpinion(Opinion opinion) {
+        try (Statement statement = connection.createStatement()) {
+            int id = findLowestFreeId(TABLE_OPINION);
+            statement.execute("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (" +
+                    TABLE_OPINION_ID + ", " + TABLE_OPINION_DESC + ") VALUES (" + id + ", '" + opinion.getDescription() + "')");
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert record into " + TABLE_OPINION + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void deleteOpinion(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_OPINION + " WHERE " + TABLE_OPINION_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete record from " + TABLE_OPINION + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Opinion> getOpinions() {
+        List<Opinion> opinions = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_OPINION)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_OPINION_ID);
+                String description = resultSet.getString(INDEX_OPINION_DESC);
+                Opinion opinion = new Opinion(id, description);
+
+                opinions.add(opinion);
+            }
+
+            return opinions;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_OPINION + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 

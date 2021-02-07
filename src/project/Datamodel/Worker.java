@@ -1,18 +1,16 @@
 package project.Datamodel;
 
-public class Manager {
+public class Worker {
     private final int id;
     private final String name;
     private final String surname;
-    private final String phoneNumber;
     private final String email;
 
-    public Manager(int id, String... data) {
+    public Worker(int id, String... data) {
         this.id = id;
         this.name = data[0];
         this.surname = data[1];
-        this.phoneNumber = data[2];
-        this.email = data[3];
+        this.email = data[2];
     }
 
     public int getId() {
@@ -25,10 +23,6 @@ public class Manager {
 
     public String getSurname() {
         return this.surname;
-    }
-
-    public String getPhoneNumber() {
-        return this.phoneNumber;
     }
 
     public String getEmail() {
