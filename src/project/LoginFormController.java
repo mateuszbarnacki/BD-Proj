@@ -154,15 +154,8 @@ public class LoginFormController {
     }
 
     private void alertCreator(Alert.AlertType type, String title, String content){
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if(result.isPresent()){
-            alert.close();
-        }
+        AlertLoader loader = new AlertLoader(type, title, content);
+        loader.load();
     }
 }
 

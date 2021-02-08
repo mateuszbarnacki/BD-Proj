@@ -3,13 +3,10 @@ package project;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import project.Datamodel.Account;
 import project.Datamodel.Datasource;
-
-import java.util.Optional;
 
 public class RegisterFormController {
     @FXML
@@ -44,14 +41,8 @@ public class RegisterFormController {
     }
 
     private void alertCreator(Alert.AlertType type, String contentText){
-        Alert alert = new Alert(type);
-        alert.setTitle("Utworzenie konta");
-        alert.setHeaderText(null);
-        alert.setContentText(contentText);
-        Optional<ButtonType> response = alert.showAndWait();
-        if(response.isPresent()){
-            alert.close();
-        }
+        AlertLoader alertLoader = new AlertLoader(type, "Utworzenie konta", contentText);
+        alertLoader.load();
     }
 
     private boolean fieldsValidation(){

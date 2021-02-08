@@ -43,25 +43,8 @@ public class DepartmentWindowController {
 
     @FXML
     public void displayPreviousPage(MouseEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("WarehouseWindow.fxml"));
-        BorderPane temp = new BorderPane();
-
-        try {
-            temp.setCenter(fxmlLoader.load());
-        } catch (IOException e) {
-            System.out.println("Couldn't load warehouse window: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("AppTopMenu.fxml"));
-        try {
-            temp.setTop(fxmlLoader.load());
-        } catch (IOException e) {
-            System.out.println("Couldn't load top menu: " + e.getMessage());
-        }
-
+        PageLoader pageLoader = new PageLoader("WarehouseWindow");
+        BorderPane temp = pageLoader.load();
         this.borderPane.getScene().setRoot(temp);
     }
 
@@ -86,43 +69,19 @@ public class DepartmentWindowController {
         if(result.isPresent() && (result.get() == ButtonType.OK)) {
             DepartmentDialogController controller = fxmlLoader.getController();
             if (controller.processResult()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Kreator działów");
-                alert.setHeaderText(null);
-                alert.setContentText("Zaktualizowano listę działów");
-                Optional<ButtonType> response = alert.showAndWait();
-                if (response.isPresent()) {
-                    Task<ObservableList<Department>> task = new GetListOfDepartments();
-                    departmentsList.itemsProperty().bind(task.valueProperty());
-                    new Thread(task).start();
-                    alert.close();
-                }
+                AlertLoader loader = new AlertLoader(Alert.AlertType.INFORMATION, "Kreator działów", "Zaktualizowano listę działów");
+                loader.load();
+                Task<ObservableList<Department>> task = new GetListOfDepartments();
+                departmentsList.itemsProperty().bind(task.valueProperty());
+                new Thread(task).start();
             }
         }
     }
 
     @FXML
     public void loadStuffSection(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("StuffSection.fxml"));
-        BorderPane temp = new BorderPane();
-
-        try{
-            temp.setCenter(fxmlLoader.load());
-        } catch (IOException e) {
-            System.out.println("Couldn't load stuff section page: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("AppTopMenu.fxml"));
-        try{
-            temp.setTop(fxmlLoader.load());
-        } catch (IOException e) {
-            System.out.println("Couldn't load app top menu: " + e.getMessage());
-            e.printStackTrace();
-        }
-
+        PageLoader loader = new PageLoader("StuffSection");
+        BorderPane temp = loader.load();
         this.borderPane.getScene().setRoot(temp);
     }
 
