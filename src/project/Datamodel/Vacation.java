@@ -24,4 +24,9 @@ public class Vacation {
     public Date getEnd() {
         return this.end;
     }
+
+    @Override
+    public String toString() {
+        return "Data rozpoczęcia: " + this.beginning + " \nData zakończenia: " + this.end;
+    }
 }

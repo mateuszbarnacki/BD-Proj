@@ -25,4 +25,9 @@ public class Commodity {
     public double getPrice() {
         return this.price.get();
     }
+
+    @Override
+    public String toString() {
+        return "Nazwa: " + this.name.get() + " \nCena: " + this.price.get();
+    }
 }

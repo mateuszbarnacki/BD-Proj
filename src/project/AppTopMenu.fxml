@@ -8,26 +8,26 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="project.AppTopMenuController">
+            fx:controller="project.AppTopMenuController" fx:id="borderPane">
     <top>
         <MenuBar>
             <Menu text="Opcje">
                 <items>
-                    <MenuItem text="Wyloguj"/>
+                    <MenuItem text="Wyloguj" onAction="#logout"/>
                     <MenuItem text="Zamknij" onAction="#close"/>
                 </items>
             </Menu>
             <Menu text="Baza">
                 <items>
-                    <MenuItem text="Działy"/>
-                    <MenuItem text="Kierownicy"/>
-                    <MenuItem text="Pracownicy"/>
-                    <MenuItem text="Projektanci"/>
-                    <MenuItem text="Obowiązki"/>
-                    <MenuItem text="Plany urlopowe"/>
-                    <MenuItem text="Ekspozycje"/>
-                    <MenuItem text="Towary"/>
-                    <MenuItem text="Opinie"/>
+                    <MenuItem text="Działy" onAction="#printDepartments"/>
+                    <MenuItem text="Kierownicy" onAction="#printManagers"/>
+                    <MenuItem text="Pracownicy" onAction="#printWorkers"/>
+                    <MenuItem text="Projektanci" onAction="#printDesigners"/>
+                    <MenuItem text="Obowiązki" onAction="#printDuties"/>
+                    <MenuItem text="Plany urlopowe" onAction="#printVacations"/>
+                    <MenuItem text="Ekspozycje" onAction="#printExpositions"/>
+                    <MenuItem text="Towary" onAction="#printCommodities"/>
+                    <MenuItem text="Opinie" onAction="#printOpinions"/>
                 </items>
             </Menu>
         </MenuBar>

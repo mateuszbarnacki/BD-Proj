@@ -37,4 +37,9 @@ public class Manager {
     public String getEmail() {
         return this.email.get();
     }
+
+    @Override
+    public String toString() {
+        return "Imie: " + this.name.get() + " \nNazwisko: " + this.surname.get() + " \nNumer telefonu: " + this.phoneNumber.get() + " \nAdres email: " + this.email.get();
+    }
 }

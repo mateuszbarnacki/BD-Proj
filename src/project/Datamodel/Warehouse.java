@@ -28,4 +28,9 @@ public class Warehouse {
     public String getPostcode(){
         return this.postcode;
     }
+
+    @Override
+    public String toString() {
+        return "Nazwa: " + this.name + " \nUlica: " + this.street + " \nMiasto: " + this.city + " \nKod pocztowy: " + this.postcode;
+    }
 }
