@@ -1145,7 +1145,7 @@ public class Datasource {
             Statement statement = connection.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DUTIES + " (\n" +
                     TABLE_DUTIES_ID + " INTEGER NOT NULL,\n" +
-                    TABLE_DUTIES_DESC + " VARCHAR(30) NOT NULL,\n" +
+                    TABLE_DUTIES_DESC + " VARCHAR(200) NOT NULL,\n" +
                     " CONSTRAINT id_obowiazek PRIMARY KEY (" + TABLE_DUTIES_ID + ")\n" +
                     ")");
         }catch(SQLException e){

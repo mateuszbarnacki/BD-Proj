@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.DutyDialogController">
+    <center>
+        <GridPane alignment="CENTER" hgap="5" vgap="10">
+            <Label text="Opis: " textAlignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 16px;"/>
+            <TextArea fx:id="description" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="250" prefHeight="200" wrapText="true" style="-fx-font-size: 14px;"/>
+        </GridPane>
+    </center>
+</BorderPane>

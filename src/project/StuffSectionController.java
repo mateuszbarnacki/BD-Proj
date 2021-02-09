@@ -25,7 +25,9 @@ public class StuffSectionController {
 
     @FXML
     public void loadVacationPage(ActionEvent event) {
-
+        PageLoader pageLoader = new PageLoader("SecondWorkerWindow");
+        BorderPane temp = pageLoader.load();
+        this.borderPane.getScene().setRoot(temp);
     }
 
 }

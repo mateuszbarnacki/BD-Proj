@@ -1,31 +1,34 @@
 package project.Datamodel;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Worker {
-    private final int id;
-    private final String name;
-    private final String surname;
-    private final String email;
+    private final SimpleIntegerProperty id = new SimpleIntegerProperty();
+    private final SimpleStringProperty name = new SimpleStringProperty();
+    private final SimpleStringProperty surname = new SimpleStringProperty();
+    private final SimpleStringProperty email = new SimpleStringProperty();
 
     public Worker(int id, String... data) {
-        this.id = id;
-        this.name = data[0];
-        this.surname = data[1];
-        this.email = data[2];
+        this.id.set(id);
+        this.name.set(data[0]);
+        this.surname.set(data[1]);
+        this.email.set(data[2]);
     }
 
     public int getId() {
-        return this.id;
+        return this.id.get();
     }
 
     public String getName() {
-        return this.name;
+        return this.name.get();
     }
 
     public String getSurname() {
-        return this.surname;
+        return this.surname.get();
     }
 
     public String getEmail() {
-        return this.email;
+        return this.email.get();
     }
 }
