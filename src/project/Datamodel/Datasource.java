@@ -96,7 +96,7 @@ public class Datasource {
     public static final String TABLE_DESIGNER_NAME = "imie";
     public static final String TABLE_DESIGNER_SURNAME = "nazwisko";
     public static final String TABLE_DESIGNER_EMAIL = "adres_email";
-    public static final String TABLE_DESIGNER_PHONE = "nr_telefonu";
+    public static final String TABLE_DESIGNER_PHONE = "numer_telefonu";
     public static final int INDEX_DESIGNER_ID = 1;
     public static final int INDEX_DESIGNER_NAME = 2;
     public static final int INDEX_DESIGNER_SURNAME = 3;
@@ -762,7 +762,7 @@ public class Datasource {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT id_" + table + " FROM " + Session.getInstance().getToken() + "." + table)) {
             int counter = 1;
-            int temp = 0;
+            int temp;
             while (resultSet.next()) {
                 temp = resultSet.getInt(1);
                 if(counter != temp){
@@ -833,7 +833,7 @@ public class Datasource {
     }
 
     public List<Account> getAccounts(){
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
         try(Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(GET_ALL_ACCOUNTS);
             while(resultSet.next()){
@@ -863,8 +863,7 @@ public class Datasource {
                 String name = resultSet.getString(INDEX_ACCOUNT_NAME);
                 String login = resultSet.getString(INDEX_ACCOUNT_LOGIN);
                 String password = resultSet.getString(INDEX_ACCOUNT_PASSWORD);
-                Account temp = new Account(name, login, password);
-                account = temp;
+                account = new Account(name, login, password);
             }
             resultSet.close();
             return account;
@@ -907,16 +906,16 @@ public class Datasource {
         int id = findLowestFreeId(TABLE_WAREHOUSE);
         int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE +
                     " (" + TABLE_WAREHOUSE_ID + ", " + TABLE_WAREHOUSE_NAME + ", " + TABLE_WAREHOUSE_STREET + ", " + TABLE_WAREHOUSE_CITY + ", " + TABLE_WAREHOUSE_POSTCODE + ")" +
-                    " VALUES (" + id + ", \'" + data.getName() + "\', \'" + data.getStreet() + "\', \'" + data.getCity() + "\', \'" + data.getPostcode() + "\')");
+                    " VALUES (" + id + ", '" + data.getName() + "', '" + data.getStreet() + "', '" + data.getCity() + "', '" + data.getPostcode() + "')");
         statement.close();
         return affectedRows == 1;
     }
 
     public boolean updateWarehouse(Warehouse data) throws SQLException{
         Statement statement = connection.createStatement();
-        int affectedRows = statement.executeUpdate( "UPDATE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " SET " + TABLE_WAREHOUSE_NAME + " = \'" + data.getName() + "\', " +
-                    TABLE_WAREHOUSE_STREET + " = \'" + data.getStreet() + "\', " + TABLE_WAREHOUSE_CITY + " = \'" + data.getCity() + "\', " +
-                    TABLE_WAREHOUSE_POSTCODE + " = \'" + data.getPostcode() + "\' WHERE " + TABLE_WAREHOUSE_ID  + " = 1" );
+        int affectedRows = statement.executeUpdate( "UPDATE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " SET " + TABLE_WAREHOUSE_NAME + " = '" + data.getName() + "', " +
+                    TABLE_WAREHOUSE_STREET + " = '" + data.getStreet() + "', " + TABLE_WAREHOUSE_CITY + " = '" + data.getCity() + "', " +
+                    TABLE_WAREHOUSE_POSTCODE + " = '" + data.getPostcode() + "' WHERE " + TABLE_WAREHOUSE_ID  + " = 1" );
         statement.close();
         return affectedRows == 1;
     }
@@ -960,7 +959,7 @@ public class Datasource {
         try (Statement statement = connection.createStatement()) {
             int id = findLowestFreeId(TABLE_DEPARTMENT);
             int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT
-                                + " VALUES (" + id + ", \'" + name + "\')");
+                                + " VALUES (" + id + ", '" + name + "')");
 
             return affectedRows == 1;
         } catch (SQLException e) {

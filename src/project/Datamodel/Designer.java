@@ -1,18 +1,20 @@
 package project.Datamodel;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Designer {
     private final int id;
-    private final String name;
-    private final String surname;
-    private final String phoneNumber;
-    private final String email;
+    private final SimpleStringProperty name = new SimpleStringProperty();
+    private final SimpleStringProperty surname = new SimpleStringProperty();
+    private final SimpleStringProperty phoneNumber = new SimpleStringProperty();
+    private final SimpleStringProperty email = new SimpleStringProperty();
 
     public Designer(int id, String... data) {
         this.id = id;
-        this.name = data[0];
-        this.surname = data[1];
-        this.email = data[2];
-        this.phoneNumber = data[3];
+        this.name.set(data[0]);
+        this.surname.set(data[1]);
+        this.email.set(data[2]);
+        this.phoneNumber.set(data[3]);
     }
 
     public int getId() {
@@ -20,18 +22,18 @@ public class Designer {
     }
 
     public String getName() {
-        return this.name;
+        return this.name.get();
     }
 
     public String getSurname() {
-        return this.surname;
+        return this.surname.get();
     }
 
     public String getPhoneNumber() {
-        return this.phoneNumber;
+        return this.phoneNumber.get();
     }
 
     public String getEmail() {
-        return this.email;
+        return this.email.get();
     }
 }

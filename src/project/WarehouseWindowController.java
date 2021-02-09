@@ -11,6 +11,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import project.Datamodel.Datasource;
 import project.Datamodel.Warehouse;
+
+import java.io.IOException;
 import java.util.Optional;
 
 public class WarehouseWindowController {
@@ -55,13 +57,23 @@ public class WarehouseWindowController {
 
     @FXML
     public void createWarehouse(ActionEvent event){
-        DialogLoader dialogLoader = new DialogLoader("WarehouseDialog");
-        Dialog<ButtonType> dialog = dialogLoader.load();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("WarehouseDialog.fxml"));
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e) {
+            System.out.println("Couldn't load warehouse window: " + e.getMessage());
+            e.printStackTrace();
+        }
+
 
         Optional<ButtonType> response = dialog.showAndWait();
         if(response.isPresent() && (response.get() == ButtonType.OK)) {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("WarehouseDialog.fxml"));
             WarehouseDialogController controller = fxmlLoader.getController();
             if(controller.processResult("wstaw")){
                 setLabels();
@@ -75,13 +87,22 @@ public class WarehouseWindowController {
 
     @FXML
     public void editWarehouse(ActionEvent event) {
-        DialogLoader loader = new DialogLoader("WarehouseDialog");
-        Dialog<ButtonType> dialog = loader.load();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("WarehouseDialog.fxml"));
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e) {
+            System.out.println("Couldn't load warehouse window: " + e.getMessage());
+            e.printStackTrace();
+        }
 
         Optional<ButtonType> response = dialog.showAndWait();
         if(response.isPresent() && (response.get() == ButtonType.OK)) {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("WarehouseDialog.fxml"));
             WarehouseDialogController controller = fxmlLoader.getController();
             if(controller.processResult("edytuj")){
                 setLabels();
