@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.CommodityWindowController" fx:id="borderPane">
+    <left>
+        <HBox prefWidth="40">
+            <Label text="Powrót" onMouseClicked="#displayPreviousPage" style="-fx-font-size: 12px; -fx-text-fill: orange;"/>
+        </HBox>
+    </left>
+    <center>
+        <VBox alignment="CENTER" spacing="10" prefWidth="320">
+            <Label text="Towary w ekspozycji" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
+            <TableView fx:id="commoditiesList" onMouseClicked="#showOptions">
+                <columns>
+                    <TableColumn text="Nazwa">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="name"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Cena">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="price"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+            <Button fx:id="addCommodityButton" text="Dodaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#addCommodity" style="-fx-background-radius: 30px;"/>
+            <HBox fx:id="hBox" spacing="15" alignment="CENTER">
+                <Button text="Usuń" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#deleteCommodity" style="-fx-background-radius: 30px;"/>
+                <Button text="Edytuj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#editCommodity" style="-fx-background-radius: 30px;"/>
+                <Button text="Opinie" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#loadOpinionPage" style="-fx-background-radius: 30px;"/>
+            </HBox>
+        </VBox>
+    </center>
+    <right>
+        <HBox prefWidth="40"/>
+    </right>
+</BorderPane>

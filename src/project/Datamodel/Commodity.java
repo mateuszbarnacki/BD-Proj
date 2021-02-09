@@ -1,14 +1,17 @@
 package project.Datamodel;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Commodity {
     private final int id;
-    private final String name;
-    private final double price;
+    private final SimpleStringProperty name = new SimpleStringProperty();
+    private final SimpleDoubleProperty price = new SimpleDoubleProperty();
 
     public Commodity(int id, String name, double price) {
         this.id = id;
-        this.name = name;
-        this.price = price;
+        this.name.set(name);
+        this.price.set(price);
     }
 
     public int getId() {
@@ -16,10 +19,10 @@ public class Commodity {
     }
 
     public String getName() {
-        return this.name;
+        return this.name.get();
     }
 
     public double getPrice() {
-        return this.price;
+        return this.price.get();
     }
 }

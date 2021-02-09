@@ -1217,7 +1217,7 @@ public class Datasource {
         int id = findLowestFreeId(TABLE_VACATION);
         int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_VACATION +
                             " (" + TABLE_VACATION_ID + ", " + TABLE_VACATION_BEGINNING + ", " + TABLE_VACATION_END + ") VALUES ("
-                            + id + ", " + vacation.getBeginning() + ", " + vacation.getEnd() + ")");
+                            + id + ", '" + vacation.getBeginning() + "', '" + vacation.getEnd() + "')");
 
         statement.close();
         return affectedRows == 1;
@@ -1487,17 +1487,13 @@ public class Datasource {
         }
     }
 
-    public boolean insertOpinion(Opinion opinion) {
-        try (Statement statement = connection.createStatement()) {
-            int id = findLowestFreeId(TABLE_OPINION);
-            statement.execute("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (" +
+    public boolean insertOpinion(Opinion opinion) throws SQLException {
+        Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_OPINION);
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (" +
                     TABLE_OPINION_ID + ", " + TABLE_OPINION_DESC + ") VALUES (" + id + ", '" + opinion.getDescription() + "')");
-            return true;
-        } catch (SQLException e) {
-            System.out.println("Couldn't insert record into " + TABLE_OPINION + " table: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+        statement.close();
+        return affectedRows == 1;
     }
 
     public void deleteOpinion(int id) {

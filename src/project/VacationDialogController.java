@@ -3,12 +3,11 @@ package project;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
-import org.w3c.dom.events.MouseEvent;
 import project.Datamodel.Datasource;
+import project.Datamodel.Vacation;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.time.temporal.TemporalField;
 
 public class VacationDialogController {
     @FXML
@@ -17,22 +16,19 @@ public class VacationDialogController {
     public DatePicker endDate;
 
     public boolean processResult(){
-        System.out.println(beginningDate.getValue());
+        Date begin = Date.valueOf(beginningDate.getValue());
+        Date end = Date.valueOf(endDate.getValue());
+        Vacation vacation = new Vacation(1, begin, end);
         try {
-            if (Datasource.getInstance().insertVacation(null)) {
-                AlertLoader loader = new AlertLoader(Alert.AlertType.INFORMATION, "Kreator magazynu", "Magazyn został utworzony");
-                loader.load();
+            if (begin.compareTo(end) <= 0) {
+                return Datasource.getInstance().insertVacation(vacation);
+            } else {
+                throw new SQLException("Błędny przydział czasu!");
             }
-            return true;
         } catch (SQLException e) {
-            AlertLoader loader = new AlertLoader(Alert.AlertType.ERROR, "Błąd utworzenia magazynu", "Nie można utworzyć magazynu: " + e.getMessage().split("!")[0] + "!");
+            AlertLoader loader = new AlertLoader(Alert.AlertType.ERROR, "Błąd dodania urlopu", "Nie można zapisać urlopu: " + e.getMessage().split("!")[0] + "!");
             loader.load();
             return false;
         }
-    }
-
-    public void test(javafx.scene.input.MouseEvent event) {
-        Date date = Date.valueOf(beginningDate.getValue());
-        System.out.println(date);
     }
 }

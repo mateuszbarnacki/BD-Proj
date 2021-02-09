@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.ExpositionDialogController">
+    <center>
+        <GridPane alignment="CENTER" hgap="5" vgap="10">
+            <Label text="Nazwa: " textAlignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 16px;"/>
+            <TextField fx:id="name" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        </GridPane>
+    </center>
+</BorderPane>

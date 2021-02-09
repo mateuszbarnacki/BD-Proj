@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -12,7 +8,7 @@
     <center>
         <GridPane alignment="CENTER" vgap="10" hgap="5">
             <Label text="Data rozpoczęcia: " textAlignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 16px;"/>
-            <DatePicker fx:id="beginningDate" GridPane.rowIndex="0" GridPane.columnIndex="1" onMouseClicked="#test"/>
+            <DatePicker fx:id="beginningDate" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
             <Label text="Data zakończenia: " textAlignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-size: 16px;"/>
             <DatePicker fx:id="endDate" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
         </GridPane>

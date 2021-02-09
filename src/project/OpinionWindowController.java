@@ -10,45 +10,45 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import project.Datamodel.Datasource;
-import project.Datamodel.Vacation;
+import project.Datamodel.Opinion;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public class VacationWindowController {
+public class OpinionWindowController {
     @FXML
     public BorderPane borderPane;
     @FXML
-    public TableView<Vacation> vacationsList;
+    public ListView<Opinion> opinionsList;
     @FXML
-    public Button addVacationButton;
+    public Button addOpinionButton;
     @FXML
-    public Button deleteVacationButton;
+    public Button deleteOpinionButton;
 
     public void initialize() {
-        deleteVacationButton.setVisible(false);
+        deleteOpinionButton.setVisible(false);
         refreshListView();
     }
 
     @FXML
     public void displayPreviousPage(MouseEvent event) {
-        PageLoader pageLoader = new PageLoader("SecondWorkerWindow");
+        PageLoader pageLoader = new PageLoader("CommodityWindow");
         BorderPane temp = pageLoader.load();
         this.borderPane.getScene().setRoot(temp);
     }
 
     @FXML
     public void showOptions(MouseEvent event) {
-        if(!vacationsList.getSelectionModel().isEmpty()){
-            addVacationButton.setVisible(false);
-            deleteVacationButton.setVisible(true);
+        if(!opinionsList.getSelectionModel().isEmpty()){
+            addOpinionButton.setVisible(false);
+            deleteOpinionButton.setVisible(true);
         }
     }
 
     @FXML
-    public void addVacation(ActionEvent event) {
+    public void addOpinion(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("VacationDialog.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("OpinionDialog.fxml"));
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
@@ -57,16 +57,16 @@ public class VacationWindowController {
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
-            System.out.println("Couldn't load vacation dialog window: " + e.getMessage());
+            System.out.println("Couldn't load opinion dialog window: " + e.getMessage());
             e.printStackTrace();
         }
 
         Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.isPresent() && (result.get() == ButtonType.OK)) {
-            VacationDialogController controller = fxmlLoader.getController();
+            OpinionDialogController controller = fxmlLoader.getController();
             if (controller.processResult()) {
-                AlertLoader alertLoader = new AlertLoader(Alert.AlertType.INFORMATION, "Zaktualizowano listę rekordów", "Dodano urlop");
+                AlertLoader alertLoader = new AlertLoader(Alert.AlertType.INFORMATION, "Zaktualizowano listę rekordów", "Dodanie opini");
                 alertLoader.load();
                 refreshListView();
             }
@@ -74,33 +74,32 @@ public class VacationWindowController {
     }
 
     @FXML
-    public void deleteVacation(ActionEvent event) {
+    public void deleteOpinion(ActionEvent event) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.setTitle("Usunięcie urlopu");
-        dialog.setContentText("Czy na pewno chcesz usunąć ten urlop?");
+        dialog.setTitle("Usunięcie opini");
+        dialog.setContentText("Czy na pewno chcesz usunąć opinię?");
 
         Optional<ButtonType> response = dialog.showAndWait();
         if (response.isPresent() && (response.get() == ButtonType.OK)) {
-            Datasource.getInstance().deleteVacation(vacationsList.getSelectionModel().getSelectedItem().getId());
+            Datasource.getInstance().deleteOpinion(opinionsList.getSelectionModel().getSelectedItem().getId());
             refreshListView();
-            addVacationButton.setVisible(true);
-            deleteVacationButton.setVisible(false);
+            addOpinionButton.setVisible(true);
+            deleteOpinionButton.setVisible(false);
         }
     }
 
     private void refreshListView() {
-        Task<ObservableList<Vacation>> task = new GetListOfVacations();
-        vacationsList.itemsProperty().bind(task.valueProperty());
+        Task<ObservableList<Opinion>> task = new GetListOfOpinions();
+        opinionsList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfVacations extends Task {
+class GetListOfOpinions extends Task {
     @Override
-    public ObservableList<Vacation> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getVacations());
+    public ObservableList<Opinion> call() throws Exception {
+        return FXCollections.observableArrayList(Datasource.getInstance().getOpinions());
     }
 }
-

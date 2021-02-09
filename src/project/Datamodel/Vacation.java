@@ -1,6 +1,6 @@
 package project.Datamodel;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Vacation {
     private final int id;

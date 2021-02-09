@@ -87,7 +87,9 @@ public class DepartmentWindowController {
 
     @FXML
     public void loadProductsSection(ActionEvent event) {
-
+        PageLoader loader = new PageLoader("ExpositionWindow");
+        BorderPane temp = loader.load();
+        this.borderPane.getScene().setRoot(temp);
     }
 }
 

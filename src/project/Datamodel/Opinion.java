@@ -16,4 +16,9 @@ public class Opinion {
     public String getDescription() {
         return this.description;
     }
+
+    @Override
+    public String toString() {
+        return this.description;
+    }
 }
