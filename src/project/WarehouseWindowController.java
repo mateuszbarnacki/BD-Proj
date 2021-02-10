@@ -114,6 +114,7 @@ public class WarehouseWindowController {
     public void manageDepartment(ActionEvent event){
         PageLoader loader = new PageLoader("DepartmentWindow");
         BorderPane temp = loader.load();
+        DatabasePath.getInstance().setIdWarehouse(1);
         this.borderPane.getScene().setRoot(temp);
     }
 

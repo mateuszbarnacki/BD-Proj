@@ -123,6 +123,7 @@ public class WorkerWindowController {
     public void loadDutyPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("DutyWindow");
         BorderPane temp = pageLoader.load();
+        DatabasePath.getInstance().setIdWorker(workersList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 

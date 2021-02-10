@@ -123,6 +123,7 @@ public class CommodityWindowController {
     public void loadOpinionPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("OpinionWindow");
         BorderPane temp = pageLoader.load();
+        DatabasePath.getInstance().setIdCommodity(commoditiesList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 

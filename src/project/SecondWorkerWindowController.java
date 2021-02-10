@@ -74,6 +74,7 @@ public class SecondWorkerWindowController {
     public void loadVacationPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("VacationWindow");
         BorderPane temp = pageLoader.load();
+        DatabasePath.getInstance().setIdWorker(workersList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 

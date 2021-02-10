@@ -1,5 +1,6 @@
 package project.Datamodel;
 
+import project.DatabasePath;
 import project.Session;
 
 import java.sql.*;
@@ -961,7 +962,8 @@ public class Datasource {
             int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT
                                 + " VALUES (" + id + ", '" + name + "')");
 
-            return affectedRows == 1;
+            boolean canWarehouseDepartmentInsert = insertWarehouseDepartment(DatabasePath.getInstance().getIdWarehouse(), id);
+            return affectedRows == 1 && canWarehouseDepartmentInsert;
         } catch (SQLException e) {
             System.out.println("Couldn't insert into " + TABLE_DEPARTMENT + " table: " + e.getMessage());
             e.printStackTrace();
@@ -1018,7 +1020,8 @@ public class Datasource {
                 manager.getPhoneNumber() + "', '" + manager.getEmail() + "')");
 
         statement.close();
-        return affectedRows == 1;
+        boolean canDepartmentManagerInsert = insertDepartmentManager(DatabasePath.getInstance().getIdDepartment(), id);
+        return affectedRows == 1 && canDepartmentManagerInsert;
     }
 
     public boolean updateManager(Manager manager) throws SQLException {
@@ -1092,7 +1095,8 @@ public class Datasource {
                             ") VALUES (" + id + ", '" + worker.getName() + "', '" + worker.getSurname() + "', '" + worker.getEmail() + "')");
 
         statement.close();
-        return affectedRows == 1;
+        boolean canManagerWorkerInsert = insertManagerWorker(DatabasePath.getInstance().getIdManager(), id);
+        return affectedRows == 1 && canManagerWorkerInsert;
     }
 
     public boolean updateWorker(Worker worker) throws SQLException {
@@ -1160,7 +1164,8 @@ public class Datasource {
                             "(" + TABLE_DUTIES_ID + ", " + TABLE_DUTIES_DESC + ") VALUES (" + id + ", '" + duty.getDescription() + "')");
 
         statement.close();
-        return affectedRows == 1;
+        boolean canWorkerDutyInsert = insertWorkerDuty(DatabasePath.getInstance().getIdWorker(), id);
+        return affectedRows == 1 && canWorkerDutyInsert;
     }
 
     public void deleteDuty(int id) {
@@ -1219,7 +1224,8 @@ public class Datasource {
                             + id + ", '" + vacation.getBeginning() + "', '" + vacation.getEnd() + "')");
 
         statement.close();
-        return affectedRows == 1;
+        boolean canWorkerVacationInsert = insertWorkerVacation(DatabasePath.getInstance().getIdWorker(), id);
+        return affectedRows == 1 && canWorkerVacationInsert;
     }
 
     public void deleteVacation(int id) {
@@ -1279,7 +1285,8 @@ public class Datasource {
                             id + ", '" + exposition.getName() + "', " + exposition.getPrice() + ")");
 
         statement.close();
-        return affectedRows == 1;
+        boolean canDepartmentExpositionInsert = insertDepartmentExposition(DatabasePath.getInstance().getIdDepartment(), id);
+        return affectedRows == 1 && canDepartmentExpositionInsert;
     }
 
     public boolean updateExposition(Exposition exposition) throws SQLException {
@@ -1349,7 +1356,8 @@ public class Datasource {
                             id + ", '" + commodity.getName() + "', " + commodity.getPrice() + ")");
 
         statement.close();
-        return affectedRows == 1;
+        boolean canExpositionCommodityInsert = insertExpositionCommodity(DatabasePath.getInstance().getIdExposition(), id);
+        return affectedRows == 1 && canExpositionCommodityInsert;
     }
 
     public boolean updateCommodity(Commodity commodity) throws SQLException {
@@ -1422,7 +1430,8 @@ public class Datasource {
                             designer.getEmail() + "', '" + designer.getPhoneNumber() + "')");
 
         statement.close();
-        return affectedRows == 1;
+        boolean canExpositionDesignerInsert = insertExpositionDesigner(DatabasePath.getInstance().getIdExposition(), id);
+        return affectedRows == 1 && canExpositionDesignerInsert;
     }
 
     public boolean updateDesigner(Designer designer) throws SQLException {
@@ -1492,7 +1501,8 @@ public class Datasource {
         int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (" +
                     TABLE_OPINION_ID + ", " + TABLE_OPINION_DESC + ") VALUES (" + id + ", '" + opinion.getDescription() + "')");
         statement.close();
-        return affectedRows == 1;
+        boolean canCommodityOpinionInsert = insertCommodityOpinion(DatabasePath.getInstance().getIdCommodity(), id);
+        return affectedRows == 1 && canCommodityOpinionInsert;
     }
 
     public void deleteOpinion(int id) {
@@ -1529,8 +1539,7 @@ public class Datasource {
     // ============================== COMMODITY_OPINION_TABLE ================
 
     private void createCommodityOpinionTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute(    "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " (\n" +
                     TABLE_COMMODITY_OPINION_ID_COMMODITY + " INTEGER NOT NULL,\n" +
                     TABLE_COMMODITY_OPINION_ID_OPINION + " INTEGER NOT NULL,\n" +
@@ -1542,11 +1551,22 @@ public class Datasource {
         }
     }
 
+    private boolean insertCommodityOpinion(int idCommodity, int idOpinion) {
+        try (Statement statement = connection.createStatement()) {
+             int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION +
+                     " VALUES (" + idCommodity + ", " + idOpinion + ")");
+             return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_COMMODITY_OPINION + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //================================= EXPOSITION_DESIGNER_TABLE ====================
 
     private void createExpositionDesignerTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute( "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " (\n" +
                     TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
                     TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + " INTEGER NOT NULL,\n" +
@@ -1558,12 +1578,22 @@ public class Datasource {
         }
     }
 
+    private boolean insertExpositionDesigner(int idExposition, int idDesigner) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER +
+                                " VALUES (" + idExposition + ", " + idDesigner + ")");
 
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_EXPOSITION_DESIGNER + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
     //================================== EXPOSITION_COMMODITY_TABLE =====================
 
     private void createExpositionCommodityTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute( "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " (\n" +
                     TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
                     TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + " INTEGER NOT NULL,\n" +
@@ -1575,11 +1605,23 @@ public class Datasource {
         }
     }
 
+    private boolean insertExpositionCommodity(int idExposition, int idCommodity) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY +
+                                " VALUES (" + idExposition + ", " + idCommodity + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_EXPOSITION_COMMODITY + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //=============================== WORKER_DUTY_TABLE =============================
 
     private void createWorkerDutyTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute(  "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " (\n" +
                     TABLE_WORKER_DUTY_ID_WORKER + " INTEGER NOT NULL,\n" +
                     TABLE_WORKER_DUTY_ID_DUTY + " INTEGER NOT NULL,\n" +
@@ -1591,11 +1633,23 @@ public class Datasource {
         }
     }
 
+    private boolean insertWorkerDuty(int idWorker, int idDuty) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY +
+                                " VALUES (" + idWorker + ", " + idDuty + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_WORKER_DUTY + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //=================================== WORKER_VACATION_TABLE ============================
 
     private void createWorkerVacationTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute(  "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " (\n" +
                     TABLE_WORKER_VACATION_ID_WORKER + " INTEGER NOT NULL,\n" +
                     TABLE_WORKER_VACATION_ID_VACATION + " INTEGER NOT NULL,\n" +
@@ -1607,11 +1661,23 @@ public class Datasource {
         }
     }
 
+    private boolean insertWorkerVacation(int idWorker, int idVacation) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION +
+                                " VALUES (" + idWorker + ", " + idVacation + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_WORKER_VACATION + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //======================================== MANAGER_WORKER_TABLE ================================
 
     private void createManagerWorkerTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute(  "CREATE TABLE IF NOT EXISTS " +  Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " (\n" +
                     TABLE_MANAGER_WORKER_ID_MANAGER + " INTEGER NOT NULL,\n" +
                     TABLE_MANAGER_WORKER_ID_WORKER + " INTEGER NOT NULL,\n" +
@@ -1623,11 +1689,23 @@ public class Datasource {
         }
     }
 
+    private boolean insertManagerWorker(int idManager, int idWorker) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER +
+                                " VALUES (" + idManager + ", " + idWorker + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_MANAGER_WORKER + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //====================================== DEPARTMENT_EXPOSITION_TABLE ===========================
 
     private void createDepartmentExpositionTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " (\n" +
                     TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
                     TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " INTEGER NOT NULL,\n" +
@@ -1639,11 +1717,23 @@ public class Datasource {
         }
     }
 
+    private boolean insertDepartmentExposition(int idDepartment, int idExposition) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION +
+                                " VALUES (" + idDepartment + ", " + idExposition + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_DEPARTMENT_EXPOSITION + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //======================================= DEPARTMENT_MANAGER_TABLE ================================
 
     private void createDepartmentManagerTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " (\n" +
                     TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
                     TABLE_DEPARTMENT_MANAGER_ID_MANAGER + " INTEGER NOT NULL,\n" +
@@ -1655,11 +1745,23 @@ public class Datasource {
         }
     }
 
+    private boolean insertDepartmentManager(int idDepartment, int idManager) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER +
+                                " VALUES (" + idDepartment + ", " + idManager + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_DEPARTMENT_MANAGER + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //======================================== WAREHOUSE_DEPARTMENT_TABLE =====================
 
     private void createWarehouseDepartmentTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " (\n" +
                     TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + " INTEGER NOT NULL,\n" +
                     TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + " INTEGER NOT NULL,\n" +
@@ -1671,11 +1773,23 @@ public class Datasource {
         }
     }
 
+    private boolean insertWarehouseDepartment(int idWarehouse, int idDepartment) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT +
+                                " VALUES (" + idWarehouse + ", " + idDepartment + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_WAREHOUSE_DEPARTMENT + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //====================================== Add foreign keys =====================
 
     private void alterTableCommodityOpinionFkOpinion(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT opinia_towar_opinia_fk\n" +
                     "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (" + TABLE_OPINION_ID + ")\n" +
@@ -1689,8 +1803,7 @@ public class Datasource {
     }
 
     private void dropTableCommodityOpinionFkOpinion(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " DROP CONSTRAINT IF EXISTS opinia_towar_opinia_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table commodity-opinion fkOpinion: " + e.getMessage());
@@ -1699,8 +1812,7 @@ public class Datasource {
     }
 
     private void alterTableCommodityOpinionFkCommodity(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT towar_towar_opinia_fk\n" +
                     "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
@@ -1714,8 +1826,7 @@ public class Datasource {
     }
 
     private void dropTableCommodityOpinionFkCommodity(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " DROP CONSTRAINT IF EXISTS towar_towar_opinia_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table commodity-opinion fkCommodity: " + e.getMessage());
@@ -1724,8 +1835,7 @@ public class Datasource {
     }
 
     private void alterTableExpositionDesignerFkDesigner(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT projektant_ekspozycja_projektant_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " (" + TABLE_DESIGNER_ID + ")\n" +
@@ -1739,8 +1849,7 @@ public class Datasource {
     }
 
     private void dropTableExpositionDesignerFkDesigner(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " DROP CONSTRAINT IF EXISTS projektant_ekspozycja_projektant_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table exposition-designer fkDesigner: " + e.getMessage());
@@ -1749,8 +1858,7 @@ public class Datasource {
     }
 
     private void alterTableExpositionDesignerFkExposition(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT ekspozycja_ekspozycja_projektant_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
@@ -1764,8 +1872,7 @@ public class Datasource {
     }
 
     private void dropTableExpositionDesignerFkExposition(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " DROP CONSTRAINT IF EXISTS ekspozycja_ekspozycja_projektant_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table exposition-designer fkExposition: " + e.getMessage());
@@ -1774,8 +1881,7 @@ public class Datasource {
     }
 
     private void alterTableExpositionCommodityFkCommodity(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT towar_ekspozycja_towar_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
@@ -1789,8 +1895,7 @@ public class Datasource {
     }
 
     private void dropTableExpositionCommodityFkCommodity(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " DROP CONSTRAINT IF EXISTS towar_ekspozycja_towar_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table exposition-commodity fkCommodity: " + e.getMessage());
@@ -1799,8 +1904,7 @@ public class Datasource {
     }
 
     private void alterTableExpositionCommodityFkExposition(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT ekspozycja_ekspozycja_towar_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
@@ -1814,8 +1918,7 @@ public class Datasource {
     }
 
     private void dropTableExpositionCommodityFkExposition(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " DROP CONSTRAINT IF EXISTS ekspozycja_ekspozycja_towar_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table exposition-commodity fkExposition: " + e.getMessage());
@@ -1824,8 +1927,7 @@ public class Datasource {
     }
 
     private void alterTableDepartmentExpositionFkExposition(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT ekspozycja_dzial_ekspozycja_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
@@ -1839,8 +1941,7 @@ public class Datasource {
     }
 
     private void dropTableDepartmentExpositionFkExposition(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()){
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " DROP CONSTRAINT IF EXISTS ekspozycja_dzial_ekspozycja_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table department-exposition fkExposition: " + e.getMessage());
@@ -1849,8 +1950,7 @@ public class Datasource {
     }
 
     private void alterTableDepartmentExpositionFkDepartment(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT dzial_dzial_ekspozycja_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
@@ -1864,8 +1964,7 @@ public class Datasource {
     }
 
     private void dropTableDepartmentExpositionFkDepartment(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " DROP CONSTRAINT IF EXISTS dzial_dzial_ekspozycja_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table department-exposition fkDepartment: " + e.getMessage());
@@ -1874,8 +1973,7 @@ public class Datasource {
     }
 
     private void alterTableWorkerDutyFkDuty(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()){
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT obowiazek_pracownik_obowiazek_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_DUTIES + " (" + TABLE_DUTIES_ID + ")\n" +
@@ -1889,8 +1987,7 @@ public class Datasource {
     }
 
     private void dropTableWorkerDutyFkDuty(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()){
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " DROP CONSTRAINT IF EXISTS obowiazek_pracownik_obowiazek_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table worker-duty fkDuty: " + e.getMessage());
@@ -1899,8 +1996,7 @@ public class Datasource {
     }
 
     private void alterTableWorkerDutyFkWorker(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT pracownik_pracownik_obowiazek_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
@@ -1914,8 +2010,7 @@ public class Datasource {
     }
 
     private void dropTableWorkerDutyFkWorker(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " DROP CONSTRAINT IF EXISTS pracownik_pracownik_obowiazek_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table worker-duty fkWorker: " + e.getMessage());
@@ -1924,8 +2019,7 @@ public class Datasource {
     }
 
     private void alterTableWorkerVacationFkVacation(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT plany_urlopowe_pracownik_plan_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_VACATION + " (" + TABLE_VACATION_ID + ")\n" +
@@ -1939,8 +2033,7 @@ public class Datasource {
     }
 
     private void dropTableWorkerVacationFkVacation(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " DROP CONSTRAINT IF EXISTS plany_urlopowe_pracownik_plan_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table worker-vacation fkVacation: " + e.getMessage());
@@ -1949,8 +2042,7 @@ public class Datasource {
     }
 
     private void alterTableWorkerVacationFkWorker(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT pracownik_pracownik_plan_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
@@ -1964,8 +2056,7 @@ public class Datasource {
     }
 
     private void dropTableWorkerVacationFkWorker(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " DROP CONSTRAINT IF EXISTS pracownik_pracownik_plan_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table worker-vacation fkWorker: " + e.getMessage());
@@ -1974,8 +2065,7 @@ public class Datasource {
     }
 
     private void alterTableManagerWorkerFkWorker(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT pracownik_kierownik_pracownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
@@ -1989,8 +2079,7 @@ public class Datasource {
     }
 
     private void dropTableManagerWorkerFkWorker(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " DROP CONSTRAINT IF EXISTS pracownik_kierownik_pracownik_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table manager-worker fkWorker: " + e.getMessage());
@@ -1999,8 +2088,7 @@ public class Datasource {
     }
 
     private void alterTableManagerWorkerFkManager(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT kierownik_kierownik_pracownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
@@ -2014,8 +2102,7 @@ public class Datasource {
     }
 
     private void dropTableManagerWorkerFkManager(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " DROP CONSTRAINT IF EXISTS kierownik_kierownik_pracownik_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table manager-worker fkManager: " + e.getMessage());
@@ -2024,8 +2111,7 @@ public class Datasource {
     }
 
     private void alterTableDepartmentManagerFkManager(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT kierownik_dzial_kierownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
@@ -2039,8 +2125,7 @@ public class Datasource {
     }
 
     private void dropTableDepartmentManagerFkManager(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " DROP CONSTRAINT IF EXISTS kierownik_dzial_kierownik_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table department-manager fkManager: " + e.getMessage());
@@ -2049,8 +2134,7 @@ public class Datasource {
     }
 
     private void alterTableDepartmentManagerFkDepartment(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT dzial_dzial_kierownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
@@ -2064,8 +2148,7 @@ public class Datasource {
     }
 
     private void dropTableDepartmentManagerFkDepartment(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " DROP CONSTRAINT IF EXISTS dzial_dzial_kierownik_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table department-manager fkDepartment: " + e.getMessage());
@@ -2074,8 +2157,7 @@ public class Datasource {
     }
 
     private void alterTableWarehouseDepartmentFkDepartment(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT dzial_magazyn_dzial_fk\n" +
                     "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
@@ -2089,8 +2171,7 @@ public class Datasource {
     }
 
     private void dropTableWarehouseDepartmentFkDepartment(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " DROP CONSTRAINT IF EXISTS dzial_magazyn_dzial_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table warehouse-department fkDepartment: " + e.getMessage());
@@ -2099,8 +2180,7 @@ public class Datasource {
     }
 
     private void alterTableWarehouseDepartmentFkWarehouse(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT magazyn_magazyn_dzial_fk\n" +
                     "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + ")\n" +
@@ -2114,8 +2194,7 @@ public class Datasource {
     }
 
     private void dropTableWarehouseDepartmentFkWarehouse(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()){
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " DROP CONSTRAINT IF EXISTS magazyn_magazyn_dzial_fk");
         }catch(SQLException e){
             System.out.println("Couldn't process alter table warehouse-department fkWarehouse: " + e.getMessage());
