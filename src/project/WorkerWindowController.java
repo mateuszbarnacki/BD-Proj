@@ -128,15 +128,15 @@ public class WorkerWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Worker>> task = new GetListOfWorkers();
+        Task<ObservableList<Worker>> task = new GetWorkersByManager();
         workersList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfWorkers extends Task {
+class GetWorkersByManager extends Task {
     @Override
     public ObservableList<Worker> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getWorkers());
+        return FXCollections.observableArrayList(Datasource.getInstance().getWorkersByManagers(DatabasePath.getInstance().getIdManager()));
     }
 }

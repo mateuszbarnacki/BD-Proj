@@ -128,15 +128,15 @@ public class CommodityWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Commodity>> task = new GetListOfCommodities();
+        Task<ObservableList<Commodity>> task = new GetListOfCommoditiesByExposition();
         commoditiesList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfCommodities extends Task {
+class GetListOfCommoditiesByExposition extends Task {
     @Override
     public ObservableList<Commodity> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getCommodities());
+        return FXCollections.observableArrayList(Datasource.getInstance().getCommoditiesByExposition(DatabasePath.getInstance().getIdExposition()));
     }
 }

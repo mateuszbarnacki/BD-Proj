@@ -91,15 +91,15 @@ public class DutyWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Duty>> task = new GetListOfDuties();
+        Task<ObservableList<Duty>> task = new GetDutiesByWorkers();
         dutiesList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfDuties extends Task {
+class GetDutiesByWorkers extends Task {
     @Override
     public ObservableList<Duty> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getDuties());
+        return FXCollections.observableArrayList(Datasource.getInstance().getDutiesByWorkers(DatabasePath.getInstance().getIdWorker()));
     }
 }

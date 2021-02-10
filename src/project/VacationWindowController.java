@@ -91,16 +91,15 @@ public class VacationWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Vacation>> task = new GetListOfVacations();
+        Task<ObservableList<Vacation>> task = new GetVacationsByWorker();
         vacationsList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfVacations extends Task {
+class GetVacationsByWorker extends Task {
     @Override
     public ObservableList<Vacation> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getVacations());
+        return FXCollections.observableArrayList(Datasource.getInstance().getVacationsByWorker(DatabasePath.getInstance().getIdWorker()));
     }
 }
-

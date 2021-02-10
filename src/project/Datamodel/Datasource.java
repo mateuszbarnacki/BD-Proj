@@ -780,6 +780,20 @@ public class Datasource {
         }
     }
 
+    public int getNumberOfRows(String tableName) {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM " + Session.getInstance().getToken() + "." + tableName)) {
+
+            resultSet.next();
+            int numOfRows = resultSet.getInt(1);
+            return numOfRows;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get number of rows: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     //====================== Account ============================
 
     private void createAccountTable(){
@@ -1044,6 +1058,37 @@ public class Datasource {
         }
     }
 
+    public List<Manager> getManagersByDepartments(int idDepartment) {
+        List<Manager> managers = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                                    Session.getInstance().getToken() + "." + TABLE_MANAGER + " INNER JOIN " +
+                                    Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ON " +
+                                    Session.getInstance().getToken() + "." + TABLE_MANAGER + "." + TABLE_MANAGER_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + "." + TABLE_DEPARTMENT_MANAGER_ID_MANAGER +
+                                    " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                                    Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + "." + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID +
+                                    " WHERE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + " = " + idDepartment)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_MANAGER_ID);
+                String name = resultSet.getString(INDEX_MANAGER_NAME);
+                String surname = resultSet.getString(INDEX_MANAGER_SURNAME);
+                String phoneNumber = resultSet.getString(INDEX_MANAGER_PHONE);
+                String email = resultSet.getString(INDEX_MANAGER_EMAIL);
+                Manager manager = new Manager(id, name, surname, phoneNumber, email);
+
+                managers.add(manager);
+            }
+
+            return managers;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_MANAGER + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Manager> getManagers() {
         List<Manager> managers = new ArrayList<>();
 
@@ -1118,6 +1163,35 @@ public class Datasource {
         }
     }
 
+    public List<Worker> getWorkersByManagers(int idManager) {
+        List<Worker> workers = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER + "." + TABLE_WORKER_ID + " = " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + "." + TABLE_MANAGER_WORKER_ID_WORKER +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + "." + TABLE_MANAGER_WORKER_ID_MANAGER + " = " + Session.getInstance().getToken() + "." + TABLE_MANAGER + "." + TABLE_MANAGER_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_MANAGER + "." + TABLE_MANAGER_ID + " = " + idManager)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_WORKER_ID);
+                String name = resultSet.getString(INDEX_WORKER_NAME);
+                String surname = resultSet.getString(INDEX_WORKER_SURNAME);
+                String email = resultSet.getString(INDEX_WORKER_EMAIL);
+                Worker worker = new Worker(id, name, surname, email);
+                workers.add(worker);
+            }
+
+            return workers;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_WORKER + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Worker> getWorkers() {
         List<Worker> workers = new ArrayList<>();
 
@@ -1174,6 +1248,34 @@ public class Datasource {
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_DUTIES + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public List<Duty> getDutiesByWorkers(int idWorker) {
+        List<Duty> duties = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_DUTIES + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_DUTIES + "." + TABLE_DUTIES_ID + " = " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + "." + TABLE_WORKER_DUTY_ID_DUTY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_WORKER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + "." + TABLE_WORKER_DUTY_ID_WORKER + " = " + Session.getInstance().getToken() + "." + TABLE_WORKER + "." + TABLE_WORKER_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_WORKER + "." + TABLE_WORKER_ID + " = " + idWorker)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_DUTIES_ID);
+                String description = resultSet.getString(INDEX_DUTIES_DESC);
+                Duty duty = new Duty(id, description);
+
+                duties.add(duty);
+            }
+
+            return duties;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_DUTIES + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1234,6 +1336,35 @@ public class Datasource {
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_VACATION + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public List<Vacation> getVacationsByWorker(int idWorker) {
+        List<Vacation> vacations = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_VACATION + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_VACATION + "." + TABLE_VACATION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + "." + TABLE_WORKER_VACATION_ID_VACATION +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_WORKER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + "." + TABLE_WORKER_VACATION_ID_WORKER + " = " + Session.getInstance().getToken() + "." + TABLE_WORKER + "." + TABLE_WORKER_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_WORKER + "." + TABLE_WORKER_ID + " = " + idWorker)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_VACATION_ID);
+                Date beginning = resultSet.getDate(INDEX_VACATION_BEGINNING);
+                Date end = resultSet.getDate(INDEX_VACATION_END);
+                Vacation vacation = new Vacation(id, beginning, end);
+
+                vacations.add(vacation);
+            }
+
+            return vacations;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_VACATION + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1308,6 +1439,35 @@ public class Datasource {
         }
     }
 
+    public List<Exposition> getExpositionsByDepartment(int idDepartment) {
+        List<Exposition> expositions = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + " = " + idDepartment)) {
+
+            while(resultSet.next()) {
+                int id = resultSet.getInt(INDEX_EXPOSITION_ID);
+                String name = resultSet.getString(INDEX_EXPOSITION_NAME);
+                double price = resultSet.getDouble(INDEX_EXPOSITION_PRICE);
+                Exposition exposition = new Exposition(id, name, price);
+
+                expositions.add(exposition);
+            }
+
+            return expositions;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_EXPOSITION + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Exposition> getExpositions() {
         List<Exposition> expositions = new ArrayList<>();
 
@@ -1376,6 +1536,35 @@ public class Datasource {
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_COMMODITY + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public List<Commodity> getCommoditiesByExposition(int idExposition) {
+        List<Commodity> commodities = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + idExposition)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_COMMODITY_ID);
+                String name = resultSet.getString(INDEX_COMMODITY_NAME);
+                double price = resultSet.getDouble(INDEX_COMMODITY_PRICE);
+                Commodity commodity = new Commodity(id, name, price);
+
+                commodities.add(commodity);
+            }
+
+            return commodities;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_COMMODITY + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1454,6 +1643,37 @@ public class Datasource {
         }
     }
 
+    public List<Designer> getDesignersByExposition(int idExposition) {
+        List<Designer> designers = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_DESIGNER + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_DESIGNER + "." + TABLE_DESIGNER_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + "." + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + "." + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + idExposition)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_DESIGNER_ID);
+                String name = resultSet.getString(INDEX_DESIGNER_NAME);
+                String surname = resultSet.getString(INDEX_DESIGNER_SURNAME);
+                String email = resultSet.getString(INDEX_DESIGNER_EMAIL);
+                String phoneNumber = resultSet.getString(INDEX_DESIGNER_PHONE);
+                Designer designer = new Designer(id, name, surname, email, phoneNumber);
+
+                designers.add(designer);
+            }
+
+            return designers;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_DESIGNER + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Designer> getDesigners() {
         List<Designer> designers = new ArrayList<>();
 
@@ -1511,6 +1731,34 @@ public class Datasource {
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_OPINION + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public List<Opinion> getOpinionsByCommodity(int idCommodity) {
+        List<Opinion> opinions = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_OPINION + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_OPINION + "." + TABLE_OPINION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + "." + TABLE_COMMODITY_OPINION_ID_OPINION +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + "." + TABLE_COMMODITY_OPINION_ID_COMMODITY + " = " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + idCommodity)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_OPINION_ID);
+                String description = resultSet.getString(INDEX_OPINION_DESC);
+                Opinion opinion = new Opinion(id, description);
+
+                opinions.add(opinion);
+            }
+
+            return opinions;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_OPINION + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 

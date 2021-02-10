@@ -135,15 +135,15 @@ public class ExpositionWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Exposition>> task = new GetListOfExpositions();
+        Task<ObservableList<Exposition>> task = new GetExpositionsByDepartment();
         expositionsList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfExpositions extends Task {
+class GetExpositionsByDepartment extends Task {
     @Override
     public ObservableList<Exposition> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getExpositions());
+        return FXCollections.observableArrayList(Datasource.getInstance().getExpositionsByDepartment(DatabasePath.getInstance().getIdDepartment()));
     }
 }

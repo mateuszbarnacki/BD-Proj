@@ -15,6 +15,10 @@
             <Label text="Lista rekordów" textAlignment="CENTER" style="-fx-font-size: 30px; -fx-text-fill: orange;"/>
             <ListView fx:id="itemsList">
             </ListView>
+            <HBox fx:id="hBox" alignment="CENTER" spacing="5">
+                <Label text="Ilość rekodrów w tabeli: " textAlignment="CENTER" style="-fx-font-size: 14px;"/>
+                <Label fx:id="countLabel" textAlignment="CENTER" style="-fx-font-size: 14px;"/>
+            </HBox>
         </VBox>
     </center>
 </BorderPane>

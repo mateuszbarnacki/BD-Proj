@@ -91,15 +91,15 @@ public class OpinionWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Opinion>> task = new GetListOfOpinions();
+        Task<ObservableList<Opinion>> task = new GetOpinionsByCommodity();
         opinionsList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfOpinions extends Task {
+class GetOpinionsByCommodity extends Task {
     @Override
     public ObservableList<Opinion> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getOpinions());
+        return FXCollections.observableArrayList(Datasource.getInstance().getOpinionsByCommodity(DatabasePath.getInstance().getIdCommodity()));
     }
 }

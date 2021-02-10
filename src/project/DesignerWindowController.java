@@ -120,15 +120,15 @@ public class DesignerWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Designer>> task = new GetListOfDesigners();
+        Task<ObservableList<Designer>> task = new GetDesignersByExposition();
         designersList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfDesigners extends Task {
+class GetDesignersByExposition extends Task {
     @Override
     public ObservableList<Designer> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getDesigners());
+        return FXCollections.observableArrayList(Datasource.getInstance().getDesignersByExposition(DatabasePath.getInstance().getIdExposition()));
     }
 }

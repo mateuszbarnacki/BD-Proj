@@ -128,15 +128,15 @@ public class ManagerWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Manager>> task = new GetListOfManagers();
+        Task<ObservableList<Manager>> task = new GetManagersByDepartments();
         managersList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
     }
 }
 
-class GetListOfManagers extends Task {
+class GetManagersByDepartments extends Task {
     @Override
     public ObservableList<Manager> call() throws Exception {
-        return FXCollections.observableArrayList(Datasource.getInstance().getManagers());
+        return FXCollections.observableArrayList(Datasource.getInstance().getManagersByDepartments(DatabasePath.getInstance().getIdDepartment()));
     }
 }
