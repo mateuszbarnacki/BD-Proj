@@ -43,6 +43,7 @@ public class WorkerWindowController {
         if(!workersList.getSelectionModel().isEmpty()){
             addWorkerButton.setVisible(false);
             hBox.setVisible(true);
+            DatabasePath.getInstance().setIdWorker(workersList.getSelectionModel().getSelectedItem().getId());
         }
     }
 
@@ -123,7 +124,6 @@ public class WorkerWindowController {
     public void loadDutyPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("DutyWindow");
         BorderPane temp = pageLoader.load();
-        DatabasePath.getInstance().setIdWorker(workersList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 

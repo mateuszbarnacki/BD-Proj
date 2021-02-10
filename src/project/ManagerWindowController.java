@@ -43,6 +43,7 @@ public class ManagerWindowController {
         if(!managersList.getSelectionModel().isEmpty()){
             addManagerButton.setVisible(false);
             hBox.setVisible(true);
+            DatabasePath.getInstance().setIdManager(managersList.getSelectionModel().getSelectedItem().getId());
         }
     }
 
@@ -123,7 +124,6 @@ public class ManagerWindowController {
     public void loadWorkerPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("WorkerWindow");
         BorderPane temp = pageLoader.load();
-        DatabasePath.getInstance().setIdManager(managersList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 

@@ -143,6 +143,7 @@ public class LoginFormController {
             if(Datasource.getInstance().dropSchema(username)) {
                 if (Datasource.getInstance().deleteAccount(username)) {
                     alertCreator(Alert.AlertType.INFORMATION, "Usunięcie konta", "Konto zostało sukcesywnie usunięte");
+                    hBox.setVisible(false);
                     Task<ObservableList<Account>> task = new GetAccounts();
                     accountsList.itemsProperty().bind(task.valueProperty());
                     new Thread(task).start();

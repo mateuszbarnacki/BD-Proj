@@ -6,6 +6,8 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import project.Datamodel.*;
 
@@ -13,12 +15,21 @@ public class ReportController {
     @FXML
     public ListView itemsList;
     @FXML
+    public BorderPane borderPane;
+    @FXML
     public HBox hBox;
     @FXML
     public Label countLabel;
 
     public void initialize() {
         hBox.setVisible(false);
+    }
+
+    @FXML
+    public void displayPreviousPage(MouseEvent event) {
+        PageLoader loader = new PageLoader("WarehouseWindow");
+        BorderPane temp = loader.load();
+        this.borderPane.getScene().setRoot(temp);
     }
 
     public void setReport(String type) {

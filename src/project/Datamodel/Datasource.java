@@ -368,7 +368,7 @@ public class Datasource {
 
     public boolean dropSchema(String username){
         try (Statement statement = connection.createStatement()){
-            statement.execute( "DROP SCHEMA " + username + " CASCADE");
+            statement.execute( "DROP SCHEMA IF EXISTS " + username + " CASCADE");
 
             return true;
         } catch (SQLException e){
@@ -2041,7 +2041,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT opinia_towar_opinia_fk\n" +
                     "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_OPINION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (" + TABLE_OPINION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2064,7 +2064,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION + " ADD CONSTRAINT towar_towar_opinia_fk\n" +
                     "FOREIGN KEY (" + TABLE_COMMODITY_OPINION_ID_COMMODITY + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2087,7 +2087,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT projektant_ekspozycja_projektant_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_DESIGNER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " (" + TABLE_DESIGNER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2110,7 +2110,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER + " ADD CONSTRAINT ekspozycja_ekspozycja_projektant_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2133,7 +2133,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT towar_ekspozycja_towar_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " (" + TABLE_COMMODITY_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2156,7 +2156,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ADD CONSTRAINT ekspozycja_ekspozycja_towar_fk\n" +
                     "FOREIGN KEY (" + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2179,7 +2179,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT ekspozycja_dzial_ekspozycja_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " (" + TABLE_EXPOSITION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2202,7 +2202,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ADD CONSTRAINT dzial_dzial_ekspozycja_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_EXPOSITION_ID_DEPARTMENT + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2225,7 +2225,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT obowiazek_pracownik_obowiazek_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_DUTY + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_DUTIES + " (" + TABLE_DUTIES_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2248,7 +2248,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY + " ADD CONSTRAINT pracownik_pracownik_obowiazek_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_DUTY_ID_WORKER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." +  TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2271,7 +2271,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT plany_urlopowe_pracownik_plan_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_VACATION + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_VACATION + " (" + TABLE_VACATION_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2294,7 +2294,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION + " ADD CONSTRAINT pracownik_pracownik_plan_fk\n" +
                     "FOREIGN KEY (" + TABLE_WORKER_VACATION_ID_WORKER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2317,7 +2317,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT pracownik_kierownik_pracownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_WORKER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WORKER + " (" + TABLE_WORKER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2340,7 +2340,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ADD CONSTRAINT kierownik_kierownik_pracownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_MANAGER_WORKER_ID_MANAGER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2363,7 +2363,7 @@ public class Datasource {
             statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT kierownik_dzial_kierownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_MANAGER + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " (" + TABLE_MANAGER_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2386,7 +2386,7 @@ public class Datasource {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ADD CONSTRAINT dzial_dzial_kierownik_fk\n" +
                     "FOREIGN KEY (" + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2409,7 +2409,7 @@ public class Datasource {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT dzial_magazyn_dzial_fk\n" +
                     "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " (" + TABLE_DEPARTMENT_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){
@@ -2432,7 +2432,7 @@ public class Datasource {
             statement.execute( "ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE_DEPARTMENT + " ADD CONSTRAINT magazyn_magazyn_dzial_fk\n" +
                     "FOREIGN KEY (" + TABLE_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE + ")\n" +
                     "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_WAREHOUSE + " (" + TABLE_WAREHOUSE_ID + ")\n" +
-                    "ON DELETE NO ACTION\n" +
+                    "ON DELETE CASCADE\n" +
                     "ON UPDATE NO ACTION\n" +
                     "NOT DEFERRABLE");
         }catch(SQLException e){

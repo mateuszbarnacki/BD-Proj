@@ -38,6 +38,7 @@ public class DepartmentWindowController {
         if(!departmentsList.getSelectionModel().isEmpty()){
             insertDepartmentButton.setVisible(false);
             hBox.setVisible(true);
+            DatabasePath.getInstance().setIdDepartment(departmentsList.getSelectionModel().getSelectedItem().getId());
         }
     }
 
@@ -82,7 +83,6 @@ public class DepartmentWindowController {
     public void loadStuffSection(ActionEvent event) {
         PageLoader loader = new PageLoader("StuffSection");
         BorderPane temp = loader.load();
-        DatabasePath.getInstance().setIdDepartment(departmentsList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 
@@ -90,7 +90,6 @@ public class DepartmentWindowController {
     public void loadProductsSection(ActionEvent event) {
         PageLoader loader = new PageLoader("ExpositionWindow");
         BorderPane temp = loader.load();
-        DatabasePath.getInstance().setIdDepartment(departmentsList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 }

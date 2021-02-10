@@ -43,6 +43,7 @@ public class ExpositionWindowController {
         if(!expositionsList.getSelectionModel().isEmpty()){
             addExpositionButton.setVisible(false);
             hBox.setVisible(true);
+            DatabasePath.getInstance().setIdExposition(expositionsList.getSelectionModel().getSelectedItem().getId());
         }
     }
 
@@ -122,7 +123,6 @@ public class ExpositionWindowController {
     public void loadCommodityPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("CommodityWindow");
         BorderPane temp = pageLoader.load();
-        DatabasePath.getInstance().setIdExposition(expositionsList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 
@@ -130,7 +130,6 @@ public class ExpositionWindowController {
     public void loadDesignerPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("DesignerWindow");
         BorderPane temp = pageLoader.load();
-        DatabasePath.getInstance().setIdExposition(expositionsList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 

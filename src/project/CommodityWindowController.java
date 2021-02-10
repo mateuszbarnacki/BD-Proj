@@ -43,6 +43,7 @@ public class CommodityWindowController {
         if(!commoditiesList.getSelectionModel().isEmpty()){
             addCommodityButton.setVisible(false);
             hBox.setVisible(true);
+            DatabasePath.getInstance().setIdCommodity(commoditiesList.getSelectionModel().getSelectedItem().getId());
         }
     }
 
@@ -123,7 +124,6 @@ public class CommodityWindowController {
     public void loadOpinionPage(ActionEvent event) {
         PageLoader pageLoader = new PageLoader("OpinionWindow");
         BorderPane temp = pageLoader.load();
-        DatabasePath.getInstance().setIdCommodity(commoditiesList.getSelectionModel().getSelectedItem().getId());
         this.borderPane.getScene().setRoot(temp);
     }
 
