@@ -1,5 +1,6 @@
 package project;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -9,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import project.Datamodel.Datasource;
 import project.Datamodel.Worker;
 
 import java.io.IOException;
@@ -79,9 +81,16 @@ public class SecondWorkerWindowController {
     }
 
     private void refreshListView() {
-        Task<ObservableList<Worker>> task = new GetListOfWorkers();
+        Task<ObservableList<Worker>> task = new GetWorkersByDepartments();
         workersList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
+    }
+}
+
+class GetWorkersByDepartments extends Task {
+    @Override
+    public ObservableList<Worker> call() throws Exception {
+        return FXCollections.observableArrayList(Datasource.getInstance().getWorkersByDepartments(DatabasePath.getInstance().getIdDepartment()));
     }
 }
 

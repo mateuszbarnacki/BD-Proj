@@ -1182,6 +1182,39 @@ public class Datasource {
         }
     }
 
+    public List<Worker> getWorkersByDepartments(int idDepartment) {
+        List<Worker> workers = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER + " INNER JOIN " +
+                     Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_WORKER + "." + TABLE_WORKER_ID + " = " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + "." + TABLE_MANAGER_WORKER_ID_WORKER +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER + "." + TABLE_MANAGER_WORKER_ID_MANAGER + " = " + Session.getInstance().getToken() + "." + TABLE_MANAGER + "." + TABLE_MANAGER_ID +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_MANAGER + "." + TABLE_MANAGER_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + "." + TABLE_DEPARTMENT_MANAGER_ID_MANAGER +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_MANAGER + "." + TABLE_DEPARTMENT_MANAGER_ID_DEPARTMENT + " = " + Session.getInstance().getToken() + '.' + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + " = " + idDepartment)) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(INDEX_WORKER_ID);
+                String name = resultSet.getString(INDEX_WORKER_NAME);
+                String surname = resultSet.getString(INDEX_WORKER_SURNAME);
+                String email = resultSet.getString(INDEX_WORKER_EMAIL);
+                Worker worker = new Worker(id, name, surname, email);
+                workers.add(worker);
+            }
+
+            return workers;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_WORKER + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Worker> getWorkersByManagers(int idManager) {
         List<Worker> workers = new ArrayList<>();
 
