@@ -3,10 +3,7 @@ package project;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
-
-import java.io.IOException;
 
 public class AppTopMenuController {
     @FXML
@@ -16,15 +13,8 @@ public class AppTopMenuController {
     public void logout(ActionEvent event) {
         Session.getInstance().setToken(null);
         Session.getInstance().lock();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("RootWindow.fxml"));
-        BorderPane temp = null;
-        try {
-            temp = fxmlLoader.load();
-        } catch (IOException e) {
-            System.out.println("Couldn't load start page: " + e.getMessage());
-            e.printStackTrace();
-        }
+        RegisterPageLoader loader = new RegisterPageLoader("StartWindow");
+        BorderPane temp = loader.load();
         this.borderPane.getScene().setRoot(temp);
     }
 

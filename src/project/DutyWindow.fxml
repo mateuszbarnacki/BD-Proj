@@ -15,12 +15,12 @@
         </HBox>
     </left>
     <center>
-        <VBox alignment="CENTER" spacing="10" prefWidth="320">
+        <VBox alignment="CENTER" spacing="10" prefWidth="400">
             <Label text="Obowiązki pracownika" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-            <ListView fx:id="dutiesList" onMouseClicked="#showOptions">
+            <ListView fx:id="dutiesList" onMouseClicked="#showOptions" style="-fx-font-size: 14px;">
             </ListView>
-            <Button fx:id="addDutyButton" text="Dodaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#addDuty" style="-fx-background-radius: 30px;"/>
-            <Button fx:id="deleteDutyButton" text="Usuń" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#deleteDuty" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="addDutyButton" text="Dodaj" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#addDuty" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="deleteDutyButton" text="Usuń" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#deleteDuty" style="-fx-background-radius: 30px;"/>
         </VBox>
     </center>
     <right>

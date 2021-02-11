@@ -16,24 +16,24 @@
         </HBox>
     </left>
     <center>
-        <VBox alignment="CENTER" spacing="10" prefWidth="320">
+        <VBox alignment="CENTER" spacing="10" prefWidth="400">
             <Label text="Rozpiska urlopu" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-            <TableView fx:id="vacationsList" onMouseClicked="#showOptions">
+            <TableView fx:id="vacationsList" onMouseClicked="#showOptions" style="-fx-font-size: 14px;">
                 <columns>
-                    <TableColumn text="Begin date">
+                    <TableColumn text="Data rozpoczecia" prefWidth="200">
                         <cellValueFactory>
                             <PropertyValueFactory property="beginning"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn text="End date">
+                    <TableColumn text="Data zakonczenia" prefWidth="200">
                         <cellValueFactory>
                             <PropertyValueFactory property="end"/>
                         </cellValueFactory>
                     </TableColumn>
                 </columns>
             </TableView>
-            <Button fx:id="addVacationButton" text="Dodaj urlop" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#addVacation" style="-fx-background-radius: 30px;"/>
-            <Button fx:id="deleteVacationButton" text="Usuń urlop" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#deleteVacation" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="addVacationButton" text="Dodaj urlop" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#addVacation" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="deleteVacationButton" text="Usuń urlop" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#deleteVacation" style="-fx-background-radius: 30px;"/>
         </VBox>
     </center>
     <right>

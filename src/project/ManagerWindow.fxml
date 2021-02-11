@@ -16,37 +16,37 @@
         </HBox>
     </left>
     <center>
-        <VBox alignment="CENTER" spacing="10" prefWidth="320">
+        <VBox alignment="CENTER" spacing="10" prefWidth="400">
             <Label text="Kadra kierownicza" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-            <TableView fx:id="managersList" onMouseClicked="#showOptions">
+            <TableView fx:id="managersList" onMouseClicked="#showOptions" prefWidth="400" style="-fx-font-size: 14px;">
                 <columns>
-                    <TableColumn text="Name">
+                    <TableColumn text="Imie" prefWidth="100">
                         <cellValueFactory>
                             <PropertyValueFactory property="name"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn text="Surname">
+                    <TableColumn text="Nazwisko" prefWidth="100">
                         <cellValueFactory>
                             <PropertyValueFactory property="surname"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn text="PhoneNumber">
+                    <TableColumn text="Numer telefonu" prefWidth="100">
                         <cellValueFactory>
                             <PropertyValueFactory property="phoneNumber"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn text="Email">
+                    <TableColumn text="Email" prefWidth="100">
                         <cellValueFactory>
                             <PropertyValueFactory property="email"/>
                         </cellValueFactory>
                     </TableColumn>
                 </columns>
             </TableView>
-            <Button fx:id="addManagerButton" text="Dodaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#addManager" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="addManagerButton" text="Dodaj" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#addManager" style="-fx-background-radius: 30px;"/>
             <HBox fx:id="hBox" spacing="15" alignment="CENTER">
-                <Button text="Edytuj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#editManager" style="-fx-background-radius: 30px;"/>
-                <Button text="Usuń" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#deleteManager" style="-fx-background-radius: 30px;"/>
-                <Button text="Zarządzaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#loadWorkerPage" style="-fx-background-radius: 30px;"/>
+                <Button text="Edytuj" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#editManager" style="-fx-background-radius: 30px;"/>
+                <Button text="Usuń" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#deleteManager" style="-fx-background-radius: 30px;"/>
+                <Button text="Zarządzaj" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#loadWorkerPage" style="-fx-background-radius: 30px;"/>
             </HBox>
         </VBox>
     </center>

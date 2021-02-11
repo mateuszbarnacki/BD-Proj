@@ -8,22 +8,21 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="project.LoginFormController"
-            prefHeight="400.0" prefWidth="600.0" fx:id="borderPane">
+            fx:controller="project.LoginFormController" fx:id="borderPane">
     <left>
         <HBox prefWidth="40">
             <Label text="Powrót" onMouseClicked="#displayPreviousPage" style="-fx-font-size: 12px; -fx-text-fill: orange;"/>
         </HBox>
     </left>
     <center>
-        <VBox spacing="20" alignment="CENTER">
+        <VBox spacing="20" alignment="CENTER" prefWidth="400">
             <Label text="Logowanie" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-            <ListView fx:id="accountsList" onMouseClicked="#showOptions">
+            <ListView fx:id="accountsList" onMouseClicked="#showOptions" style="-fx-font-size: 14px;">
             </ListView>
             <HBox fx:id="hBox" spacing="20" visible="false" alignment="CENTER">
-                <Button text="Zaloguj" textAlignment="CENTER" onAction="#login" minWidth="100" minHeight="25" style="-fx-background-radius: 30px;"/>
-                <Button text="Edytuj" textAlignment="CENTER" onAction="#editAccount" minWidth="100" minHeight="25" style="-fx-background-radius: 30px;"/>
-                <Button text="Usuń" textAlignment="CENTER" onAction="#deleteAccount" minWidth="100" minHeight="25" style="-fx-background-radius: 30px;"/>
+                <Button text="Zaloguj" textAlignment="CENTER" onAction="#login" minWidth="120" minHeight="30" style="-fx-background-radius: 30px;"/>
+                <Button text="Edytuj" textAlignment="CENTER" onAction="#editAccount" minWidth="120" minHeight="30" style="-fx-background-radius: 30px;"/>
+                <Button text="Usuń" textAlignment="CENTER" onAction="#deleteAccount" minWidth="120" minHeight="30" style="-fx-background-radius: 30px;"/>
             </HBox>
         </VBox>
     </center>

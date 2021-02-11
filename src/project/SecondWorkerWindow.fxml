@@ -16,21 +16,21 @@
         </HBox>
     </left>
     <center>
-        <VBox alignment="CENTER" spacing="10" prefWidth="320">
+        <VBox alignment="CENTER" spacing="10" prefWidth="400">
             <Label text="Pracownicy działu" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-            <TableView fx:id="workersList" onMouseClicked="#showOptions">
+            <TableView fx:id="workersList" onMouseClicked="#showOptions" prefWidth="400" style="-fx-font-size: 14px;">
                 <columns>
-                    <TableColumn text="Name">
+                    <TableColumn text="Imie" prefWidth="133">
                         <cellValueFactory>
                             <PropertyValueFactory property="name"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn text="Surname">
+                    <TableColumn text="Nazwisko" prefWidth="133">
                         <cellValueFactory>
                             <PropertyValueFactory property="surname"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn text="Email">
+                    <TableColumn text="Email" prefWidth="133">
                         <cellValueFactory>
                             <PropertyValueFactory property="email"/>
                         </cellValueFactory>
@@ -38,8 +38,8 @@
                 </columns>
             </TableView>
             <HBox fx:id="hBox" spacing="15" alignment="CENTER">
-                <Button text="Edytuj dane" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#editWorker" style="-fx-background-radius: 30px;"/>
-                <Button text="Zaplanuj urlop" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#loadVacationPage" style="-fx-background-radius: 30px;"/>
+                <Button text="Edytuj dane" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#editWorker" style="-fx-background-radius: 30px;"/>
+                <Button text="Zaplanuj urlop" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#loadVacationPage" style="-fx-background-radius: 30px;"/>
             </HBox>
         </VBox>
     </center>

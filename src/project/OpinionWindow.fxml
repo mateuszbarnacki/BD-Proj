@@ -15,12 +15,12 @@
         </HBox>
     </left>
     <center>
-        <VBox alignment="CENTER" spacing="10" prefWidth="320">
+        <VBox alignment="CENTER" spacing="10" prefWidth="400">
             <Label text="Opinie" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-            <ListView fx:id="opinionsList" onMouseClicked="#showOptions">
+            <ListView fx:id="opinionsList" onMouseClicked="#showOptions" prefWidth="400" style="-fx-font-size: 14px;">
             </ListView>
-            <Button fx:id="addOpinionButton" text="Dodaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#addOpinion" style="-fx-background-radius: 30px;"/>
-            <Button fx:id="deleteOpinionButton" text="Usuń" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#deleteOpinion" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="addOpinionButton" text="Dodaj" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#addOpinion" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="deleteOpinionButton" text="Usuń" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#deleteOpinion" style="-fx-background-radius: 30px;"/>
         </VBox>
     </center>
     <right>

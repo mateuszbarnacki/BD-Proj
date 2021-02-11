@@ -16,27 +16,27 @@
         </HBox>
     </left>
     <center>
-        <VBox alignment="CENTER" spacing="10" prefWidth="320">
+        <VBox alignment="CENTER" spacing="10" prefWidth="400">
             <Label text="Towary w ekspozycji" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
-            <TableView fx:id="commoditiesList" onMouseClicked="#showOptions">
+            <TableView fx:id="commoditiesList" onMouseClicked="#showOptions" style="-fx-font-size: 14px;">
                 <columns>
-                    <TableColumn text="Nazwa">
+                    <TableColumn text="Nazwa" prefWidth="200">
                         <cellValueFactory>
                             <PropertyValueFactory property="name"/>
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn text="Cena">
+                    <TableColumn text="Cena" prefWidth="200">
                         <cellValueFactory>
                             <PropertyValueFactory property="price"/>
                         </cellValueFactory>
                     </TableColumn>
                 </columns>
             </TableView>
-            <Button fx:id="addCommodityButton" text="Dodaj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#addCommodity" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="addCommodityButton" text="Dodaj produkt" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#addCommodity" style="-fx-background-radius: 30px;"/>
             <HBox fx:id="hBox" spacing="15" alignment="CENTER">
-                <Button text="Usuń" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#deleteCommodity" style="-fx-background-radius: 30px;"/>
-                <Button text="Edytuj" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#editCommodity" style="-fx-background-radius: 30px;"/>
-                <Button text="Opinie" textAlignment="CENTER" minWidth="80" minHeight="20" onAction="#loadOpinionPage" style="-fx-background-radius: 30px;"/>
+                <Button text="Usuń produkt" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#deleteCommodity" style="-fx-background-radius: 30px;"/>
+                <Button text="Edytuj produkt" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#editCommodity" style="-fx-background-radius: 30px;"/>
+                <Button text="Opinie o produkcie" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#loadOpinionPage" style="-fx-background-radius: 30px;"/>
             </HBox>
         </VBox>
     </center>
