@@ -12,8 +12,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import project.Datamodel.Commodity;
 import project.Datamodel.Datasource;
+import project.Datamodel.Exposition;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class CommodityWindowController {
@@ -71,6 +73,7 @@ public class CommodityWindowController {
                 AlertLoader alertLoader = new AlertLoader(Alert.AlertType.INFORMATION, "Zaktualizowano listę rekordów", "Dodanie towaru");
                 alertLoader.load();
                 refreshListView();
+                updateExposition();
             }
         }
     }
@@ -99,6 +102,7 @@ public class CommodityWindowController {
                 AlertLoader alertLoader = new AlertLoader(Alert.AlertType.INFORMATION, "Zaktualizowano listę rekordów", "Edycja towaru");
                 alertLoader.load();
                 refreshListView();
+                updateExposition();
             }
         }
     }
@@ -117,6 +121,7 @@ public class CommodityWindowController {
             refreshListView();
             addCommodityButton.setVisible(true);
             hBox.setVisible(false);
+            updateExposition();
         }
     }
 
@@ -125,6 +130,19 @@ public class CommodityWindowController {
         PageLoader pageLoader = new PageLoader("OpinionWindow");
         BorderPane temp = pageLoader.load();
         this.borderPane.getScene().setRoot(temp);
+    }
+
+    private void updateExposition() {
+        int idExposition = DatabasePath.getInstance().getIdExposition();
+        double newPrice = Datasource.getInstance().calculateSumOfCommodities(idExposition);
+        Exposition exposition = Datasource.getInstance().getExposition(idExposition);
+        Exposition newExposition = new Exposition(exposition.getId(), exposition.getName(), newPrice);
+        try {
+            Datasource.getInstance().updateExposition(newExposition);
+        } catch (SQLException e) {
+            System.out.println("Couldn't update exposition: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void refreshListView() {

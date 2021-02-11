@@ -5,10 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import project.Datamodel.Account;
 import project.Datamodel.Datasource;
 
 public class RegisterFormController {
+    @FXML
+    public BorderPane borderPane;
     @FXML
     public TextField userNameField;
     @FXML
@@ -17,6 +21,13 @@ public class RegisterFormController {
     public PasswordField passwordField;
     @FXML
     public PasswordField secPasswordField;
+
+    @FXML
+    public void displayPreviousPage(MouseEvent event) {
+        RegisterPageLoader loader = new RegisterPageLoader("StartWindow");
+        BorderPane temp = loader.load();
+        this.borderPane.getScene().setRoot(temp);
+    }
 
     @FXML
     public void addAccount(ActionEvent event){

@@ -11,14 +11,20 @@ import java.io.IOException;
 public class RootWindowController {
     @FXML
     public BorderPane borderPane;
+    private static boolean isFirst = true;
 
     public void initialize(){
-        loadStartWindow();
+        if (isFirst) {
+            loadStartWindow();
+            isFirst = false;
+        }
     }
 
     @FXML
     public void loadStartPage(ActionEvent event){
-        loadStartWindow();
+        RegisterPageLoader loader = new RegisterPageLoader("StartWindow");
+        BorderPane temp = loader.load();
+        this.borderPane.getScene().setRoot(temp);
     }
 
     @FXML

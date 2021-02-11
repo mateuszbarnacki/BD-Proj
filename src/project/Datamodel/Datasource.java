@@ -6,6 +6,7 @@ import project.Session;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.StampedLock;
 
 public class Datasource {
     public static final String CONNECTION_STRING = "jdbc:postgresql://ziggy.db.elephantsql.com:5432/cefhxaqy";
@@ -1469,6 +1470,28 @@ public class Datasource {
         }
     }
 
+    public Exposition getExposition(int id) {
+        Exposition exposition = null;
+
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION +
+                                " WHERE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + id)) {
+
+            while (result.next()) {
+                int idx = result.getInt(INDEX_EXPOSITION_ID);
+                String name = result.getString(INDEX_EXPOSITION_NAME);
+                double price = result.getDouble(INDEX_EXPOSITION_PRICE);
+                exposition = new Exposition(idx, name, price);
+            }
+
+            return exposition;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get exposition: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Exposition> getExpositionsByDepartment(int idDepartment) {
         List<Exposition> expositions = new ArrayList<>();
 
@@ -1572,6 +1595,27 @@ public class Datasource {
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_COMMODITY + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public double calculateSumOfCommodities(int idExposition) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT SUM(" + Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE + ") FROM " +
+                                    Session.getInstance().getToken() + "." + TABLE_COMMODITY + " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY +
+                                    " ON " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY +
+                                    " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                                    Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                                    " WHERE " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + idExposition) ) {
+            double price = 0.0;
+            while (results.next()) {
+                price = results.getDouble(1);
+            }
+
+            return price;
+        } catch (SQLException e) {
+            System.out.println("Couldn't calculate the price of exposition: " + e.getMessage());
+            e.printStackTrace();
+            return -1.0;
         }
     }
 

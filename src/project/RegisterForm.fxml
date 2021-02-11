@@ -9,7 +9,12 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="project.RegisterFormController"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:id="borderPane">
+    <left>
+        <HBox prefWidth="40">
+            <Label text="Powrót" onMouseClicked="#displayPreviousPage" style="-fx-font-size: 12px; -fx-text-fill: orange;"/>
+        </HBox>
+    </left>
     <center>
         <VBox alignment="CENTER" spacing="20">
             <Label text="Rejestracja" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
@@ -26,4 +31,7 @@
             <Button text="Zatwierdź" minWidth="120" minHeight="40" style="-fx-background-radius: 30px;" onAction="#addAccount"/>
         </VBox>
     </center>
+    <right>
+        <HBox prefWidth="40"/>
+    </right>
 </BorderPane>

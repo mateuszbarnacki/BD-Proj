@@ -8,6 +8,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import project.Datamodel.Account;
@@ -28,6 +29,13 @@ public class LoginFormController {
         Task<ObservableList<Account>> task = new GetAccounts();
         accountsList.itemsProperty().bind(task.valueProperty());
         new Thread(task).start();
+    }
+
+    @FXML
+    public void displayPreviousPage(MouseEvent event) {
+        RegisterPageLoader loader = new RegisterPageLoader("StartWindow");
+        BorderPane temp = loader.load();
+        this.borderPane.getScene().setRoot(temp);
     }
 
     @FXML
