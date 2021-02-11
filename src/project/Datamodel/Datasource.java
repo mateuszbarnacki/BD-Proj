@@ -1051,6 +1051,12 @@ public class Datasource {
 
     public void deleteManager(int id) {
         try (Statement statement = connection.createStatement()) {
+            List<Integer> relatedWorkers = getListOfWorkerIndexes(id);
+            if(relatedWorkers != null) {
+                for (int idx : relatedWorkers) {
+                    deleteWorker(idx);
+                }
+            }
             statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_MANAGER + " WHERE " + TABLE_MANAGER_ID + " = " + id);
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_MANAGER + " table: " + e.getMessage());
@@ -1156,6 +1162,18 @@ public class Datasource {
 
     public void deleteWorker(int id) {
         try (Statement statement = connection.createStatement()) {
+            List<Integer> relatedDuty = getListOfDutyIndexes(id);
+            if (relatedDuty != null) {
+                for (int idx : relatedDuty) {
+                    deleteDuty(idx);
+                }
+            }
+            List<Integer> relatedVacation = getListOfVacationIndexes(id);
+            if (relatedVacation != null) {
+                for (int idx : relatedVacation) {
+                    deleteVacation(idx);
+                }
+            }
             statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_WORKER + " WHERE " + TABLE_WORKER_ID + " = " + id);
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_WORKER + " table: " + e.getMessage());
@@ -1432,6 +1450,18 @@ public class Datasource {
 
     public void deleteExposition(int id) {
         try (Statement statement = connection.createStatement()) {
+            List<Integer> relatedDesigner = getListOfDesignerIndexes(id);
+            if (relatedDesigner != null) {
+                for (int idx : relatedDesigner) {
+                    deleteDesigner(idx);
+                }
+            }
+            List<Integer> relatedCommodity = getListOfCommodityIndexes(id);
+            if (relatedCommodity != null) {
+                for (int idx : relatedCommodity) {
+                    deleteCommodity(idx);
+                }
+            }
             statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " WHERE " + TABLE_EXPOSITION_ID + " = " + id);
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_EXPOSITION + " table: " + e.getMessage());
@@ -1532,6 +1562,12 @@ public class Datasource {
 
     public void deleteCommodity(int id) {
         try (Statement statement = connection.createStatement()) {
+            List<Integer> relatedOpinion = getListOfOpinionIndexes(id);
+            if (relatedOpinion != null) {
+                for (int idx : relatedOpinion) {
+                    deleteOpinion(idx);
+                }
+            }
             statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + " WHERE " + TABLE_COMMODITY_ID + " = " + id);
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_COMMODITY + " table: " + e.getMessage());
@@ -1811,6 +1847,24 @@ public class Datasource {
         }
     }
 
+    private List<Integer> getListOfOpinionIndexes(int idCommodity) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_COMMODITY_OPINION +
+                                    " WHERE " + TABLE_COMMODITY_OPINION_ID_COMMODITY + " = " + idCommodity)) {
+            List<Integer> idxs = new ArrayList<>();
+            while (results.next()) {
+                int idx = results.getInt(INDEX_COMMODITY_OPINION_ID_OPINION);
+                idxs.add(idx);
+            }
+            if (idxs.size() == 0) idxs = null;
+            return idxs;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get list of opinion indexes: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //================================= EXPOSITION_DESIGNER_TABLE ====================
 
     private void createExpositionDesignerTable(){
@@ -1838,6 +1892,25 @@ public class Datasource {
             return false;
         }
     }
+
+    private List<Integer> getListOfDesignerIndexes(int idExposition) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_DESIGNER +
+                     " WHERE " + TABLE_EXPOSITION_DESIGNER_ID_EXPOSITION + " = " + idExposition)) {
+            List<Integer> idxs = new ArrayList<>();
+            while (results.next()) {
+                int idx = results.getInt(INDEX_EXPOSITION_DESIGNER_ID_DESIGNER);
+                idxs.add(idx);
+            }
+            if (idxs.size() == 0) idxs = null;
+            return idxs;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get list of designer indexes: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //================================== EXPOSITION_COMMODITY_TABLE =====================
 
     private void createExpositionCommodityTable(){
@@ -1863,6 +1936,24 @@ public class Datasource {
             System.out.println("Couldn't insert into " + TABLE_EXPOSITION_COMMODITY + ": " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private List<Integer> getListOfCommodityIndexes(int idExposition) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY +
+                     " WHERE " + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + idExposition)) {
+            List<Integer> idxs = new ArrayList<>();
+            while (results.next()) {
+                int idx = results.getInt(INDEX_EXPOSITION_COMMODITY_ID_COMMODITY);
+                idxs.add(idx);
+            }
+            if (idxs.size() == 0) idxs = null;
+            return idxs;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get list of commodity indexes: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -1894,6 +1985,24 @@ public class Datasource {
         }
     }
 
+    private List<Integer> getListOfDutyIndexes(int idWorker) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_WORKER_DUTY +
+                     " WHERE " + TABLE_WORKER_DUTY_ID_WORKER + " = " + idWorker)) {
+            List<Integer> idxs = new ArrayList<>();
+            while (results.next()) {
+                int idx = results.getInt(INDEX_WORKER_DUTY_ID_DUTY);
+                idxs.add(idx);
+            }
+            if (idxs.size() == 0) idxs = null;
+            return idxs;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get list of duty indexes: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //=================================== WORKER_VACATION_TABLE ============================
 
     private void createWorkerVacationTable(){
@@ -1922,6 +2031,24 @@ public class Datasource {
         }
     }
 
+    private List<Integer> getListOfVacationIndexes(int idWorker) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_WORKER_VACATION +
+                     " WHERE " + TABLE_WORKER_VACATION_ID_WORKER + " = " + idWorker)) {
+            List<Integer> idxs = new ArrayList<>();
+            while (results.next()) {
+                int idx = results.getInt(INDEX_WORKER_VACATION_ID_VACATION);
+                idxs.add(idx);
+            }
+            if (idxs.size() == 0) idxs = null;
+            return idxs;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get list of vacation indexes: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //======================================== MANAGER_WORKER_TABLE ================================
 
     private void createManagerWorkerTable(){
@@ -1947,6 +2074,24 @@ public class Datasource {
             System.out.println("Couldn't insert into " + TABLE_MANAGER_WORKER + ": " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private List<Integer> getListOfWorkerIndexes(int idManager) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_MANAGER_WORKER +
+                     " WHERE " + TABLE_MANAGER_WORKER_ID_MANAGER + " = " + idManager)) {
+            List<Integer> idxs = new ArrayList<>();
+            while (results.next()) {
+                int idx = results.getInt(INDEX_MANAGER_WORKER_ID_WORKER);
+                idxs.add(idx);
+            }
+            if (idxs.size() == 0) idxs = null;
+            return idxs;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get list of opinion indexes: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
