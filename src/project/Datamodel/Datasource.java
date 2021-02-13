@@ -110,7 +110,21 @@ public class Datasource {
     public static final int INDEX_OPINION_ID = 1;
     public static final int INDEX_OPINION_DESC = 2;
 
+    public static final String TABLE_PORTFOLIO = "portfolio";
+    public static final String TABLE_PORTFOLIO_ID = "id_portfolio";
+    public static final String TABLE_PORTFOLIO_DESC = "opis";
+    public static final String TABLE_PORTFOLIO_DATE = "data_wykonania";
+    public static final int INDEX_PORTFOLIO_ID = 1;
+    public static final int INDEX_PORTFOLIO_DESC = 2;
+    public static final int INDEX_PORTFOLIO_DATE = 3;
+
     // ============ Encje asocjacyjne =========================
+
+    public static final String TABLE_DESIGNER_PORTFOLIO = "projektant_portfolio";
+    public static final String TABLE_DESIGNER_PORTFOLIO_ID_DESIGNER = "id_projektant";
+    public static final String TABLE_DESIGNER_PORTFOLIO_ID_PORTFOLIO = "id_portfolio";
+    public static final int INDEX_DESIGNER_PORTFOLIO_ID_DESIGNER = 1;
+    public static final int INDEX_DESIGNER_PORTFOLIO_ID_PORTFOLIO = 2;
 
     public static final String TABLE_COMMODITY_OPINION = "towar_opinia";
     public static final String TABLE_COMMODITY_OPINION_ID_COMMODITY = "id_towar";
@@ -1814,8 +1828,7 @@ public class Datasource {
     //=========================== Opinion Methods =========================
 
     private void createOpinionTable(){
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()){
             statement.execute(   "CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_OPINION + " (\n" +
                     TABLE_OPINION_ID + " INTEGER NOT NULL,\n" +
                     TABLE_OPINION_DESC + " VARCHAR(50) NOT NULL,\n" +
@@ -1893,6 +1906,88 @@ public class Datasource {
             System.out.println("Couldn't get all records from " + TABLE_OPINION + " table: " + e.getMessage());
             e.printStackTrace();
             return null;
+        }
+    }
+
+    // ============================== Portfolio methods =========================
+
+    private void createPortfolioTable() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO + "(\n" +
+                                     TABLE_PORTFOLIO_ID + " INTEGER NOT NULL,\n" +
+                                     TABLE_PORTFOLIO_DESC + " VARCHAR(100) NOT NULL,\n" +
+                                     TABLE_PORTFOLIO_DATE + " DATE NOT NULL,\n" +
+                                   "CONSTRAINT id_portfolio PRIMARY KEY (" + TABLE_PORTFOLIO_ID + ")\n" +
+                    ")");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create " + TABLE_PORTFOLIO + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public boolean insertPortfolio(Portfolio portfolio) throws SQLException {
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO +
+                            " (" + TABLE_PORTFOLIO_ID + ", " + TABLE_PORTFOLIO_DESC + ", " + TABLE_PORTFOLIO_DATE + ") VALUES (" +
+                            portfolio.getId() + ", '" + portfolio.getDescription() + "', " + portfolio.getDate() + ")");
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public boolean updatePortfolio(Portfolio portfolio) throws SQLException {
+        Statement statement = connection.createStatement();
+        int affectedRows = statement.executeUpdate("UPDATE " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO +
+                            " SET " + TABLE_PORTFOLIO_DESC + " = '" + portfolio.getDescription() + "', " + TABLE_PORTFOLIO_DATE + " = " + portfolio.getDate() +
+                            " WHERE " + TABLE_PORTFOLIO_ID + " = " + portfolio.getId());
+        statement.close();
+        return affectedRows == 1;
+    }
+
+    public void deletePortfolio(int id) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO + " WHERE " + TABLE_PORTFOLIO_ID + " = " + id);
+        } catch (SQLException e) {
+            System.out.println("Couldn't delete row from " + TABLE_PORTFOLIO + " table: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Portfolio> getPortfolios() {
+        List<Portfolio> portfolios = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO)) {
+
+            while (results.next()) {
+                int id = results.getInt(INDEX_PORTFOLIO_ID);
+                String description = results.getString(INDEX_PORTFOLIO_DESC);
+                Date date = results.getDate(INDEX_PORTFOLIO_DATE);
+                Portfolio portfolio = new Portfolio(id, description, date);
+
+                portfolios.add(portfolio);
+            }
+
+            if (portfolios.size() == 0) portfolios = null;
+            return portfolios;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + TABLE_PORTFOLIO + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // ============================== DESIGNER_PORTFOLIO_TABLE ===============
+
+    private void createDesignerPortfolioTable() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TABLE IF NOT EXISTS " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + " (\n" +
+                                    TABLE_DESIGNER_PORTFOLIO_ID_DESIGNER + " INTEGER NOT NULL,\n" +
+                                    TABLE_DESIGNER_PORTFOLIO_ID_PORTFOLIO + " INTEGER NOT NULL,\n" +
+                    "                CONSTRAINT projektant_portfolio_pk PRIMARY KEY (" + TABLE_DESIGNER_PORTFOLIO_ID_DESIGNER + ", " + TABLE_DESIGNER_PORTFOLIO_ID_PORTFOLIO + ")\n" +
+                    ")");
+        } catch (SQLException e) {
+            System.out.println("Couldn't create " + TABLE_DESIGNER_PORTFOLIO + " table: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -2256,6 +2351,52 @@ public class Datasource {
     }
 
     //====================================== Add foreign keys =====================
+
+    private void alterTableDesignerPortfolioFkPortfolio(){
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + " ADD CONSTRAINT portfolio_projektant_portfolio_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DESIGNER_PORTFOLIO_ID_PORTFOLIO + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO + " (" + TABLE_PORTFOLIO_ID + ")\n" +
+                    "ON DELETE CASCADE\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE;");
+        } catch (SQLException e) {
+            System.out.println("Couldn't process alter table designer-portfolio fkPortfolio: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableDesignerPortfolioFkPortfolio() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + " DROP CONSTRAINT IF EXISTS portfolio_projektant_portfolio_fk");
+        } catch (SQLException e) {
+            System.out.println("Couldn't process alter table designer-portfolio fkPortfolio: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void alterTableDesignerPortfolioFkDesigner() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + " ADD CONSTRAINT projektant_projektant_portfolio_fk\n" +
+                    "FOREIGN KEY (" + TABLE_DESIGNER_PORTFOLIO_ID_DESIGNER + ")\n" +
+                    "REFERENCES " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " (" + TABLE_DESIGNER_ID + ")\n" +
+                    "ON DELETE CASCADE\n" +
+                    "ON UPDATE NO ACTION\n" +
+                    "NOT DEFERRABLE;");
+        } catch (SQLException e) {
+            System.out.println("Couldn't process alter table designer-portfolio fkDesigner: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void dropTableDesignerPortfolioFkDesigner() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + " DROP CONSTRAINT IF EXISTS projektant_projektant_portfolio_fk");
+        } catch (SQLException e) {
+            System.out.println("Couldn't process alter table designer-portfolio fkDesigner: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private void alterTableCommodityOpinionFkOpinion(){
         try (Statement statement = connection.createStatement()) {
