@@ -87,6 +87,12 @@ public class ReportController {
             new Thread(task).start();
             countLabel.setText(Integer.toString(Datasource.getInstance().getNumberOfRows(Datasource.TABLE_OPINION)));
             hBox.setVisible(true);
+        } else if (type.equals("portfolio")) {
+            Task<ObservableList<Portfolio>> task = new GetListOfPortfolios();
+            itemsList.itemsProperty().bind(task.valueProperty());
+            new Thread(task).start();
+            countLabel.setText(Integer.toString(Datasource.getInstance().getNumberOfRows(Datasource.TABLE_PORTFOLIO)));
+            hBox.setVisible(true);
         }
     }
 }
@@ -144,5 +150,12 @@ class GetListOfWorkers extends Task {
     @Override
     public ObservableList<Worker> call() throws Exception {
         return FXCollections.observableArrayList(Datasource.getInstance().getWorkers());
+    }
+}
+
+class GetListOfPortfolios extends Task {
+    @Override
+    public ObservableList<Portfolio> call() throws Exception {
+        return FXCollections.observableArrayList(Datasource.getInstance().getPortfolios());
     }
 }

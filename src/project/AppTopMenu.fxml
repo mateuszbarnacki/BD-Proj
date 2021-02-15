@@ -28,6 +28,7 @@
                     <MenuItem text="Ekspozycje" onAction="#printExpositions"/>
                     <MenuItem text="Towary" onAction="#printCommodities"/>
                     <MenuItem text="Opinie" onAction="#printOpinions"/>
+                    <MenuItem text="Portfolio" onAction="#printPortfolios"/>
                 </items>
             </Menu>
         </MenuBar>

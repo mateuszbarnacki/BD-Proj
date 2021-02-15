@@ -77,4 +77,10 @@ public class AppTopMenuController {
         creator.load(this.borderPane);
     }
 
+    @FXML
+    public void printPortfolios(ActionEvent event) {
+        ReportCreator creator = new ReportCreator("portfolio");
+        creator.load(this.borderPane);
+    }
+
 }

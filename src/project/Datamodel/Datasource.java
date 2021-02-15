@@ -180,6 +180,16 @@ public class Datasource {
     public static final int INDEX_WAREHOUSE_DEPARTMENT_ID_WAREHOUSE = 1;
     public static final int INDEX_WAREHOUSE_DEPARTMENT_ID_DEPARTMENT = 2;
 
+    public static final String VIEW_REFERENCES = "referencje";
+    public static final String VIEW_REFERENCES_NAME = "imie";
+    public static final String VIEW_REFERENCES_SURNAME = "nazwisko";
+    public static final String VIEW_REFERENCES_TITLE = "tytul";
+    public static final String VIEW_REFERENCES_DATE = "data";
+    public static final int INDEX_REFERENCES_NAME = 1;
+    public static final int INDEX_REFERENCES_SURNAME = 2;
+    public static final int INDEX_REFERENCES_TITLE = 3;
+    public static final int INDEX_REFERENCES_DATE = 4;
+
     // ================== Creation of the tables ===================
 
     //================= Account ======================
@@ -243,6 +253,7 @@ public class Datasource {
     }
 
     public void openUserEnvironment(){
+            // Tables
             createWarehouseTable();
             createDepartmentTable();
             createManagerTable();
@@ -253,6 +264,7 @@ public class Datasource {
             createCommodityTable();
             createDesignerTable();
             createOpinionTable();
+            createPortfolioTable();
 
             createCommodityOpinionTable();
             createExpositionDesignerTable();
@@ -263,9 +275,12 @@ public class Datasource {
             createDepartmentExpositionTable();
             createDepartmentManagerTable();
             createWarehouseDepartmentTable();
+            createDesignerPortfolioTable();
+
+            //View
+            createReferencesView();
 
             //Foreign keys
-
             dropTableCommodityOpinionFkOpinion();
             dropTableCommodityOpinionFkCommodity();
             dropTableExpositionDesignerFkDesigner();
@@ -284,6 +299,8 @@ public class Datasource {
             dropTableDepartmentManagerFkDepartment();
             dropTableWarehouseDepartmentFkDepartment();
             dropTableWarehouseDepartmentFkWarehouse();
+            dropTableDesignerPortfolioFkDesigner();
+            dropTableDesignerPortfolioFkPortfolio();
 
             alterTableCommodityOpinionFkOpinion();
             alterTableCommodityOpinionFkCommodity();
@@ -303,9 +320,10 @@ public class Datasource {
             alterTableDepartmentManagerFkDepartment();
             alterTableWarehouseDepartmentFkDepartment();
             alterTableWarehouseDepartmentFkWarehouse();
+            alterTableDesignerPortfolioFkDesigner();
+            alterTableDesignerPortfolioFkPortfolio();
 
             //Functions and triggers
-
             createCheckPostcodeFunction();
             dropCheckPostcodeWarehouseTrigger();
             createCheckPostcodeWarehouseTrigger();
@@ -1762,6 +1780,12 @@ public class Datasource {
 
     public void deleteDesigner(int id) {
         try (Statement statement = connection.createStatement()) {
+            List<Integer> relatedPortfolios = getPortfoliosIndexes(id);
+            if (relatedPortfolios != null) {
+                for (int idx : relatedPortfolios) {
+                    deletePortfolio(idx);
+                }
+            }
             statement.execute("DELETE FROM " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " WHERE " + TABLE_DESIGNER_ID + " = " + id);
         } catch (SQLException e) {
             System.out.println("Couldn't delete record from " + TABLE_DESIGNER + " table: " + e.getMessage());
@@ -1927,11 +1951,13 @@ public class Datasource {
 
     public boolean insertPortfolio(Portfolio portfolio) throws SQLException {
         Statement statement = connection.createStatement();
+        int id = findLowestFreeId(TABLE_PORTFOLIO);
         int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO +
                             " (" + TABLE_PORTFOLIO_ID + ", " + TABLE_PORTFOLIO_DESC + ", " + TABLE_PORTFOLIO_DATE + ") VALUES (" +
-                            portfolio.getId() + ", '" + portfolio.getDescription() + "', " + portfolio.getDate() + ")");
+                            id + ", '" + portfolio.getDescription() + "', " + portfolio.getDate() + ")");
         statement.close();
-        return affectedRows == 1;
+        boolean canDesignerPortfolioInsert = insertDesignerPortfolio(DatabasePath.getInstance().getIdDesigner(), id);
+        return affectedRows == 1 && canDesignerPortfolioInsert;
     }
 
     public boolean updatePortfolio(Portfolio portfolio) throws SQLException {
@@ -2000,6 +2026,52 @@ public class Datasource {
             return portfolios;
         } catch (SQLException e) {
             System.out.println("Couldn't get all records from " + TABLE_PORTFOLIO + " table: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // ============================== REFERENCES VIEW ========================
+
+    private void createReferencesView() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE OR REPLACE VIEW " + Session.getInstance().getToken() + "." + VIEW_REFERENCES +
+                    " (" + VIEW_REFERENCES_NAME + ", " + VIEW_REFERENCES_SURNAME + ", " + VIEW_REFERENCES_TITLE + ", " + VIEW_REFERENCES_DATE + ") AS " +
+                    " SELECT " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + "." + TABLE_DESIGNER_NAME + ", " +
+                    Session.getInstance().getToken() + "." + TABLE_DESIGNER + "." + TABLE_DESIGNER_SURNAME + ", " +
+                    Session.getInstance().getToken() + "." + TABLE_PORTFOLIO + "." + TABLE_PORTFOLIO_DESC + ", " +
+                    Session.getInstance().getToken() + "." + TABLE_PORTFOLIO + "." + TABLE_PORTFOLIO_DATE +
+                    " FROM " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO +
+                    " ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + "." + TABLE_DESIGNER_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + "." + TABLE_DESIGNER_PORTFOLIO_ID_DESIGNER +
+                    " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO +
+                    " ON " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + "." + TABLE_DESIGNER_PORTFOLIO_ID_PORTFOLIO + " = " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO + "." + TABLE_PORTFOLIO_ID + ";");
+
+        } catch (SQLException e) {
+            System.out.println("Coudln't create references view: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<Reference> getReferences() {
+        List<Reference> references = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + VIEW_REFERENCES)) {
+
+            while (results.next()) {
+                String name = results.getString(INDEX_REFERENCES_NAME);
+                String surname = results.getString(INDEX_REFERENCES_SURNAME);
+                String title = results.getString(INDEX_REFERENCES_TITLE);
+                Date date = results.getDate(INDEX_REFERENCES_DATE);
+                Reference reference = new Reference(date, name, surname, title);
+
+                references.add(reference);
+            }
+            if (references.size() == 0) references = null;
+
+            return references;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all records from " + VIEW_REFERENCES + " view: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
