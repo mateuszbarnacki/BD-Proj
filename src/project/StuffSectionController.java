@@ -30,4 +30,11 @@ public class StuffSectionController {
         this.borderPane.getScene().setRoot(temp);
     }
 
+    @FXML
+    public void loadPortfolioPage(ActionEvent event) {
+        PageLoader pageLoader = new PageLoader("PortfolioWindow");
+        BorderPane temp = pageLoader.load();
+        this.borderPane.getScene().setRoot(temp);
+    }
+
 }

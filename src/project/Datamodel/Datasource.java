@@ -1952,6 +1952,35 @@ public class Datasource {
         }
     }
 
+    public List<Portfolio> getPortfoliosByDesigner(int idDesigner) {
+        List<Portfolio> portfolios = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_PORTFOLIO +
+                                 " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + " ON " +
+                                 Session.getInstance().getToken() + "." + TABLE_PORTFOLIO + "." + TABLE_PORTFOLIO_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + "." + TABLE_DESIGNER_PORTFOLIO_ID_PORTFOLIO +
+                                 " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + " ON " +
+                                 Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + "." + TABLE_DESIGNER_PORTFOLIO_ID_DESIGNER + " = " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + "." + TABLE_DESIGNER_ID +
+                                 " WHERE " + Session.getInstance().getToken() + "." + TABLE_DESIGNER + "." + TABLE_DESIGNER_ID + " = " + idDesigner)) {
+
+            while (results.next()) {
+                int id = results.getInt(INDEX_PORTFOLIO_ID);
+                String description = results.getString(INDEX_PORTFOLIO_DESC);
+                Date date = results.getDate(INDEX_PORTFOLIO_DATE);
+                Portfolio portfolio = new Portfolio(id, description, date);
+
+                portfolios.add(portfolio);
+            }
+            if (portfolios.size() == 0) portfolios = null;
+
+            return portfolios;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get all " + TABLE_PORTFOLIO + " records: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Portfolio> getPortfolios() {
         List<Portfolio> portfolios = new ArrayList<>();
 
@@ -1988,6 +2017,40 @@ public class Datasource {
         } catch (SQLException e) {
             System.out.println("Couldn't create " + TABLE_DESIGNER_PORTFOLIO + " table: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private boolean insertDesignerPortfolio(int idDesigner, int idPortfolio) {
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate("INSERT INTO " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO +
+                                    " VALUES (" + idDesigner + ", " + idPortfolio + ")");
+
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            System.out.println("Couldn't insert into " + TABLE_DESIGNER_PORTFOLIO + " table: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private List<Integer> getPortfoliosIndexes(int idDesigner) {
+        List<Integer> indexes = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO +
+                                  " WHERE " + Session.getInstance().getToken() + "." + TABLE_DESIGNER_PORTFOLIO + "." + TABLE_DESIGNER_PORTFOLIO_ID_DESIGNER + " = " + idDesigner)) {
+
+            while (results.next()) {
+                int id = results.getInt(INDEX_DESIGNER_PORTFOLIO_ID_PORTFOLIO);
+                indexes.add(id);
+            }
+            if (indexes.size() == 0) indexes = null;
+
+            return indexes;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get portfolios indexes: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 

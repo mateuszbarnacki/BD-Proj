@@ -18,6 +18,7 @@
         <VBox alignment="CENTER" spacing="20" prefWidth="320">
             <Button text="Strefa kierownika" textAlignment="CENTER" onAction="#loadManagerPage" prefWidth="160" prefHeight="40" style="-fx-background-radius: 30px;"/>
             <Button text="Strefa pracownika" textAlignment="CENTER" onAction="#loadVacationPage" prefWidth="160" prefHeight="40" style="-fx-background-radius: 30px;"/>
+            <Button text="Referencje projektantów" textAlignment="CENTER" onAction="#loadPortfolioPage" prefWidth="160" prefHeight="40" style="-fx-background-radius: 30px;"/>
         </VBox>
     </center>
     <right>

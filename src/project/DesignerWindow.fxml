@@ -46,6 +46,7 @@
             <HBox fx:id="hBox" spacing="15" alignment="CENTER">
                 <Button text="Edytuj dane" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#editDesigner" style="-fx-background-radius: 30px;"/>
                 <Button text="Zwolnij" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#deleteDesigner" style="-fx-background-radius: 30px;"/>
+                <Button text="Portfolio" textAlignment="CENTER" minWidth="100" minHeight="25" onAction="#loadPortfolioPage" style="-fx-background-radius: 30px;"/>
             </HBox>
         </VBox>
     </center>

@@ -119,6 +119,13 @@ public class DesignerWindowController {
         }
     }
 
+    @FXML
+    public void loadPortfolioPage(ActionEvent event) {
+        PageLoader pageLoader = new PageLoader("PortfolioWindow");
+        BorderPane temp = pageLoader.load();
+        this.borderPane.getScene().setRoot(temp);
+    }
+
     private void refreshListView() {
         Task<ObservableList<Designer>> task = new GetDesignersByExposition();
         designersList.itemsProperty().bind(task.valueProperty());
