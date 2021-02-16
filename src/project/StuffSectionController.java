@@ -32,7 +32,7 @@ public class StuffSectionController {
 
     @FXML
     public void loadPortfolioPage(ActionEvent event) {
-        PageLoader pageLoader = new PageLoader("PortfolioWindow");
+        PageLoader pageLoader = new PageLoader("ReferenceWindow");
         BorderPane temp = pageLoader.load();
         this.borderPane.getScene().setRoot(temp);
     }

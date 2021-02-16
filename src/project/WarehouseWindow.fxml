@@ -27,6 +27,7 @@
                     <Button fx:id="createWarehouseButton" text="Utwórz magazyn" textAlignment="CENTER" onAction="#createWarehouse" minWidth="160" minHeight="40" style="-fx-background-radius: 30px;"/>
                     <Button fx:id="updateWarehouseButton" text="Edytuj dane magazynu" textAlignment="CENTER" onAction="#editWarehouse" minWidth="160" minHeight="40" style="-fx-background-radius: 30px;"/>
                     <Button fx:id="manageDepartmentButton" text="Zarządzaj działami" textAlignment="CENTER" onAction="#manageDepartment" minWidth="160" minHeight="40" style="-fx-background-radius: 30px;"/>
+                    <Button fx:id="loadCommodityBrowser" text="Wyszukaj produkty" textAlignment="CENTER" onAction="#loadBrowser" minWidth="160" minHeight="40" style="-fx-background-radius: 30px;"/>
                 </VBox>
             </center>
         </BorderPane>

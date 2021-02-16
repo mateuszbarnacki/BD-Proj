@@ -31,6 +31,8 @@ public class WarehouseWindowController {
     @FXML
     public Button manageDepartmentButton;
     @FXML
+    public Button loadCommodityBrowser;
+    @FXML
     public BorderPane borderPane;
     @FXML
     public GridPane gridPane;
@@ -47,11 +49,13 @@ public class WarehouseWindowController {
             createWarehouseButton.setVisible(false);
             updateWarehouseButton.setVisible(true);
             manageDepartmentButton.setVisible(true);
+            loadCommodityBrowser.setVisible(true);
         } else {
             gridPane.setVisible(false);
             createWarehouseButton.setVisible(true);
             updateWarehouseButton.setVisible(false);
             manageDepartmentButton.setVisible(false);
+            loadCommodityBrowser.setVisible(false);
         }
     }
 
@@ -81,6 +85,7 @@ public class WarehouseWindowController {
                 createWarehouseButton.setVisible(false);
                 updateWarehouseButton.setVisible(true);
                 manageDepartmentButton.setVisible(true);
+                loadCommodityBrowser.setVisible(true);
             }
         }
     }
@@ -113,6 +118,14 @@ public class WarehouseWindowController {
     @FXML
     public void manageDepartment(ActionEvent event){
         PageLoader loader = new PageLoader("DepartmentWindow");
+        BorderPane temp = loader.load();
+        DatabasePath.getInstance().setIdWarehouse(1);
+        this.borderPane.getScene().setRoot(temp);
+    }
+
+    @FXML
+    public void loadBrowser(ActionEvent event) {
+        PageLoader loader = new PageLoader("CommodityBrowser");
         BorderPane temp = loader.load();
         DatabasePath.getInstance().setIdWarehouse(1);
         this.borderPane.getScene().setRoot(temp);

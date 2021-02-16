@@ -1683,6 +1683,126 @@ public class Datasource {
         }
     }
 
+    public List<Commodity> findTheCheapestCommodity(int idDepartment) {
+        List<Commodity> commodities = new ArrayList<>();
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_COMMODITY +
+                                 " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ON " +
+                                 Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY +
+                                 " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                                 Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                                 " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ON " +
+                                 Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION +
+                                 " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                                 Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID +
+                                " WHERE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + " = " + idDepartment + " AND " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE + " = (" +
+                     "SELECT MIN(" + Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE + ") FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + ")" )) {
+
+            while(results.next()) {
+                int id = results.getInt(INDEX_COMMODITY_ID);
+                String name = results.getString(INDEX_COMMODITY_NAME);
+                double price = results.getDouble(INDEX_COMMODITY_PRICE);
+
+                Commodity commodity = new Commodity(id, name, price);
+                commodities.add(commodity);
+            }
+
+            return commodities;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get the cheapest commodity: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Commodity> findTheMostExpensiveCommodity(int idDepartment) {
+        List<Commodity> commodities = new ArrayList<>();
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_COMMODITY +
+                " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ON " +
+                Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY +
+                " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ON " +
+                Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION +
+                " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID +
+                " WHERE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + " = " + idDepartment + " AND " +
+                 Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE + " = (" +
+                 "SELECT MAX(" + Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE + ") FROM " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + ")" )) {
+
+
+            while (result.next()) {
+                int id = result.getInt(INDEX_COMMODITY_ID);
+                String name = result.getString(INDEX_COMMODITY_NAME);
+                double price = result.getDouble(INDEX_COMMODITY_PRICE);
+                Commodity commodity = new Commodity(id, name, price);
+
+                commodities.add(commodity);
+            }
+
+            return commodities;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get the most expensive commodity: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Commodity> getSpecialCommodities(int idDepartment, double minVal, double maxVal) {
+        List<Commodity> commodities = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + Session.getInstance().getToken() + "." + TABLE_COMMODITY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_ID + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_COMMODITY +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION_COMMODITY + "." + TABLE_EXPOSITION_COMMODITY_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_EXPOSITION + "." + TABLE_EXPOSITION_ID + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION +
+                     " INNER JOIN " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + " ON " +
+                     Session.getInstance().getToken() + "." + TABLE_DEPARTMENT_EXPOSITION + "." + TABLE_DEPARTMENT_EXPOSITION_ID_EXPOSITION + " = " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID +
+                     " WHERE " + Session.getInstance().getToken() + "." + TABLE_DEPARTMENT + "." + TABLE_DEPARTMENT_ID + " = " + idDepartment + " AND " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE + " >= " + minVal + " AND " +
+                     Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE + " <= " + maxVal +
+                     " ORDER BY " + Session.getInstance().getToken() + "." + TABLE_COMMODITY + "." + TABLE_COMMODITY_PRICE)) {
+
+            while (results.next()) {
+                int id = results.getInt(INDEX_COMMODITY_ID);
+                String name = results.getString(INDEX_COMMODITY_NAME);
+                double price = results.getDouble(INDEX_COMMODITY_PRICE);
+                Commodity commodity = new Commodity(id, name, price);
+
+                commodities.add(commodity);
+            }
+
+            return commodities;
+        } catch (SQLException e) {
+            System.out.println("Couldn't get the list of commodities: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Commodity> getCommoditiesByExposition(int idExposition) {
         List<Commodity> commodities = new ArrayList<>();
 
