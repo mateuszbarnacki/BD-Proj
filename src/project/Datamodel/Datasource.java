@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Datasource {
-    public static final String CONNECTION_STRING = "jdbc:postgresql://ziggy.db.elephantsql.com:5432/cefhxaqy";
-    public static final String username = "cefhxaqy";
-    public static final String password = "vgtlgQPZ-bCZLJeG2t6pRd9HMeO_vr-e";
+    public static final String CONNECTION_STRING = "jdbc:postgresql:";
+    public static final String username = "";
+    public static final String password = "";
 
     //============= Account config ==================
     public static final String TABLE_ACCOUNT = "konto";
