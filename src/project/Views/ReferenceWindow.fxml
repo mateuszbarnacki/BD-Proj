@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.Views.ReferenceWindowController" fx:id="borderPane">
+    <left>
+        <HBox prefWidth="40">
+            <Label text="Powrót" textAlignment="CENTER" onMouseClicked="#displayPreviousPage" style="-fx-font-size: 12px; -fx-text-fill: orange;"/>
+        </HBox>
+    </left>
+    <center>
+        <VBox alignment="CENTER" spacing="25">
+            <Label text="Referencje projektantów" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
+            <TableView fx:id="referencesTable" prefWidth="400" style="-fx-font-size: 16px;">
+              <columns>
+                  <TableColumn text="Autor" prefWidth="200">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="author"/>
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn text="Nazwa" prefWidth="100">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="title"/>
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn text="Data" prefWidth="100">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="date"/>
+                      </cellValueFactory>
+                  </TableColumn>
+              </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <right>
+        <HBox prefWidth="40"/>
+    </right>
+</BorderPane>

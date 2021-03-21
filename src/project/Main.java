@@ -11,7 +11,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("RootWindow.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("Views/RootWindow.fxml"));
         primaryStage.setTitle("Symulator hurtowni mebli");
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(root, 500, 720));

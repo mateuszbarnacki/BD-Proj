@@ -1,7 +1,7 @@
 package project.Datamodel;
 
-import project.DatabasePath;
-import project.Session;
+import project.Utilities.DatabasePath;
+import project.Utilities.Session;
 
 import java.sql.*;
 import java.util.ArrayList;

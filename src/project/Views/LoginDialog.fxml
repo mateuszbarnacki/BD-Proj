@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.Views.LoginDialogController">
+    <BorderPane>
+        <center>
+            <VBox alignment="CENTER">
+                <padding><Insets top="15"/></padding>
+                <GridPane alignment="CENTER" hgap="15" vgap="10">
+                    <Label text="Login: " textAlignment="CENTER" style="-fx-font-size: 16px;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="login" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Hasło: " textAlignment="CENTER" style="-fx-font-size: 16px;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <PasswordField fx:id="password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                </GridPane>
+                <Label fx:id="errorLabel" text="W formularzu występują puste pola!" textAlignment="CENTER" visible="false" style="-fx-text-fill: red; -fx-font-size: 16px;"/>
+            </VBox>
+        </center>
+    </BorderPane>
+</AnchorPane>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.Views.ReportController" fx:id="borderPane">
+    <left>
+        <HBox prefWidth="40">
+            <Label text="Powrót" onMouseClicked="#displayPreviousPage" style="-fx-font-size: 12px; -fx-text-fill: orange;"/>
+        </HBox>
+    </left>
+    <center>
+        <VBox alignment="CENTER" spacing="25">
+            <Label text="Lista rekordów" textAlignment="CENTER" style="-fx-font-size: 30px; -fx-text-fill: orange;"/>
+            <ListView fx:id="itemsList" style="-fx-font-size: 14px;">
+            </ListView>
+            <HBox fx:id="hBox" alignment="CENTER" spacing="5">
+                <Label text="Ilość rekodrów w tabeli: " textAlignment="CENTER" style="-fx-font-size: 14px;"/>
+                <Label fx:id="countLabel" textAlignment="CENTER" style="-fx-font-size: 14px;"/>
+            </HBox>
+        </VBox>
+    </center>
+    <right><HBox prefWidth="40"/></right>
+</BorderPane>

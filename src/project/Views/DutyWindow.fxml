@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="project.Views.DutyWindowController" fx:id="borderPane">
+    <left>
+        <HBox prefWidth="40">
+            <Label text="Powrót" onMouseClicked="#displayPreviousPage" style="-fx-font-size: 12px; -fx-text-fill: orange;"/>
+        </HBox>
+    </left>
+    <center>
+        <VBox alignment="CENTER" spacing="10" prefWidth="400">
+            <Label text="Obowiązki pracownika" textAlignment="CENTER" style="-fx-font-size: 32px; -fx-text-fill: orange;"/>
+            <ListView fx:id="dutiesList" onMouseClicked="#showOptions" style="-fx-font-size: 14px;">
+            </ListView>
+            <Button fx:id="addDutyButton" text="Dodaj" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#addDuty" style="-fx-background-radius: 30px;"/>
+            <Button fx:id="deleteDutyButton" text="Usuń" textAlignment="CENTER" minWidth="120" minHeight="30" onAction="#deleteDuty" style="-fx-background-radius: 30px;"/>
+        </VBox>
+    </center>
+    <right>
+        <HBox prefWidth="40"/>
+    </right>
+</BorderPane>
